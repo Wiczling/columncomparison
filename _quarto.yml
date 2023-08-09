@@ -1,6 +1,7 @@
 project:
   type: website
   output-dir: docs
+  
 
 website:
   title: "Column Comparison"
@@ -22,3 +23,5 @@ editor: visual
 knitr:
   opts_chunk: 
     dev: "ragg_png"
+    
+bibliography: references.bib
