@@ -1,0 +1,28 @@
+#!/bin/bash -l
+
+#SBATCH --job-name=cmdstan_conda
+#SBATCH -N 1
+#SBATCH -n 24
+#SBATCH -p batch
+#SBATCH --time=72:00:00
+#SBATCH --mem=64gb
+#SBATCH --array=1-8%8 
+
+# Załadowanie modułu
+module load tryton/cmdstan/2.30.1-conda
+
+export STAN_THREADS=true
+
+# Nazwa modelu
+export CMDSTAN_MODEL_NAME="hplc-gra-fivecolumns"
+
+# Katalog z modelem (czyli gdzie się on znajduje)
+export MODEL_SRC_DIR=${TASK_USER_WORK}
+cd ${MODEL_SRC_DIR}
+
+# Budowanie modelu
+[ -f ${CMDSTAN_MODEL_NAME} ] && echo "Model "${CMDSTAN_MODEL_NAME}" istnieje." || cmdstan_model ${CMDSTAN_MODEL_NAME}
+
+wait
+
+${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hmc engine=nuts max_depth=10 stepsize=0.01 adapt delta=0.9 data file=$PWD/standata.json init=$PWD/init-${SLURM_ARRAY_TASK_ID}.json  num_threads=${SLURM_NTASKS} output file=$PWD/output_${SLURM_ARRAY_TASK_ID}.csv
