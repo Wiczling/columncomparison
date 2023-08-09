@@ -3717,6 +3717,7 @@ colnames(data_to_plot) <- paste(dataNames$Name[analyte_ID_sample])
 wpCond1 <- melt(data_to_plot)
 wpCond1$Column <- unname(col.labs[i])
 wpCond= rbind(wpCond,wpCond1)
+}
 
 wpCond$Column=as.factor(wpCond$Column)
 
@@ -3736,7 +3737,6 @@ print(p)
 
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
-}
 ```
 
 # Predictions and decision making. Case 2
