@@ -3462,17 +3462,12 @@ Let's find the best chromatogram that maximize utility using the set of experime
 The utility function is based on lowest retention time, highest retention time and the difference of retention times between the critical pair of analytes. This utility is zero if at least one of the analyte has retention higher that 40, less than 2 min or the difference in retention time is less than 2. Otherwise, it favors shorter runs. (.) denotes design variables.
 
 $$
-
 U(.)= I((mintr(.)>2) \ \& \ (res(.)>2)) \cdot (40-maxtr(.)) \cdot I(maxtr(.)<40)
-
 $$
 
 $$
-
  I(x) = 1 \ if \ condition \ x  \ is \ true \\
-
- I(x) = 0 \ if \ condition \ x  \ is \ false \\
-
+ I(x) = 0 \ if \ condition \ x  \ is \ false
 $$
 
 ```{r}
