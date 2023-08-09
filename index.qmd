@@ -11,7 +11,7 @@ knitr::opts_chunk$set(cache=TRUE, message=FALSE, error=FALSE, warning=FALSE, com
 
 # Introduction
 
-In this work we applied the previously developed Bayesian multilevel framework \[1-4\] to characterize chromatographic gradient retention time datasets collected using a multicomponent mixtures of analytes, five stationary phases, and a wide range of chromatographic conditions (pH, organic modifier, temperature, gradient program). Such datasets carry much information about chromatographic retention that, if extracted, can provide useful predictive information, i.e. a detailed multidimensional characterization of chromatographic stationary phases and ability to predict retention (along with uncertainty) based on various number of preliminary experiments (e.g. to predict retention time for a set of analytes given no, or several measurements collected using a different stationary phase).
+In this work we applied the previously developed Bayesian multilevel framework [@kamedulska_toward_2022, @kamedulska_statistical_2022, @wiczling_application_2021, @kubik_analysis_2018] to characterize chromatographic gradient retention time datasets collected using a multicomponent mixtures of analytes, five stationary phases, and a wide range of chromatographic conditions (pH, organic modifier, temperature, gradient program). Such datasets carry much information about chromatographic retention that, if extracted, can provide useful predictive information, i.e. a detailed multidimensional characterization of chromatographic stationary phases and ability to predict retention (along with uncertainty) based on various number of preliminary experiments (e.g. to predict retention time for a set of analytes given no, or several measurements collected using a different stationary phase).
 
 In this case study, we compared five RP-HPLC stationary phases (XBridge Shield RP18, XTerra MS C18, XBridge Phenyl, XBridge C8, Xterra MS C8) based on LC-MS/TOF data.
 
@@ -44,7 +44,7 @@ set.seed(10271998)
 
 # Data
 
-Data can be accessed via github or osf.io repository \[5-10\].
+Data can be accessed via github or osf.io repository [@kubik_XBridgeC18_2022,@kubik_XterraC18_2022,@kubik_XTerraC8_2022,@kubik_XBridgePhenyl_2022,@kubik_XBridgeC8_2022].
 
 ## Prepare the data
 
@@ -285,7 +285,7 @@ $$
 \int_0^{t_{R,z}-t_{0,z}-t_e}\frac{dt}{t_{0,z}\cdot ki_z(t) }=1,
 $$
 
-where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. \[11\] The following function described the relationship between the isocratic retention factor and pH for an ith-analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
+where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an ith-analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
 
 $$
 ki_z(t)=\frac{k_{z,i[z],1}(t)+\sum_{r=1}^{R[i[z]]} k_{z,i[z],r+1}(t) \cdot 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i]} pKa_{z,i[z],r}(t)} }{1+\sum_{r=1}^R 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i[z]]} pKa_{z,i[z],r}(t) } }
@@ -4459,18 +4459,11 @@ ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".png"), plo
 
 The large gradient retention time data and multilevel modeling allow to characterize separation of RP HPLC stationary phases.
 
-# References
 
-1.  Kamedulska A, Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski MJ, Wiczling P. Toward the General Mechanistic Model of Liquid Chromatographic Retention. Anal Chem. 2022 Aug 9;94(31):11070-11080. doi: 10.1021/acs.analchem.2c02034..
-2.  Kamedulska A, Kubik Ł, Wiczling P. Statistical analysis of isocratic chromatographic data using Bayesian modeling. Anal Bioanal Chem. 2022 May;414(11):3471-3481. doi: 10.1007/s00216-022-03968-x..
-3.  Wiczling P, Kamedulska A, Kubik Ł. Application of Bayesian Multilevel Modeling in the Quantitative Structure-Retention Relationship Studies of Heterogeneous Compounds. Anal Chem. 2021 May 11;93(18):6961-6971. doi: 10.1021/acs.analchem.0c05227.
-4.  Kubik Ł, Kaliszan R, Wiczling P. Analysis of Isocratic-Chromatographic-Retention Data using Bayesian Multilevel Modeling. Anal Chem. 2018 Nov 20;90(22):13670-13679. doi: 10.1021/acs.analchem.8b04033.
-5.  Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XTerra MS C18 column. DOI 10.17605/OSF.IO/QBV7J
-6.  Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XBridge Shield RP18 column. DOI 10.17605/OSF.IO/ZQTJ7
-7.  Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XTerra-C8 column. DOI 10.17605/OSF.IO/2MCNW
-8.  Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XBridge Phenyl column. DOI 10.17605/OSF.IO/EVUJ9
-9.  Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XBridge-C8 column. DOI 10.17605/OSF.IO/Y6S8P
-10. Nikitas, P.; Pappa-Louisi, A. New equations describing the combined effect of pH and organic modifier concentration on the retention in reversed-phase liquid chromatography. Journal of Chromatography A 2002, 971 (1), 47--60. https://doi.org/10.1016/S0021-9673(02)00965-2.
+# References {.unnumbered}
+
+::: {#refs}
+:::
 
 # Licenses {.unnumbered}
 

@@ -56,7 +56,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -252,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>In this work we applied the previously developed Bayesian multilevel framework [1-4] to characterize chromatographic gradient retention time datasets collected using a multicomponent mixtures of analytes, five stationary phases, and a wide range of chromatographic conditions (pH, organic modifier, temperature, gradient program). Such datasets carry much information about chromatographic retention that, if extracted, can provide useful predictive information, i.e.&nbsp;a detailed multidimensional characterization of chromatographic stationary phases and ability to predict retention (along with uncertainty) based on various number of preliminary experiments (e.g.&nbsp;to predict retention time for a set of analytes given no, or several measurements collected using a different stationary phase).</p>
+<p>In this work we applied the previously developed Bayesian multilevel framework <span class="citation" data-cites="kamedulska_toward_2022">Kubik, Kaliszan, and Wiczling (<a href="#ref-kubik_analysis_2018" role="doc-biblioref">2018</a>)</span> to characterize chromatographic gradient retention time datasets collected using a multicomponent mixtures of analytes, five stationary phases, and a wide range of chromatographic conditions (pH, organic modifier, temperature, gradient program). Such datasets carry much information about chromatographic retention that, if extracted, can provide useful predictive information, i.e.&nbsp;a detailed multidimensional characterization of chromatographic stationary phases and ability to predict retention (along with uncertainty) based on various number of preliminary experiments (e.g.&nbsp;to predict retention time for a set of analytes given no, or several measurements collected using a different stationary phase).</p>
 <p>In this case study, we compared five RP-HPLC stationary phases (XBridge Shield RP18, XTerra MS C18, XBridge Phenyl, XBridge C8, Xterra MS C8) based on LC-MS/TOF data.</p>
 </section>
 <section id="experimental-design" class="level1">
@@ -285,7 +304,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>
-<p>Data can be accessed via github or osf.io repository [5-10].</p>
+<p>Data can be accessed via github or osf.io repository <span class="citation" data-cites="kubik_XBridgeC18_2022">Kubik et al. (<a href="#ref-kubik_XBridgeC8_2022" role="doc-biblioref">2022b</a>)</span>.</p>
 <section id="prepare-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="prepare-the-data">Prepare the data</h2>
 <p>First we load the data:</p>
@@ -560,7 +579,7 @@ t_{Robs,z} \sim student_t(\nu, t_{R,z} ,\sigma_{i[z],c[z]})
 <p><span class="math display">\[
 \int_0^{t_{R,z}-t_{0,z}-t_e}\frac{dt}{t_{0,z}\cdot ki_z(t) }=1,
 \]</span></p>
-<p>where <span class="math inline">\(\small ki_z(t)\)</span> denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, <span class="math inline">\(\small t_{0,z}\)</span> denotes column hold-up (dead) time and <span class="math inline">\(\small t_e\)</span> denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al.&nbsp;[11] The following function described the relationship between the isocratic retention factor and pH for an ith-analyte with <span class="math inline">\(\small R[i]\)</span> dissociation steps and <span class="math inline">\(\small R[i]+1\)</span> forms.</p>
+<p>where <span class="math inline">\(\small ki_z(t)\)</span> denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, <span class="math inline">\(\small t_{0,z}\)</span> denotes column hold-up (dead) time and <span class="math inline">\(\small t_e\)</span> denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. <span class="citation" data-cites="nikitas_new_2002">(<a href="#ref-nikitas_new_2002" role="doc-biblioref">Nikitas and Pappa-Louisi 2002</a>)</span> The following function described the relationship between the isocratic retention factor and pH for an ith-analyte with <span class="math inline">\(\small R[i]\)</span> dissociation steps and <span class="math inline">\(\small R[i]+1\)</span> forms.</p>
 <p><span class="math display">\[
 ki_z(t)=\frac{k_{z,i[z],1}(t)+\sum_{r=1}^{R[i[z]]} k_{z,i[z],r+1}(t) \cdot 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i]} pKa_{z,i[z],r}(t)} }{1+\sum_{r=1}^R 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i[z]]} pKa_{z,i[z],r}(t) } }
 \]</span></p>
@@ -7017,20 +7036,40 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <h1>Conclusions</h1>
 <p>The large gradient retention time data and multilevel modeling allow to characterize separation of RP HPLC stationary phases.</p>
 </section>
-<section id="references" class="level1">
-<h1>References</h1>
-<ol type="1">
-<li>Kamedulska A, Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski MJ, Wiczling P. Toward the General Mechanistic Model of Liquid Chromatographic Retention. Anal Chem. 2022 Aug 9;94(31):11070-11080. doi: 10.1021/acs.analchem.2c02034..</li>
-<li>Kamedulska A, Kubik Ł, Wiczling P. Statistical analysis of isocratic chromatographic data using Bayesian modeling. Anal Bioanal Chem. 2022 May;414(11):3471-3481. doi: 10.1007/s00216-022-03968-x..</li>
-<li>Wiczling P, Kamedulska A, Kubik Ł. Application of Bayesian Multilevel Modeling in the Quantitative Structure-Retention Relationship Studies of Heterogeneous Compounds. Anal Chem. 2021 May 11;93(18):6961-6971. doi: 10.1021/acs.analchem.0c05227.</li>
-<li>Kubik Ł, Kaliszan R, Wiczling P. Analysis of Isocratic-Chromatographic-Retention Data using Bayesian Multilevel Modeling. Anal Chem. 2018 Nov 20;90(22):13670-13679. doi: 10.1021/acs.analchem.8b04033.</li>
-<li>Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XTerra MS C18 column. DOI 10.17605/OSF.IO/QBV7J</li>
-<li>Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XBridge Shield RP18 column. DOI 10.17605/OSF.IO/ZQTJ7</li>
-<li>Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XTerra-C8 column. DOI 10.17605/OSF.IO/2MCNW</li>
-<li>Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XBridge Phenyl column. DOI 10.17605/OSF.IO/EVUJ9</li>
-<li>Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XBridge-C8 column. DOI 10.17605/OSF.IO/Y6S8P</li>
-<li>Nikitas, P.; Pappa-Louisi, A. New equations describing the combined effect of pH and organic modifier concentration on the retention in reversed-phase liquid chromatography. Journal of Chromatography A 2002, 971 (1), 47–60. https://doi.org/10.1016/S0021-9673(02)00965-2.</li>
-</ol>
+<section id="references" class="level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-kamedulska_toward_2022" class="csl-entry" role="listitem">
+Kamedulska, Agnieszka, Łukasz Kubik, Julia Jacyna, Wiktoria Struck-Lewicka, Michał J. Markuszewski, and Paweł Wiczling. 2022. <span>“Toward the General Mechanistic Model of Liquid Chromatographic Retention.”</span> <em>Analytical Chemistry</em> 94 (31): 11070–80. <a href="https://doi.org/10.1021/acs.analchem.2c02034">https://doi.org/10.1021/acs.analchem.2c02034</a>.
+</div>
+<div id="ref-kamedulska_statistical_2022" class="csl-entry" role="listitem">
+Kamedulska, Agnieszka, Łukasz Kubik, and Paweł Wiczling. 2022. <span>“Statistical Analysis of Isocratic Chromatographic Data Using Bayesian Modeling.”</span> <em>Analytical and Bioanalytical Chemistry</em> 414 (11): 3471–3348. <a href="https://doi.org/10.1007/s00216-022-03968-x">https://doi.org/10.1007/s00216-022-03968-x</a>.
+</div>
+<div id="ref-kubik_XBridgeC18_2022" class="csl-entry" role="listitem">
+Kubik, Łukasz, Julia Jacyna, Wiktoria Struck-Lewicka, Michał J. Markuszewski, and Paweł Wiczling. 2022a. <span>“LC-TOF-MS Data Collected for 300 Small Molecules. XBridge Shield RP18 Column.”</span> <em>Osf.io/</em> 1 (1): 1. <a href="https://doi.org/10.17605/OSF.IO/ZQTJ7">https://doi.org/10.17605/OSF.IO/ZQTJ7</a>.
+</div>
+<div id="ref-kubik_XBridgeC8_2022" class="csl-entry" role="listitem">
+———. 2022b. <span>“LC-TOF-MS Data Collected for 300 Small Molecules. XBridge-C8 Column.”</span> <em>Osf.io/</em> 1 (1): 1. <a href="https://doi.org/10.17605/OSF.IO/Y6S8P">https://doi.org/10.17605/OSF.IO/Y6S8P</a>.
+</div>
+<div id="ref-kubik_XterraC18_2022" class="csl-entry" role="listitem">
+———. 2022c. <span>“LC-TOF-MS Data Collected for 300 Small Molecules. XTerra MS C18 Column.”</span> <em>Osf.io/</em> 1 (1): 1. <a href="https://doi.org/10.17605/OSF.IO/QBV7J">https://doi.org/10.17605/OSF.IO/QBV7J</a>.
+</div>
+<div id="ref-kubik_XTerraC8_2022" class="csl-entry" role="listitem">
+———. 2022d. <span>“LC-TOF-MS Data Collected for 300 Small Molecules. XTerra-C8 Column.”</span> <em>Osf.io/</em> 1 (1): 1. <a href="https://doi.org/10.17605/OSF.IO/2MCNW">https://doi.org/10.17605/OSF.IO/2MCNW</a>.
+</div>
+<div id="ref-kubik_XBridgePhenyl_2022" class="csl-entry" role="listitem">
+———. 2022e. <span>“LC-TOF-MS Data Collected for 300 Small Molecules.XBridge Phenyl Column.”</span> <em>Osf.io/</em> 1 (1): 1. <a href="https://doi.org/10.17605/OSF.IO/EVUJ9">https://doi.org/10.17605/OSF.IO/EVUJ9</a>.
+</div>
+<div id="ref-kubik_analysis_2018" class="csl-entry" role="listitem">
+Kubik, Łukasz, Roman Kaliszan, and Paweł Wiczling. 2018. <span>“Analysis of <span>Isocratic</span>-<span>Chromatographic</span>-<span>Retention</span> <span>Data</span> Using <span>Bayesian</span> <span>Multilevel</span> <span>Modeling</span>.”</span> <em>Analytical Chemistry</em> 90 (22): 13670–79. <a href="https://doi.org/10.1021/acs.analchem.8b04033">https://doi.org/10.1021/acs.analchem.8b04033</a>.
+</div>
+<div id="ref-nikitas_new_2002" class="csl-entry" role="listitem">
+Nikitas, P., and A. Pappa-Louisi. 2002. <span>“New Equations Describing the Combined Effect of <span class="nocase">pH</span> and Organic Modifier Concentration on the Retention in Reversed-Phase Liquid Chromatography.”</span> <em>Journal of Chromatography. A</em> 971 (1-2): 47–60. <a href="https://doi.org/10.1016/s0021-9673(02)00965-2">https://doi.org/10.1016/s0021-9673(02)00965-2</a>.
+</div>
+<div id="ref-wiczling_application_2021" class="csl-entry" role="listitem">
+Wiczling, Paweł, Agnieszka Kamedulska, and Łukasz Kubik. 2021. <span>“Application of Bayesian Multilevel Modeling in the Quantitative Structure–Retention Relationship Studies of Heterogeneous Compounds.”</span> <em>Analytical Chemistry</em> 93 (18): 6961–71. <a href="https://doi.org/10.1021/acs.analchem.0c05227">https://doi.org/10.1021/acs.analchem.0c05227</a>.
+</div>
+</div>
 </section>
 <section id="licenses" class="level1 unnumbered">
 <h1 class="unnumbered">Licenses</h1>
@@ -7402,7 +7441,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb177-11"><a href="#cb177-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb177-12"><a href="#cb177-12" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introduction</span></span>
 <span id="cb177-13"><a href="#cb177-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb177-14"><a href="#cb177-14" aria-hidden="true" tabindex="-1"></a>In this work we applied the previously developed Bayesian multilevel framework <span class="sc">\[</span>1-4<span class="sc">\]</span> to characterize chromatographic gradient retention time datasets collected using a multicomponent mixtures of analytes, five stationary phases, and a wide range of chromatographic conditions (pH, organic modifier, temperature, gradient program). Such datasets carry much information about chromatographic retention that, if extracted, can provide useful predictive information, i.e. a detailed multidimensional characterization of chromatographic stationary phases and ability to predict retention (along with uncertainty) based on various number of preliminary experiments (e.g. to predict retention time for a set of analytes given no, or several measurements collected using a different stationary phase).</span>
+<span id="cb177-14"><a href="#cb177-14" aria-hidden="true" tabindex="-1"></a>In this work we applied the previously developed Bayesian multilevel framework <span class="co">[</span><span class="ot">@kamedulska_toward_2022, @kamedulska_statistical_2022, @wiczling_application_2021, @kubik_analysis_2018</span><span class="co">]</span> to characterize chromatographic gradient retention time datasets collected using a multicomponent mixtures of analytes, five stationary phases, and a wide range of chromatographic conditions (pH, organic modifier, temperature, gradient program). Such datasets carry much information about chromatographic retention that, if extracted, can provide useful predictive information, i.e. a detailed multidimensional characterization of chromatographic stationary phases and ability to predict retention (along with uncertainty) based on various number of preliminary experiments (e.g. to predict retention time for a set of analytes given no, or several measurements collected using a different stationary phase).</span>
 <span id="cb177-15"><a href="#cb177-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb177-16"><a href="#cb177-16" aria-hidden="true" tabindex="-1"></a>In this case study, we compared five RP-HPLC stationary phases (XBridge Shield RP18, XTerra MS C18, XBridge Phenyl, XBridge C8, Xterra MS C8) based on LC-MS/TOF data.</span>
 <span id="cb177-17"><a href="#cb177-17" aria-hidden="true" tabindex="-1"></a></span>
@@ -7435,7 +7474,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb177-46"><a href="#cb177-46" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb177-47"><a href="#cb177-47" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data</span></span>
 <span id="cb177-48"><a href="#cb177-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb177-49"><a href="#cb177-49" aria-hidden="true" tabindex="-1"></a>Data can be accessed via github or osf.io repository <span class="sc">\[</span>5-10<span class="sc">\]</span>.</span>
+<span id="cb177-49"><a href="#cb177-49" aria-hidden="true" tabindex="-1"></a>Data can be accessed via github or osf.io repository <span class="co">[</span><span class="ot">@kubik_XBridgeC18_2022,@kubik_XterraC18_2022,@kubik_XTerraC8_2022,@kubik_XBridgePhenyl_2022,@kubik_XBridgeC8_2022</span><span class="co">]</span>.</span>
 <span id="cb177-50"><a href="#cb177-50" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb177-51"><a href="#cb177-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## Prepare the data</span></span>
 <span id="cb177-52"><a href="#cb177-52" aria-hidden="true" tabindex="-1"></a></span>
@@ -7676,7 +7715,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb177-301"><a href="#cb177-301" aria-hidden="true" tabindex="-1"></a>\int_0^{t_{R,z}-t_{0,z}-t_e}\frac{dt}{t_{0,z}\cdot ki_z(t) }=1,</span>
 <span id="cb177-302"><a href="#cb177-302" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb177-303"><a href="#cb177-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb177-304"><a href="#cb177-304" aria-hidden="true" tabindex="-1"></a>where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. <span class="sc">\[</span>11<span class="sc">\]</span> The following function described the relationship between the isocratic retention factor and pH for an ith-analyte with $\small R<span class="co">[</span><span class="ot">i</span><span class="co">]</span>$ dissociation steps and $\small R<span class="co">[</span><span class="ot">i</span><span class="co">]</span>+1$ forms.</span>
+<span id="cb177-304"><a href="#cb177-304" aria-hidden="true" tabindex="-1"></a>where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. <span class="co">[</span><span class="ot">@nikitas_new_2002</span><span class="co">]</span> The following function described the relationship between the isocratic retention factor and pH for an ith-analyte with $\small R<span class="co">[</span><span class="ot">i</span><span class="co">]</span>$ dissociation steps and $\small R<span class="co">[</span><span class="ot">i</span><span class="co">]</span>+1$ forms.</span>
 <span id="cb177-305"><a href="#cb177-305" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb177-306"><a href="#cb177-306" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb177-307"><a href="#cb177-307" aria-hidden="true" tabindex="-1"></a>ki_z(t)=\frac{k_{z,i<span class="co">[</span><span class="ot">z</span><span class="co">]</span>,1}(t)+\sum_{r=1}^{R<span class="co">[</span><span class="ot">i[z]</span><span class="co">]</span>} k_{z,i<span class="co">[</span><span class="ot">z</span><span class="co">]</span>,r+1}(t) \cdot 10^{r\cdot pH_z(t)-\sum_{r=1}^{R<span class="co">[</span><span class="ot">i</span><span class="co">]</span>} pKa_{z,i<span class="co">[</span><span class="ot">z</span><span class="co">]</span>,r}(t)} }{1+\sum_{r=1}^R 10^{r\cdot pH_z(t)-\sum_{r=1}^{R<span class="co">[</span><span class="ot">i[z]</span><span class="co">]</span>} pKa_{z,i<span class="co">[</span><span class="ot">z</span><span class="co">]</span>,r}(t) } }</span>
@@ -11850,29 +11889,22 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb177-4605"><a href="#cb177-4605" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb177-4606"><a href="#cb177-4606" aria-hidden="true" tabindex="-1"></a>The large gradient retention time data and multilevel modeling allow to characterize separation of RP HPLC stationary phases.</span>
 <span id="cb177-4607"><a href="#cb177-4607" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb177-4608"><a href="#cb177-4608" aria-hidden="true" tabindex="-1"></a><span class="fu"># References</span></span>
-<span id="cb177-4609"><a href="#cb177-4609" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb177-4610"><a href="#cb177-4610" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Kamedulska A, Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski MJ, Wiczling P. Toward the General Mechanistic Model of Liquid Chromatographic Retention. Anal Chem. 2022 Aug 9;94(31):11070-11080. doi: 10.1021/acs.analchem.2c02034..</span>
-<span id="cb177-4611"><a href="#cb177-4611" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Kamedulska A, Kubik Ł, Wiczling P. Statistical analysis of isocratic chromatographic data using Bayesian modeling. Anal Bioanal Chem. 2022 May;414(11):3471-3481. doi: 10.1007/s00216-022-03968-x..</span>
-<span id="cb177-4612"><a href="#cb177-4612" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Wiczling P, Kamedulska A, Kubik Ł. Application of Bayesian Multilevel Modeling in the Quantitative Structure-Retention Relationship Studies of Heterogeneous Compounds. Anal Chem. 2021 May 11;93(18):6961-6971. doi: 10.1021/acs.analchem.0c05227.</span>
-<span id="cb177-4613"><a href="#cb177-4613" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Kubik Ł, Kaliszan R, Wiczling P. Analysis of Isocratic-Chromatographic-Retention Data using Bayesian Multilevel Modeling. Anal Chem. 2018 Nov 20;90(22):13670-13679. doi: 10.1021/acs.analchem.8b04033.</span>
-<span id="cb177-4614"><a href="#cb177-4614" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XTerra MS C18 column. DOI 10.17605/OSF.IO/QBV7J</span>
-<span id="cb177-4615"><a href="#cb177-4615" aria-hidden="true" tabindex="-1"></a><span class="ss">6.  </span>Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XBridge Shield RP18 column. DOI 10.17605/OSF.IO/ZQTJ7</span>
-<span id="cb177-4616"><a href="#cb177-4616" aria-hidden="true" tabindex="-1"></a><span class="ss">7.  </span>Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XTerra-C8 column. DOI 10.17605/OSF.IO/2MCNW</span>
-<span id="cb177-4617"><a href="#cb177-4617" aria-hidden="true" tabindex="-1"></a><span class="ss">8.  </span>Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XBridge Phenyl column. DOI 10.17605/OSF.IO/EVUJ9</span>
-<span id="cb177-4618"><a href="#cb177-4618" aria-hidden="true" tabindex="-1"></a><span class="ss">9.  </span>Kubik Ł, Jacyna J, Struck-Lewicka W, Markuszewski M, Wiczling P, LC-TOF-MS data collected for 300 small molecules. XBridge-C8 column. DOI 10.17605/OSF.IO/Y6S8P</span>
-<span id="cb177-4619"><a href="#cb177-4619" aria-hidden="true" tabindex="-1"></a><span class="ss">10. </span>Nikitas, P.; Pappa-Louisi, A. New equations describing the combined effect of pH and organic modifier concentration on the retention in reversed-phase liquid chromatography. Journal of Chromatography A 2002, 971 (1), 47--60. https://doi.org/10.1016/S0021-9673(02)00965-2.</span>
+<span id="cb177-4608"><a href="#cb177-4608" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-4609"><a href="#cb177-4609" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
+<span id="cb177-4610"><a href="#cb177-4610" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-4611"><a href="#cb177-4611" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb177-4612"><a href="#cb177-4612" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb177-4613"><a href="#cb177-4613" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-4614"><a href="#cb177-4614" aria-hidden="true" tabindex="-1"></a><span class="fu"># Licenses {.unnumbered}</span></span>
+<span id="cb177-4615"><a href="#cb177-4615" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-4616"><a href="#cb177-4616" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Code &amp; copy; 2023, Paweł Wiczling, licensed under BSD-3.</span>
+<span id="cb177-4617"><a href="#cb177-4617" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Text &amp; copy; 2023, Paweł Wiczling, licensed under CC-BY-NC 4.0.</span>
+<span id="cb177-4618"><a href="#cb177-4618" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-4619"><a href="#cb177-4619" aria-hidden="true" tabindex="-1"></a><span class="fu"># Original Computing Environment {.unnumbered}</span></span>
 <span id="cb177-4620"><a href="#cb177-4620" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb177-4621"><a href="#cb177-4621" aria-hidden="true" tabindex="-1"></a><span class="fu"># Licenses {.unnumbered}</span></span>
-<span id="cb177-4622"><a href="#cb177-4622" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb177-4623"><a href="#cb177-4623" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Code &amp; copy; 2023, Paweł Wiczling, licensed under BSD-3.</span>
-<span id="cb177-4624"><a href="#cb177-4624" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Text &amp; copy; 2023, Paweł Wiczling, licensed under CC-BY-NC 4.0.</span>
-<span id="cb177-4625"><a href="#cb177-4625" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb177-4626"><a href="#cb177-4626" aria-hidden="true" tabindex="-1"></a><span class="fu"># Original Computing Environment {.unnumbered}</span></span>
-<span id="cb177-4627"><a href="#cb177-4627" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb177-4630"><a href="#cb177-4630" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb177-4631"><a href="#cb177-4631" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb177-4632"><a href="#cb177-4632" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb177-4623"><a href="#cb177-4623" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb177-4624"><a href="#cb177-4624" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb177-4625"><a href="#cb177-4625" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
