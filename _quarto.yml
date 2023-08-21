@@ -17,8 +17,10 @@ format:
     toc: true
     code-fold: true
     code-tools: true
+    fig-width: 7
+    fig-height: 7
     
-editor: visual
+editor: source
 
 knitr:
   opts_chunk: 

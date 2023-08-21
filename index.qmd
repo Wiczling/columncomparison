@@ -23,7 +23,7 @@ The molecular structure of the analytes was converted from SMILE format to MDL m
 
 # Setup
 
-The list of packages used in this analysis:
+Load packages used in this analysis:
 
 ```{r}
 library(pracma)
@@ -31,7 +31,6 @@ library(dplyr)
 library(ggplot2)
 require(gridExtra)
 library(cmdstanr)
-library(rstan)
 library(knitr)
 library(reshape2)
 library(bayesplot)
@@ -44,7 +43,7 @@ set.seed(10271998)
 
 # Data
 
-Data can be accessed via github or osf.io repository [@kubik_XBridgeC18_2022,@kubik_XterraC18_2022,@kubik_XTerraC8_2022,@kubik_XBridgePhenyl_2022,@kubik_XBridgeC8_2022].
+Data can be accessed via github or osf.io repository [@kubik_XBridgeC18_2022, @kubik_XterraC18_2022, @kubik_XTerraC8_2022, @kubik_XBridgePhenyl_2022, @kubik_XBridgeC8_2022].
 
 ## Prepare the data
 
@@ -89,9 +88,9 @@ data<-data %>%
 rm(data1, data2, data3, data4, data5)
 ```
 
-Second, we did some data wrangling:
+The data requires some cleaning:
 
-1.  we removed measurements with low score, analytes with less than 42 measurements per column, analytes with less than 210 measurements out of total 420, and used measurements with the highest score (If several were present)
+1.  we remove measurements with low score, analytes with less than 42 measurements per column, analytes with less than 210 measurements out of total 420, and use only measurements with the highest score (if several are present)
 
 ```{r}
 data <- data  %>%
@@ -108,7 +107,7 @@ data <- data  %>%
   ungroup()
 ```
 
-2.  we removed some outlying measurements (mismatch between literature pKa and observed data)
+2.  we remove some outlying measurements (mismatch between literature pKa and observed data)
 
 ```{r}
 data <- data %>%  
@@ -121,7 +120,7 @@ data <- data %>%
 
 ```
 
-3.  we prepared predictors: pKa, logP and functional_groups
+3.  we prepare predictors: pKa, logP and functional_groups
 
 ```{r}
 pKaslit = dataACD[,3:7]           # pKa values as predicted by ACD
@@ -150,7 +149,7 @@ functional_groups <- functional_groups[,idx_included]
 rm(idx_included)
 ```
 
-4.  we selected analytes with two or less dissociation steps
+4.  finally, we select analytes with \<=2 dissociation steps
 
 ```{r}
 maxR <- 2         
@@ -234,7 +233,7 @@ p <- ggplot(data[which(data$METID %in% analyte_ID_sample[i]),])+
       facet_grid(Temp~Mod2, labeller = labeller(Temp=temp.labs,Mod2=mod.labs))+
       geom_vline(xintercept = pKaslit[idx[i],1],linetype=groups[idx[i],1]+2)+
       geom_vline(xintercept = pKaslit[idx[i],2],linetype=groups[idx[i],2]+2)+
-      labs(title=paste(dataNames$Name[analyte_ID_sample[i]], 'METID =', analyte_ID_sample[i]), 
+      labs(title=paste(dataNames$Name[analyte_ID_sample[i]]), 
            x ="pH", y = "Retention time, min", 
            color =    "tg, min", 
            shape = 'Column')+ 
@@ -277,7 +276,7 @@ $$
 t_{Robs,z} \sim student_t(\nu, t_{R,z} ,\sigma_{i[z],c[z]})
 $$
 
-where z denotes z-th observation and student_t denotes the Student's t-distribution with the mean given by the predicted retention time $\small t_{R,z}$, scale $\small \sigma_{i,c}$ (analyte and column-specific), and normality parameter $\small \nu$.
+where z denotes z-th observation and student_t denotes the Student's t-distribution with the mean given by the predicted retention time $\small t_{R,z}$, scale $\small \sigma_{i,c}$ (analyte and column-specific), and normality parameter $\small \nu$ (set to 3).
 
 Gradient retention time $\small t_{R,z}$ was calculated utilizing the well-known integral equation:
 
@@ -308,7 +307,7 @@ $$
 pKa_{z,i,r}(t)=pKaw_{i,r}+\alpha_{m[z],i,r}\cdot\varphi_z(t)
 $$
 
-where $\small pKa_{z,i,r}(t)$ denotes dissociation constant of an $\small i$-th analyte and $\small r$-th dissociation step form and chromatographic conditions corresponding the z-th observation, $\small pKaw_{i,r}$ denotes aqueous $\small pKa$, and $\alpha_{m,i,r}$ denotes the slope for $\small m-th$ modifier, $\small i$-th analyte and $\small r$-th form. The linear relationships is generally valid for $\small \varphi$ \< 0.8.
+where $\small pKa_{z,i,r}(t)$ denotes dissociation constant of an $\small i$-th analyte and $\small r$-th dissociation step form and chromatographic conditions corresponding the z-th observation, $\small pKaw_{i,r}$ denotes aqueous $\small pKa$, and $\alpha_{m,i,r}$ denotes the slope for $\small m$-th modifier, $\small i$-th analyte and $\small r$-th form. The linear relationships is generally valid for $\small \varphi$ \< 0.8.
 
 The relationship between pH and the organic modifier content for various combinations of organic modifier and buffer was experimentally determined prior to the chromatographic analysis. The obtained relationships was then described using quadratic equations for each nominal pH, temperature and organic modifier:
 
@@ -852,7 +851,7 @@ fit <- cmdstanr::as_cmdstan_fit(c(
                                 ))
 ```
 
-```{r  eval = FALSE}
+```{r  eval = FALSE, echo = FALSE}
 # saved_rds_file <- 'save/lc-ms-main'
 # fit$save_object(file = saved_rds_file)
 # fit <- readRDS(saved_rds_file)
@@ -896,7 +895,6 @@ Output copied here to save time:
 [21] "Processing complete."                                                                 
 </pre>
 ```
-
 # Results
 
 ## Summary of model parameters (table):
@@ -1016,7 +1014,7 @@ p1<-bayesplot::mcmc_intervals(fit$draws(c("clogkwHat[1]","cS1mHat[1]","cdS1Hat[1
                               "cddS1Hat[1,1]"="cddS1Hat[c,1]",
                               "cddS1Hat[1,2]"="cddS1Hat[c,2]",
                               "cbeta[1,1]"="cbeta[c,1]",
-                              "cbeta[1,2]"="cbeta[x,2]",
+                              "cbeta[1,2]"="cbeta[c,2]",
                               "cdlogkTHat[1]"="cdlogkTHat[c]",
                               "capH[1,1]"="capH[c,1]", 
                               "capH[1,2]"="capH[c,2]"),
@@ -2243,7 +2241,7 @@ Individual parameters for column effects
 ```{r}
 param <- apply(draws_df[,which(colnames(draws_df) %in% grep("^clogkwN", names(draws_df), value = TRUE))], MARGIN = 2, FUN = mean)
 param <- melt(param)
-param <- matrix(param$value,nrow = nAnalytes, byrow = TRUE)
+param <- matrix(param$value, nrow = nAnalytes, byrow = TRUE)
 param1 <- param[,1]
 param2 <- param[,2]
 param3 <- param[,3]
@@ -2486,7 +2484,7 @@ ggsave(paste0("figures\\iparam\\", "pKas", ".png"), plot=p, width = 20, height =
 
 ## Eta plots
 
-Eta plots shows the centered individual parameters (e.g. $\eta_{logkwN,i} = (logkwN_i-(\hat{logkwN} + \beta_1 \cdot \log P_i))/\omega_1$). They allow to visualize the unexplained between-analyte variability of chromatographic parameters.
+Eta plots shows the centered and standardized individual parameters (e.g. $\eta_{logkwN,i} = (logkwN_i-(\hat{logkwN} + \beta_1 \cdot \log P_i))/\omega_1$). They allow to visualize the unexplained between-analyte variability of chromatographic parameters.
 
 ```{r eval = FALSE}
 model_etas <- cmdstan_model("stan/hplc-gra-fivecolumns-etas.stan")
@@ -2736,9 +2734,9 @@ ggsave(paste0("figures\\etaplots\\", "dissociatedforms_3", ".png"), plot=p3, wid
 
 ```
 
-<!-- # Comparison of observed and model predicted retention times -->
+# Comparison of observed and model predicted retention times
 
-<!-- The individual and population model predictions were simulated using a more dense design. The individual predictions are based on population-level parameters, predictors, and all of the observed retention time measurements. The population predictions are based on population-level parameters and predictors. -->
+The individual and population model predictions were simulated using a more dense design. The individual predictions are based on population-level parameters, predictors, and all of the observed retention time measurements. The population predictions are based on population-level parameters and predictors. 
 
 ```{r}
 fitsim <- cmdstanr::as_cmdstan_fit(c(
@@ -3546,7 +3544,6 @@ draws_sim_red_df <- as_draws_df(x$generated_quantities)
 #draws_sim_red_df <- fit_sim_red$draws(format = "df")
 
 ```
-
 
 ```{r}
 foo<-datasim_red[!duplicated(datasim_red$expid),]
@@ -4458,7 +4455,6 @@ ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".png"), plo
 # Conclusions
 
 The large gradient retention time data and multilevel modeling allow to characterize separation of RP HPLC stationary phases.
-
 
 # References {.unnumbered}
 
