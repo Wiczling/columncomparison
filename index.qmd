@@ -4360,11 +4360,11 @@ p15 <- ggplot()+
 
 print(p15)
 
-ggsave(paste0("figures\\casestudy2\\utylitymap\\",  "utylitymap1", ".png"), plot=p11, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\utylitymap\\",  "utylitymap2", ".png"), plot=p12, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\utylitymap\\",  "utylitymap3", ".png"), plot=p13, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\utylitymap\\",  "utylitymap4", ".png"), plot=p14, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\utylitymap\\",  "utylitymap5", ".png"), plot=p15, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap1", ".png"), plot=p11, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap2", ".png"), plot=p12, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap3", ".png"), plot=p13, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap4", ".png"), plot=p14, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap5", ".png"), plot=p15, width = 20, height = 20, units = "cm")
 
  # The best for XBridge Shield RP18
  foo1<-foo[foo$Column==1,];
