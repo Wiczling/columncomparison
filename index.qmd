@@ -1,6 +1,6 @@
 ---
 title: "Comparison of chromatographic stationary phases using Bayesian-based multilevel modeling"
-author: "Agnieszka Kamedulska, Paweł Wiczling"
+author: "Paweł Wiczling, Agnieszka Kamedulska"
 adress: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
 date: "`r format(Sys.Date())`"
 ---
@@ -23,7 +23,7 @@ The molecular structure of the analytes was converted from SMILE format to MDL m
 
 # Setup
 
-Load packages used in this analysis:
+The packages we will use are listed below.
 
 ```{r}
 library(pracma)
@@ -43,11 +43,11 @@ set.seed(10271998)
 
 # Data
 
-Data can be accessed via github or osf.io repository [@kubik_XBridgeC18_2022, @kubik_XterraC18_2022, @kubik_XTerraC8_2022, @kubik_XBridgePhenyl_2022, @kubik_XBridgeC8_2022].
+Data can be accessed via github (data folder) or osf.io repositories [@kubik_XBridgeC18_2022, @kubik_XterraC18_2022, @kubik_XTerraC8_2022, @kubik_XBridgePhenyl_2022, @kubik_XBridgeC8_2022].
 
 ## Prepare the data
 
-First we load the data:
+We will begin with loading and merging all the required datasets:
 
 ```{r}
 data1 = read.csv('data/1-X_Bridge_Shield_C18_5cm.csv')
@@ -120,7 +120,7 @@ data <- data %>%
 
 ```
 
-3.  we prepare predictors: pKa, logP and functional_groups
+3.  we also prepare available predictors: pKa, logP and functional_groups
 
 ```{r}
 pKaslit = dataACD[,3:7]           # pKa values as predicted by ACD
@@ -149,7 +149,7 @@ functional_groups <- functional_groups[,idx_included]
 rm(idx_included)
 ```
 
-4.  finally, we select analytes with \<=2 dissociation steps
+4.  finally, we select analytes with \<=2 dissociation steps fot the analysis
 
 ```{r}
 maxR <- 2         
@@ -163,7 +163,7 @@ charges <- charges[idx,1:(maxR+1)]       # absolute charge
 groupsA <- groupsA[idx,1:maxR]           # acidic group
 groupsB <- groupsB[idx,1:maxR]           # basic group
 R <- R[idx]                              # number of dissociation steps
-logPobs <- logPobs[idx]                     # logP
+logPobs <- logPobs[idx]                 # logP
 nrfungroups=functional_groups[idx,]
 totalnrgroups <- summarise_each(nrfungroups, funs(sum))
 
@@ -177,6 +177,7 @@ K <- ncol(nrfungroups)
 idxGroupsA <-which(groupsA!=0,arr.ind = T)
 nGroupsA <- nrow(idxGroupsA)
 pKaslitA<-pKaslit[idxGroupsA]
+
 # identify basic groups
 idxGroupsB <-which(groupsB!=0,arr.ind = T)
 nGroupsB <- nrow(idxGroupsB)
@@ -198,7 +199,6 @@ names(temp.labs) <- c('25','35')
 mod.labs <- c("ACN","MeOH")
 names(mod.labs) <- c('2','1')
 
-
 col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")
 names(col.labs) <- c('1','2','3','4','5')
 
@@ -207,7 +207,14 @@ names(diss.labs) <- c('1','2','3')
 
 ```
 
-## Plot data
+## Exploratory data analysis
+
+During the exploratory data analysis phase, we create a series of plots to better understand our data.
+
+
+
+
+### Plots
 
 The following graphs present retention time profiles for 6 analytes:
 
@@ -221,6 +228,7 @@ The following graphs present retention time profiles for 6 analytes:
 The vertical lines show ACD-based pKa values (solid line: acidic group; dotted line: basic group)
 
 ```{r}
+
 analyte_ID_sample <- c(9,17,33,58,140,180)
 #analyte_ID_sample <-unique(data$METID) # if all
 
@@ -228,6 +236,7 @@ idx <- which(unique(data$METID) %in% analyte_ID_sample)
 groups <- groupsB-groupsA
 
 for(i in 1:length(analyte_ID_sample)){
+
 p <- ggplot(data[which(data$METID %in% analyte_ID_sample[i]),])+
       geom_jitter(aes(x = pHs, y = RT, color = as.factor(tg), shape=as.factor(ColumnName)), width =0.1, height=0.1)+ 
       facet_grid(Temp~Mod2, labeller = labeller(Temp=temp.labs,Mod2=mod.labs))+
@@ -246,7 +255,9 @@ ggsave(paste0("figures\\rawdata\\", paste(dataNames$Name[analyte_ID_sample[i]]),
 
 ```
 
-## Summary of the data
+
+
+### Summary of the data
 
 1.  Number of identified analytes: `r nAnalytes`
 2.  Number of observations: `r nObs`
@@ -270,13 +281,13 @@ ggsave(paste0("figures\\predictors\\", "functionalgroups", ".png"), plot=p, widt
 
 ## Model
 
-In this work $\small z$ = 1..51915 denotes observation, $\small i$=1..142 denotes analyte, $\small c$=1..5 denotes column, $\small m$=1..2 denotes organic modifier and $\small r$=1..$\small R[i]$ denotes dissociation step for $\small i$-th analyte. The observed retention times ($\small t_{Robs,z}$) were described using the following model:
+In this work $\small z$ = 1..`r nObs` denotes observation, $\small i$=1..`r nAnalytes` denotes analyte, $\small col$=1..5 denotes column, $\small m$=1..2 denotes organic modifier and $\small r$=1..$\small R[i]$ denotes dissociation step for $\small i$-th analyte. The observed retention times ($\small t_{Robs,z}$) were described using the following model:
 
 $$
-t_{Robs,z} \sim student_t(\nu, t_{R,z} ,\sigma_{i[z],c[z]})
+t_{Robs,z} \sim student_t(\nu, t_{R,z} ,\sigma_{col[z],i[z]})
 $$
 
-where z denotes z-th observation and student_t denotes the Student's t-distribution with the mean given by the predicted retention time $\small t_{R,z}$, scale $\small \sigma_{i,c}$ (analyte and column-specific), and normality parameter $\small \nu$ (set to 3).
+where z denotes z-th observation and student_t denotes the Student's t-distribution with the mean given by the predicted retention time $\small t_{R,z}$, scale $\small \sigma_{i,col}$ (analyte and column-specific), and normality parameter $\small \nu$ (set to 3).
 
 Gradient retention time $\small t_{R,z}$ was calculated utilizing the well-known integral equation:
 
@@ -294,12 +305,12 @@ $\small log(k_{z,i,r})$ was assumed to depend on the organic modifier content ba
 
 $$
 \begin{aligned}
-& log(k_{z,i,r}(t)) = logkw_{c[z],i,r} - \frac{S1_{m[z],c[z],i,r} \cdot (1+S2_{m[z]}) \cdot \varphi_z(t)}{1+S2_{m[z]} \cdot \varphi_z(t)} + ... \\ 
-& apH_{c,[z],m[z],i,r} \cdot (pH_z(t)-7) + dlogkT_{i} \cdot (T_z-25)/10
+& log(k_{z,i,r}(t)) = logkw_{col[z],i,r} - \frac{S1_{m[z],col[z],i,r} \cdot (1+S2_{m[z]}) \cdot \varphi_z(t)}{1+S2_{m[z]} \cdot \varphi_z(t)} + ... \\ 
+& apH_{col[z],m[z],i,r} \cdot (pH_z(t)-7) + dlogkT_{col[z],i} \cdot (T_z-25)/10
 \end{aligned}
 $$
 
-where $\small logkw_{c,i,r}$ represents logarithm of retention factors extrapolated to 0% of organic modifier content for column $\small c$, $\small i$-th analyte and $\small r$-th analyte form; $\small S1_{i,m,c,r}$ and $\small S2_m$ are the slopes in the Neue equation for column $\small c$, modifier $\small m$, $\small i$-th analyte and $\small r$-th analyte form. In this parametrization of the Neue equation, $\small S1$ reflects the difference between logarithm of retention factors corresponding to water (0% of organic modifier content) and MeOH or ACN (100% of organic modifier content) as eluents. $\small dlogkT_i$ denotes the change in $\small logkw$ due to the increase in temperature by $\small 10^oC$. $\small apH_{c,m,i,r}$ denotes the pH effects on $\small logkw$;
+where $\small logkw_{col,i,r}$ represents logarithm of retention factors extrapolated to 0% of organic modifier content for column $\small col$, $\small i$-th analyte and $\small r$-th analyte form; $\small S1_{i,m,col,r}$ and $\small S2_m$ are the slopes in the Neue equation for column $\small c$, modifier $\small m$, $\small i$-th analyte and $\small r$-th analyte form. In this parametrization of the Neue equation, $\small S1$ reflects the difference between logarithm of retention factors corresponding to water (0% of organic modifier content) and MeOH or ACN (100% of organic modifier content) as eluents. $\small dlogkT_{col,i}$ denotes the change in $\small logkw$ due to the increase in temperature by $\small 10^oC$. $\small apH_{col,m,i,r}$ denotes the pH effects on $\small logkw$;
 
 Further a linear relationship between $\small pKa$ values and the organic modifier content was assumed:
 
@@ -315,7 +326,7 @@ $$
 pH_z(t)=pHo_z+\alpha 1_z\cdot \varphi_z(t)+\alpha2_z\cdot {\varphi_z(t)}^2
 $$
 
-First, individual values of $\small logkw$, $\small S1$ were described for the neutral form of an analyte in MeOH (denoted as $\small logkwN_i$ and $\small S1mN_i$) for the Xbridge Sheld RP18 column. The effect of ACN was described as $\small dS1N_i$), the effect of column was described by $\small clogkwN_i$, $\small cS1mN_i$, and $\small cdS1N_i$). The individual parametes for the neutral forms were described using the following equations:
+First, individual values of $\small logkw$, $\small S1$ are defined for the neutral form of an analyte in MeOH for the Xbridge Sheld RP18 column (denoted as $\small logkwN_i$ and $\small S1mN_i$). The effect of ACN was described as ($\small dS1N_i$), the effect of column ($\small c=1..4$) was described by $\small clogkwN_{c,i}$, $\small cS1mN_{c,i}$, and $\small cdS1N_{c,i}$). The individual parameters for the neutral forms were described using the following equations:
 
 $$
 \begin{aligned}
@@ -323,34 +334,62 @@ $$
 logkwN_i \\
 S1mN_i\\
 \end{bmatrix} \sim
-MVN([\hat{logkw}+\beta_1 \cdot (logP_i-2.2), \hat{S1m}+\beta_2 \cdot (logP_i-2.2)]^T,  \Omega) \\
+MVN(\begin{bmatrix}
+\hat{logkw}+\beta_1 \cdot (logP_i-2.2) \\
+\hat{S1m}+\beta_2 \cdot (logP_i-2.2) \\
+\end{bmatrix},  \Omega) \\
 & dS1N_i \sim N(\hat{dS1}, \omega_3)\\
 & \Omega =
 diag(\omega_{1:2}) \cdot \begin{bmatrix}
  1 & \rho \\
  \rho & 1  \\
  \end{bmatrix} \cdot diag(\omega_{1:2}) \\
-& clogkwN_{i,c} \sim N(\hat{clogkw_c}+c\beta_{1,c} \cdot (logP_i-2.2), c\omega_{1,c}) \\
-& cS1mN_{i,c} \sim N(\hat{cS1m}+c\beta_{2,c}\cdot (logP_i-2.2), c\omega_{2,c}) \\
-& cdS1N_{i,c} \sim N(\hat{cdS1_c}, c\omega_{3,c}) \\
-& dlogkT_{i,c} \sim N(\hat{dlogkT_c},\omega_{T,c}) \\
+& \begin{bmatrix}
+clogkwN_{1,i} \\
+clogkwN_{2,i} \\
+clogkwN_{3,i} \\
+clogkwN_{4,i} \\
+\end{bmatrix} \sim
+MVN(\begin{bmatrix}
+\hat{clogkw_1}+c\beta_{1,1} \cdot (logP_i-2.2) \\
+\hat{clogkw_2}+c\beta_{2,1} \cdot (logP_i-2.2) \\
+\hat{clogkw_3}+c\beta_{3,1} \cdot (logP_i-2.2) \\
+\hat{clogkw_4}+c\beta_{4,1} \cdot (logP_i-2.2) \\
+\end{bmatrix},  c\Omega) \\
+& c\Omega =
+diag(c\omega) \cdot \begin{bmatrix}
+ 1 & c\rho_{12} & c\rho_{13} & c\rho_{14} \\
+  c\rho_{21} & 1 & c\rho_{23} & c\rho_{24} \\
+   c\rho_{31} & c\rho_{32} & 1 & c\rho_{34} \\
+   c \rho_{41} & c\rho_{42} & c\rho_{43} & 1 \\
+ \end{bmatrix} \cdot diag(c\omega) \\
+& cS1mN_{c,i} \sim N(\hat{cS1m}+c\beta_{c,2}\cdot (logP_i-2.2), c\omega_{c,2}) \text{ for c=1...4} \\
+& cdS1N_{c,i} \sim N(\hat{cdS1_c}, c\omega_{c,3}) \text{ for c=1...4} \\
+& dlogkT_{c,i} \sim N(\hat{dlogkT_c},\omega_{T,c}) \text{ for c=1...4} \\
 \end{aligned}
 $$
 
-were MVN denotes the multivariate normal distribution; $\small \hat{logkw}$, $\small \hat{S1m}$, $\small \hat{dS1}$ are the mean values of individual chromatographic parameters that correspond to a typical nautral analyte with $\small logP$ =2.2 at $\small 25^oC$ on Xbridge Shield RP18 stationary phase. $\small \beta s$ are regression coefficients between the individual chromatographic parameters and the $\small logP_i$. $\small \omega$ denotes the standard deviation for between analyte variability (BAV). $\small \hat{dlogkT}$ denotes the effect of temperature for a typical analyte and $\small \omega_T$ the standard deviation for between analyte variability for temperature effects. Similar set of equations was used for column effects.
+were MVN denotes the multivariate normal distribution; $\small \hat{logkw}$, $\small \hat{S1m}$, $\small \hat{dS1}$ are the mean values of individual chromatographic parameters that correspond to a typical neutral analyte with $\small logP$ =2.2 at $\small 25^oC$ on Xbridge Shield RP18 stationary phase. $\small \beta s$ are regression coefficients between the individual chromatographic parameters and the $\small logP_i$. $\small \omega$ denotes the standard deviation for between analyte variability (BAV). $\small \hat{dlogkT}$ denotes the effect of temperature for a typical analyte and $\small \omega_T$ the standard deviation for between analyte variability for temperature effects. Similar set of equations was used for column effects. Here c denoted the column effect (4 differences with respect to he reference column).
 
-The difference in retention between the ionized form of an analyte and the neutral form of an analyte was separately estimated for acids and bases for $\small logkw$, $\small S1m$, $\small dS1$ parameters.
+The difference in retention between the ionized form of an analyte and the neutral form of an analyte was separately estimated for acids and bases for $\small logkw$, $\small S1m$, $\small dS1$ parameters. Similar set of equations was used for column effects.
 
 $$
 \begin{aligned}
-& dlogkwA_a \sim N(\hat{dlogkw_1}, \kappa_1), cdlogkwA_a \sim N(\hat{cdlogkw_1}, c\kappa_1), \\
-& dlogkwB_b \sim N(\hat{dlogkw_2}, \kappa_1), cdlogkwB_b \sim N(\hat{cdlogkw_2}, c\kappa_1), \\
-& dS1mA_a \sim N(\hat{dS1m_1}, \kappa_2), cdS1mA_a \sim N(\hat{cdS1m_1}, c\kappa_2), \\
-& dS1mB_b \sim N(\hat{dS1m_2}, \kappa_2), cdS1mB_b \sim N(\hat{cdS1m_2}, c\kappa_2), \\
-& ddS1A_a \sim N(\hat{ddS1_1}, \kappa_3), cddS1A_a \sim N(\hat{cddS1_1}, c\kappa_3), \\
-& ddS1B_b \sim N(\hat{ddS1_2}, \kappa_3), cddS1B_b \sim N(\hat{cddS1_2}, c\kappa_3).
+& dlogkwA_a \sim N(\hat{dlogkw_1}, \kappa_1), \\
+& dlogkwB_b \sim N(\hat{dlogkw_2}, \kappa_1), \\
+& dS1mA_a \sim N(\hat{dS1m_1}, \kappa_2), \\
+& dS1mB_b \sim N(\hat{dS1m_2}, \kappa_2), \\
+& ddS1A_a \sim N(\hat{ddS1_1}, \kappa_3), \\
+& ddS1B_b \sim N(\hat{ddS1_2}, \kappa_3), \\
+& cdlogkwA_{c,a} \sim N(\hat{cdlogkw_{c,1}}, c\kappa_{c,1}) \text{ for c=1...4}, \\
+& cdlogkwB_{c,b} \sim N(\hat{cdlogkw_{c,2}}, c\kappa_{c,1}) \text{ for c=1...4}, \\
+& cdS1mA_{c,a} \sim N(\hat{cdS1m_{c,1}}, c\kappa_{c,2}) \text{ for c=1...4}, \\
+& cdS1mB_{c,b} \sim N(\hat{cdS1m_{c,2}}, c\kappa_{c,2}) \text{ for c=1...4}, \\
+& cddS1A_{c,a} \sim N(\hat{cddS1_{c,1}}, c\kappa_{c,3}) \text{ for c=1...4}, \\
+& cddS1B_{c,b} \sim N(\hat{cddS1_{c,2}}, c\kappa_{c,3}) \text{ for c=1...4}. \\
 \end{aligned}
-$$ where a=1..46 and b=1..121 denote the indexes of acidic and basic groups.
+$$ 
+where a=1..`r nGroupsA` and b=1..`r nGroupsB` denote the indexes of acidic and basic groups.
 
 Similarly $\small pKa$ an $\small \alpha$ parameters were described separately for acids and based:
 
@@ -365,17 +404,17 @@ $$
 \end{aligned}
 $$
 
-Further, we created the matrices containing the value of parameters for i-th analyte, c-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the model code (displayed later).
+Further, we created the matrices containing the value of parameters for i-th analyte, col-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the model code displayed later.
 
 $$
 \begin{aligned}
-& logkw_{c,i,r}= f(logkwN_i,clogkwN_i,dlogkwA_{a},cdlogkwA_{a}, dlogkwB_{b}, cdlogkwB_{b}) \\
-& S1_{m,c,i,r}  = f(S1mN_i,cS1mN_i, dS1mA_a, cdS1mA_a, S1mB_b, cdS1mB_b, ...\\
-& dS1N_i, cdS1N_i, ddS1A_a, cddS1A_a, ddS1B_b, cddS1B_b) \\
-& apH_{m,c,i,r} = f(\hat{apH_1},\hat{capH_1},\hat{apH_2},\hat{capH_2}) \\
-& S2_{m} = 10^{f(\hat{logS2m},\hat{dlogS2})} \\
-& pKaw_{i,r} = f(pKawA_{a},pKawB_{b}) \\
-& \alpha_{m,i,r} = f(\alpha mA_{a}, d\alpha A_{a}, \alpha mB_{b},d\alpha B_{b})
+& logkw_{col,i,r}= f(logkwN_i,clogkwN_{c,i},dlogkwA_{a},cdlogkwA_{c,a}, dlogkwB_{b}, cdlogkwB_{c.b},...) \\
+& S1_{m,col,i,r}  = f(S1mN_i,cS1mN_{c,i}, dS1mA_a, cdS1mA_{c,a}, S1mB_b, cdS1mB_{c,b}, ...\\
+& dS1N_i, cdS1N_{c,i}, ddS1A_a, cddS1A_{c,a}, ddS1B_b, cddS1B_{c,b},...) \\
+& apH_{m,col,i,r} = f(\hat{apH_1},\hat{capH_{c,1}},\hat{apH_2},\hat{capH_{c,2}},...) \\
+& S2_{m} = 10^{f(\hat{logS2m},\hat{dlogS2},...)} \\
+& pKaw_{i,r} = f(pKawA_{a},pKawB_{b},...) \\
+& \alpha_{m,i,r} = f(\alpha mA_{a}, d\alpha A_{a}, \alpha mB_{b}, d\alpha B_{b},...)
 \end{aligned}
 $$
 
@@ -383,13 +422,13 @@ Residual error model assumes different parameters for each column and analyte:
 
 $$
 \begin{aligned}
-& log(\sigma_{i,c}) = f(log\sigma_i, clog\sigma_{i,c}) \\
+& log(\sigma_{col,i}) = f(log\sigma_i, clog\sigma_{c,i}) \\
 & log\sigma_i  \sim N(log(m\sigma),s\sigma) \\
-& clog\sigma_{i,c} \sim N(clogm\sigma,s\sigma_c);
+& clog\sigma_{c,i} \sim N(clogm\sigma_c,cs\sigma_c) \text{ for c=1...4},
 \end{aligned}
 $$
 
-The detailed description of parameters is provided in the following table (BAV denotes between analyte variability):
+The detailed description of parameters and used priors is provided in the following table (BAV denotes between analyte variability):
 
 ```{r results="asis"}
 
@@ -813,7 +852,7 @@ write_stan_json(init(), "stan/init-7.json", always_decimal = FALSE)
 write_stan_json(init(), "stan/init-8.json", always_decimal = FALSE)
 ```
 
-2.  we created the batch file:
+2.  we run the model using the batch file:
 
 ```{=html}
 <pre> 
@@ -836,7 +875,8 @@ wait
 ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hmc engine=nuts max_depth=10 stepsize=0.01 adapt delta=0.9 data file=$PWD/standata.json init=$PWD/init-${SLURM_ARRAY_TASK_ID}.json  num_threads=${SLURM_NTASKS} output file=$PWD/output_${SLURM_ARRAY_TASK_ID}.csv 
 </pre>
 ```
-3.  After calculations, we loaded the output files using cmdstanr:
+
+3.  After calculations, we loaded the output files using cmdstanr. The files are accessible through [stan output files](https://cloud.gumed.edu.pl/s/MbHmekcg79w4ot4 "Stan output files").
 
 ```{r}
 fit <- cmdstanr::as_cmdstan_fit(c(
@@ -851,15 +891,7 @@ fit <- cmdstanr::as_cmdstan_fit(c(
                                 ))
 ```
 
-```{r  eval = FALSE, echo = FALSE}
-# saved_rds_file <- 'save/lc-ms-main'
-# fit$save_object(file = saved_rds_file)
-# fit <- readRDS(saved_rds_file)
-```
-
-4.  finally we checked the diagnostics
-
-The diagnostics are reasonable given model complexity
+4.  finally we checked the diagnostics of Monte Carlo inferences based on the Stan documentation described here [](https://mc-stan.org/docs/cmdstan-guide/diagnose.html).
 
 ```{r eval = FALSE}
  #fit$cmdstan_diagnose()
@@ -868,7 +900,7 @@ The diagnostics are reasonable given model complexity
  system(str,intern=TRUE)
 ```
 
-Output copied here to save time:
+The diagnostics are reasonable given model complexity. Output copied here to save time:
 
 ```{=html}
 <pre>
@@ -895,6 +927,7 @@ Output copied here to save time:
 [21] "Processing complete."                                                                 
 </pre>
 ```
+
 # Results
 
 ## Summary of model parameters (table):
@@ -2736,7 +2769,7 @@ ggsave(paste0("figures\\etaplots\\", "dissociatedforms_3", ".png"), plot=p3, wid
 
 # Comparison of observed and model predicted retention times
 
-The individual and population model predictions were simulated using a more dense design. The individual predictions are based on population-level parameters, predictors, and all of the observed retention time measurements. The population predictions are based on population-level parameters and predictors. 
+The individual and population model predictions were simulated using a more dense design. The individual predictions are based on population-level parameters, predictors, and all of the observed retention time measurements. The population predictions are based on population-level parameters and predictors.
 
 ```{r}
 fitsim <- cmdstanr::as_cmdstan_fit(c(
@@ -3229,6 +3262,8 @@ print(p)
 
 # Effect of logP
 
+The following plot show the effect of logP on isocratic retention times (population predictions) for typical neutral, basic and acidic analyte. The uncertainties are large. They are not shown to improve visibility.
+
 ```{r eval = FALSE}
 
 model_logP <- cmdstan_model("stan/hplc-gra-fivecolumns-logP.stan")
@@ -3254,7 +3289,6 @@ draws_logP_df <- as_draws_df(x$generated_quantities)
 
 ```
 
-The following plots show the effect of logP on isocratic retention times (population predictions) for typical neutral, basic and acidic analyte. The uncertainties are large. They are not shown to improve visibility.
 
 ```{r}
 logPsim = c(0,1.5,3,4.5,6)
@@ -3738,7 +3772,7 @@ ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".png"), plo
 
 # Predictions and decision making. Case 2
 
-The proposed model can be used for decision making. We start by predicting XTerra MS C18, XBridge Phenyl, XBridge C8, Xterra MS C8 retention times based on XBridge Shield RP18 data.
+The proposed model can be used for decision making having access to limiet data. Here we want to ilustrate this by predicting XTerra MS C18, XBridge Phenyl, XBridge C8, Xterra MS C8 retention times based on XBridge Shield RP18 data.
 
 ```{r}
 analyte_ID_sample = c(9,17,33,58,140,180)
@@ -4119,7 +4153,7 @@ ggsave(paste0("figures\\casestudy2\\decision\\",  "maxtr", ".png"), plot=p3, wid
 
 ```
 
-### uncertainity chromatogram
+### Uncertainity chromatogram
 
 Below is the example of a chromatogram (along with uncertainty) expected for tg = 90 min, pH = 8.9, Temp = 25oC in ACN.
 
@@ -4354,7 +4388,7 @@ ggsave(paste0("figures\\casestudy2\\utylitymap\\",  "utylitymap5", ".png"), plot
 
 ```
 
-### uncertainity chromatogram
+### Uncertainity chromatogram
 
 Let's visualize chromatograms with the highest expected utility given the experimental data.
 
