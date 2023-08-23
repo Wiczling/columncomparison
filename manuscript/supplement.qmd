@@ -554,7 +554,6 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 ![](../figures/concordanceplots/uncertainitychromatogram.population.png)
 
 {{< pagebreak >}}
-
 # Licenses {.unnumbered}
 
 -   Code & copy; 2023, Paweł Wiczling, licensed under BSD-3.
