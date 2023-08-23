@@ -19,9 +19,21 @@ format:
     fig-height: 7
 ---
 
-```{r setup, include=FALSE}
+::: {.content-visible when-format="html"}
+
+```{r setuphtml, include=FALSE}
 knitr::opts_chunk$set(cache=TRUE, message=FALSE, error=FALSE, warning=FALSE, comment=NA, out.width='95%')
 ```
+
+:::
+
+::: {.content-visible when-format="pdf"}
+
+```{r setuppdf, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, message=FALSE, error=FALSE, warning=FALSE, echo=FALSE, comment=NA, out.width='95%')
+```
+
+:::
 
 # Introduction
 
