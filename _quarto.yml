@@ -1,6 +1,6 @@
 project:
   output-dir: docs
-    
+
 editor: source 
 
 knitr:

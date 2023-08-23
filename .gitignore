@@ -32,7 +32,6 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 # selected folders
-/figures/
 /papers/
 /stanfiles/
 stanfiles/*.csv

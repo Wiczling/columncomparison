@@ -2070,7 +2070,7 @@ p <-draws_df_subset %>%
 
 print(p)
 
-ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".IsocraticPredictions", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".isopred.individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
 
 }
@@ -2162,7 +2162,7 @@ p<-draws_df_subset %>%
 
  print(p)
  
- ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".IsocraticDifferences", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".diff.individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
 
 }
@@ -2247,7 +2247,7 @@ p<-draws_df_subset %>%
 
 print(p)
 
- ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".filogk1", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".filogk1.individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
 }
 ```
 
@@ -3190,7 +3190,7 @@ p<-draws_df_subset %>%
   coord_cartesian(xlim=c(0,1),ylim=c(-1,1))
  print(p)
 
- ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), "isodifferences.population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".diff.population", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
 }
 
@@ -3270,7 +3270,7 @@ p<-draws_df_subset %>%
   scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
   facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))
 print(p)
- ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), "filogk1.population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".filogk1.population", ".png"), plot=p, width = 20, height = 20, units = "cm")
 }
 
 ```
@@ -4068,7 +4068,7 @@ facet_grid(ColumnName~Mod2+Temp, labeller = labeller(Temp=temp.labs,Mod2=mod.lab
 
 print(pi)
 
-ggsave(paste0("figures\\casestudy2\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".IndividualPredictions", ".png"), plot=pi, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".png"), plot=pi, width = 20, height = 20, units = "cm")
 
 }
 
@@ -4142,8 +4142,8 @@ p3 <- ggplot()+
 
 print(p3)
 
-ggsave(paste0("figures\\casestudy2\\decision\\", "ExpectedUtility", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\decision\\",  "Resolution", ".png"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\decision\\", "expectedutility", ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\decision\\",  "resolution", ".png"), plot=p2, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\decision\\",  "maxtr", ".png"), plot=p3, width = 20, height = 20, units = "cm")
 
  # The best for XBridge Shield RP18

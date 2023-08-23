@@ -1,0 +1,5 @@
+editor: source 
+
+knitr:
+  opts_chunk: 
+    dev: "ragg_png"

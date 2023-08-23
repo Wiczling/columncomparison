@@ -1,0 +1,567 @@
+---
+title: |
+  | Supporting Information
+  | Comparison of chromatographic stationary phases using Bayesian-based multilevel modeling
+author: "Paweł Wiczling, Agnieszka Kamedulska"
+adress: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
+date: "`r format(Sys.Date())`"
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+    fig-width: 7
+    fig-height: 7
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, message=FALSE, error=FALSE, warning=FALSE, echo=FALSE, comment=NA, out.width='95%')
+```
+
+```{r, include=FALSE}
+library(dplyr)
+library(kableExtra)
+library(cmdstanr)
+```
+
+# Model
+
+In this work $\small z$ = 1..51530 denotes observation, $\small i$=1..141 denotes analyte, $\small col$=1..5 denotes column, $\small m$=1..2 denotes organic modifier and $\small r$=1..$\small R[i]$ denotes dissociation step for $\small i$-th analyte. The observed retention times ($\small t_{Robs,z}$) were described using the following model:
+
+$$
+t_{Robs,z} \sim student_t(\nu, t_{R,z} ,\sigma_{col[z],i[z]})
+$$
+
+where z denotes z-th observation and student_t denotes the Student's t-distribution with the mean given by the predicted retention time $\small t_{R,z}$, scale $\small \sigma_{i,col}$ (analyte and column-specific), and normality parameter $\small \nu$ (set to 3).
+
+Gradient retention time $\small t_{R,z}$ was calculated utilizing the well-known integral equation:
+
+$$
+\int_0^{t_{R,z}-t_{0,z}-t_e}\frac{dt}{t_{0,z}\cdot ki_z(t) }=1,
+$$
+
+where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an ith-analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
+
+$$
+ki_z(t)=\frac{k_{z,i[z],1}(t)+\sum_{r=1}^{R[i[z]]} k_{z,i[z],r+1}(t) \cdot 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i]} pKa_{z,i[z],r}(t)} }{1+\sum_{r=1}^R 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i[z]]} pKa_{z,i[z],r}(t) } }
+$$
+
+$\small log(k_{z,i,r})$ was assumed to depend on the organic modifier content based on the Neue equation, on temperature assuming linear equation, and on the pH of the mobiles phase (for ionized forms of analytes).
+
+$$
+\begin{aligned}
+& log(k_{z,i,r}(t)) = logkw_{col[z],i,r} - \frac{S1_{m[z],col[z],i,r} \cdot (1+S2_{m[z]}) \cdot \varphi_z(t)}{1+S2_{m[z]} \cdot \varphi_z(t)} + ... \\ 
+& apH_{col[z],m[z],i,r} \cdot (pH_z(t)-7) + dlogkT_{col[z],i} \cdot (T_z-25)/10
+\end{aligned}
+$$
+
+where $\small logkw_{col,i,r}$ represents logarithm of retention factors extrapolated to 0% of organic modifier content for column $\small col$, $\small i$-th analyte and $\small r$-th analyte form; $\small S1_{i,m,col,r}$ and $\small S2_m$ are the slopes in the Neue equation for column $\small c$, modifier $\small m$, $\small i$-th analyte and $\small r$-th analyte form. In this parametrization of the Neue equation, $\small S1$ reflects the difference between logarithm of retention factors corresponding to water (0% of organic modifier content) and MeOH or ACN (100% of organic modifier content) as eluents. $\small dlogkT_{col,i}$ denotes the change in $\small logkw$ due to the increase in temperature by $\small 10^oC$. $\small apH_{col,m,i,r}$ denotes the pH effects on $\small logkw$;
+
+Further a linear relationship between $\small pKa$ values and the organic modifier content was assumed:
+
+$$
+pKa_{z,i,r}(t)=pKaw_{i,r}+\alpha_{m[z],i,r}\cdot\varphi_z(t)
+$$
+
+where $\small pKa_{z,i,r}(t)$ denotes dissociation constant of an $\small i$-th analyte and $\small r$-th dissociation step form and chromatographic conditions corresponding the z-th observation, $\small pKaw_{i,r}$ denotes aqueous $\small pKa$, and $\alpha_{m,i,r}$ denotes the slope for $\small m$-th modifier, $\small i$-th analyte and $\small r$-th form. The linear relationships is generally valid for $\small \varphi$ \< 0.8.
+
+The relationship between pH and the organic modifier content for various combinations of organic modifier and buffer was experimentally determined prior to the chromatographic analysis. The obtained relationships was then described using quadratic equations for each nominal pH, temperature and organic modifier:
+
+$$
+pH_z(t)=pHo_z+\alpha 1_z\cdot \varphi_z(t)+\alpha2_z\cdot {\varphi_z(t)}^2
+$$
+
+First, individual values of $\small logkw$, $\small S1$ are defined for the neutral form of an analyte in MeOH for the Xbridge Sheld RP18 column (denoted as $\small logkwN_i$ and $\small S1mN_i$). The effect of ACN was described as ($\small dS1N_i$), the effect of column ($\small c=1..4$) was described by $\small clogkwN_{c,i}$, $\small cS1mN_{c,i}$, and $\small cdS1N_{c,i}$). The individual parameters for the neutral forms were described using the following equations:
+
+$$
+\begin{aligned}
+& \begin{bmatrix}
+logkwN_i \\
+S1mN_i\\
+\end{bmatrix} \sim
+MVN(\begin{bmatrix}
+\hat{logkw}+\beta_1 \cdot (logP_i-2.2) \\
+\hat{S1m}+\beta_2 \cdot (logP_i-2.2) \\
+\end{bmatrix},  \Omega) \\
+& dS1N_i \sim N(\hat{dS1}, \omega_3)\\
+& \Omega =
+diag(\omega_{1:2}) \cdot \begin{bmatrix}
+ 1 & \rho \\
+ \rho & 1  \\
+ \end{bmatrix} \cdot diag(\omega_{1:2}) \\
+& \begin{bmatrix}
+clogkwN_{1,i} \\
+clogkwN_{2,i} \\
+clogkwN_{3,i} \\
+clogkwN_{4,i} \\
+\end{bmatrix} \sim
+MVN(\begin{bmatrix}
+\hat{clogkw_1}+c\beta_{1,1} \cdot (logP_i-2.2) \\
+\hat{clogkw_2}+c\beta_{2,1} \cdot (logP_i-2.2) \\
+\hat{clogkw_3}+c\beta_{3,1} \cdot (logP_i-2.2) \\
+\hat{clogkw_4}+c\beta_{4,1} \cdot (logP_i-2.2) \\
+\end{bmatrix},  c\Omega) \\
+& c\Omega =
+diag(c\omega) \cdot \begin{bmatrix}
+ 1 & c\rho_{12} & c\rho_{13} & c\rho_{14} \\
+  c\rho_{21} & 1 & c\rho_{23} & c\rho_{24} \\
+   c\rho_{31} & c\rho_{32} & 1 & c\rho_{34} \\
+   c \rho_{41} & c\rho_{42} & c\rho_{43} & 1 \\
+ \end{bmatrix} \cdot diag(c\omega) \\
+& cS1mN_{c,i} \sim N(\hat{cS1m}+c\beta_{c,2}\cdot (logP_i-2.2), c\omega_{c,2}) \text{ for c=1...4} \\
+& cdS1N_{c,i} \sim N(\hat{cdS1_c}, c\omega_{c,3}) \text{ for c=1...4} \\
+& dlogkT_{c,i} \sim N(\hat{dlogkT_c},\omega_{T,c}) \text{ for c=1...4} \\
+\end{aligned}
+$$
+
+were MVN denotes the multivariate normal distribution; $\small \hat{logkw}$, $\small \hat{S1m}$, $\small \hat{dS1}$ are the mean values of individual chromatographic parameters that correspond to a typical neutral analyte with $\small logP$ =2.2 at $\small 25^oC$ on Xbridge Shield RP18 stationary phase. $\small \beta s$ are regression coefficients between the individual chromatographic parameters and the $\small logP_i$. $\small \omega$ denotes the standard deviation for between analyte variability (BAV). $\small \hat{dlogkT}$ denotes the effect of temperature for a typical analyte and $\small \omega_T$ the standard deviation for between analyte variability for temperature effects. Similar set of equations was used for column effects. Here c denoted the column effect (4 differences with respect to he reference column).
+
+The difference in retention between the ionized form of an analyte and the neutral form of an analyte was separately estimated for acids and bases for $\small logkw$, $\small S1m$, $\small dS1$ parameters. Similar set of equations was used for column effects.
+
+$$
+\begin{aligned}
+& dlogkwA_a \sim N(\hat{dlogkw_1}, \kappa_1), \\
+& dlogkwB_b \sim N(\hat{dlogkw_2}, \kappa_1), \\
+& dS1mA_a \sim N(\hat{dS1m_1}, \kappa_2), \\
+& dS1mB_b \sim N(\hat{dS1m_2}, \kappa_2), \\
+& ddS1A_a \sim N(\hat{ddS1_1}, \kappa_3), \\
+& ddS1B_b \sim N(\hat{ddS1_2}, \kappa_3), \\
+& cdlogkwA_{c,a} \sim N(\hat{cdlogkw_{c,1}}, c\kappa_{c,1}) \text{ for c=1...4}, \\
+& cdlogkwB_{c,b} \sim N(\hat{cdlogkw_{c,2}}, c\kappa_{c,1}) \text{ for c=1...4}, \\
+& cdS1mA_{c,a} \sim N(\hat{cdS1m_{c,1}}, c\kappa_{c,2}) \text{ for c=1...4}, \\
+& cdS1mB_{c,b} \sim N(\hat{cdS1m_{c,2}}, c\kappa_{c,2}) \text{ for c=1...4}, \\
+& cddS1A_{c,a} \sim N(\hat{cddS1_{c,1}}, c\kappa_{c,3}) \text{ for c=1...4}, \\
+& cddS1B_{c,b} \sim N(\hat{cddS1_{c,2}}, c\kappa_{c,3}) \text{ for c=1...4}. \\
+\end{aligned}
+$$ where a=1..46 and b=1..120 denote the indexes of acidic and basic groups.
+
+Similarly $\small pKa$ an $\small \alpha$ parameters were described separately for acids and based:
+
+$$
+\begin{aligned}
+& pKawA_{a} \sim N(pKaAlit_{a}, \tau_1), \\
+& pKawB_{b} \sim N(pKaBlit_{b}, \tau_1), \\
+& \alpha mA_{a} \sim N(\hat{\alpha m_1},\tau_2), \\
+& \alpha mB_{b} \sim N(\hat{\alpha m_2},\tau_2), \\
+& d\alpha A_{a} \sim N(\hat{d\alpha_1},\tau_3), \\
+& d\alpha B_{b} \sim N(\hat{d\alpha_2},\tau_3).
+\end{aligned}
+$$
+
+Further, we created the matrices containing the value of parameters for i-th analyte, col-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the model code.
+
+$$
+\begin{aligned}
+& logkw_{col,i,r}= f(logkwN_i,clogkwN_{c,i},dlogkwA_{a},cdlogkwA_{c,a}, dlogkwB_{b}, cdlogkwB_{c.b},...) \\
+& S1_{m,col,i,r}  = f(S1mN_i,cS1mN_{c,i}, dS1mA_a, cdS1mA_{c,a}, S1mB_b, cdS1mB_{c,b}, ...\\
+& dS1N_i, cdS1N_{c,i}, ddS1A_a, cddS1A_{c,a}, ddS1B_b, cddS1B_{c,b},...) \\
+& apH_{m,col,i,r} = f(\hat{apH_1},\hat{capH_{c,1}},\hat{apH_2},\hat{capH_{c,2}},...) \\
+& S2_{m} = 10^{f(\hat{logS2m},\hat{dlogS2},...)} \\
+& pKaw_{i,r} = f(pKawA_{a},pKawB_{b},...) \\
+& \alpha_{m,i,r} = f(\alpha mA_{a}, d\alpha A_{a}, \alpha mB_{b}, d\alpha B_{b},...)
+\end{aligned}
+$$
+
+Residual error model assumes different parameters for each column and analyte:
+
+$$
+\begin{aligned}
+& log(\sigma_{col,i}) = f(log\sigma_i, clog\sigma_{c,i}) \\
+& log\sigma_i  \sim N(log(m\sigma),s\sigma) \\
+& clog\sigma_{c,i} \sim N(clogm\sigma_c,cs\sigma_c) \text{ for c=1...4},
+\end{aligned}
+$$
+
+The detailed description of parameters and used priors is provided in the following table (BAV denotes between analyte variability):
+
+```{r results="asis"}
+
+# to properly render in quarto: https://github.com/quarto-dev/quarto-cli/issues/3340
+
+Name = c('$\\hat{logkw}$',
+         '$\\hat{S1m}$',
+         '$\\hat{dS1}$',
+         '$\\beta_1$',
+         '$\\beta_2$',
+         '$\\hat{dlogkw_1}$',
+         '$\\hat{dlogkw_2}$',
+         '$\\hat{dS1m_1}$',
+         '$\\hat{dS1m_2}$',
+         '$\\hat{ddS1_1}$',
+         '$\\hat{ddS1_2}$',
+         '$\\hat{apH_1}$',
+         '$\\hat{apH_2}$',
+         '$\\hat{dlogkT}$',
+         '$\\omega_1$',
+         '$\\omega_2$',
+         '$\\omega_3$',
+         '$\\rho$',
+         '$\\omega_T$',
+         '$\\kappa_1$',
+         '$\\kappa_2$',
+         '$\\kappa_3$',
+         '$\\hat{clogkw_c}$',
+         '$\\hat{cS1m_c}$',
+         '$\\hat{cdS1_c}$',
+         '$c\\beta_{c,1}$',
+         '$c\\beta_{c,2}$',
+         '$\\hat{cdlogkw_{c,1}}$',
+         '$\\hat{cdlogkw_{c,2}}$',
+         '$\\hat{cdS1m_{c,1}}$',
+         '$\\hat{cdS1m_{c,2}}$',
+         '$\\hat{cddS1_{c,1}}$',
+         '$\\hat{cddS1_{c,2}}$',
+         '$\\hat{cdlogkT_c}$',
+         '$capH_{c,1}$',
+         '$capH_{c,2}$',
+         '$c\\omega_{c,1}$',
+         '$c\\omega_{c,2}$',
+         '$c\\omega_{c,3}$',
+         '$c\\kappa_{c,1}$',
+         '$c\\kappa_{c,2}$',
+         '$c\\kappa_{c,3}$',
+         '$c\\omega_{T,c}$',
+         '$\\hat{logS2m}$',
+         '$\\hat{dlogS2}$',
+         '$\\hat{\\alpha m_1}$',
+         '$\\hat{\\alpha m_2}$',
+         '$\\hat{d\\alpha_1}$',
+         '$\\hat{d\\alpha_2}$',
+         '$\\tau_1$',
+         '$\\tau_2$',
+         '$\\tau_3$',
+         '$m\\sigma$',
+         '$s\\sigma$',
+         '$clogmsigma_c$',
+         '$c\\sigma_c$')
+
+Namecode = c('logkwHat',
+         'S1mHat',
+         'dS1Hat',
+         'beta[1]',
+         'beta[2]',
+         'dlogkwHat[1]',
+         'dlogkwHat[2]',
+         'dS1mHat[1]',
+         'dS1mHat[2]',
+         'ddS1Hat[1]',
+         'ddS1Hat[2]',
+         'apH[1]',
+         'apH[2]',
+         'dlogkTHat',
+         'omega[1]',
+         'omega[2]',
+         'omega[3]',
+         'rho[2,1]',
+         'omegaT',
+         'kappa[1]',
+         'kappa[2]',
+         'kappa[3]',
+         'clogkwHat[c]',
+         'cS1mHat[c]',
+         'cdS1Hat[c]',
+         'cbeta[c,1]',
+         'cbeta[c,2]',
+         'cdlogkwHat[c,1]',
+         'cdlogkwHat[c,2]',
+         'cdS1mHat[c,1]',
+         'cdS1mHat[c,2]',
+         'cddS1Hat[c,1]',
+         'cddS1Hat[c,2]',
+         'cdlogkTHat[c]',
+         'capH[c,1]',
+         'capH[c,2]',
+         'comega[c,1]',
+         'comega[c,2]',
+         'comega[c,3]',
+         'ckappa[c,1]',
+         'ckappa[c,2]',
+         'ckappa[c,3]',
+         'comegaT[c]',
+         'logS2mHat',
+         'dlogS2Hat',
+         'alphamHat[1]',
+         'alphamHat[2]',
+         'dalphaHat[1]',
+         'dalphaHat[2]',
+         'tau[1]',
+         'tau[2]',
+         'tau[3]',
+         'msigma',
+         'ssigma',
+         'clogmsigma[c]',
+         'cssigma[c]')
+
+Description = c('typical logkw [Neutral]',
+                'effect of MeOH on logkw [Neutral]',
+                'effect of ACN on S1m [Neutral]',
+                'effect of logP on logkw [Neutral]',
+                'effect of logP on S1m [Neutral]',
+                'effect of dissociation on logkw [Acids]',
+                'effect of dissociation on logkw [Bases]',
+                'effect of dissociation on S1m [Acids]',
+                'effect of dissociation on S1m [Bases]',
+                'effect of dissociation on dS1 [Acids]',
+                'effect of dissociation on dS1 [Bases]',
+                'effect of pH on logkw [Acids]',
+                'effect of pH on logkw [Bases]',
+                'effect of temperature on logkw',
+                'sd of BAV for logkw [Neutral]',
+                'sd of BAV for S1 [Neutral]',
+                'sd of BAV for dS1 [Neutral]',
+                'correlation logkw vs S1 [Neutral]',
+                'sd of BAV for dlogkT [Neutral]',
+                'sd of BAV for dlogkw [Acids and Bases]',
+                'sd of BAV for dS1m [Acids and Bases]',
+                'sd of BAV for ddS1 [Acids and Bases]',
+                'effect of column c on logkw [Neutral]',
+                'effect of column c on S1m [Neutral]',
+                'effect of column c on dS1 [Neutral]',
+                'effect of column c on beta[1] [Neutral]',
+                'effect of column c on beta[2] [Neutral]',
+                'effect of column c on dlogkw [Acids]',
+                'effect of column c on dlogkw [Bases]',
+                'effect of column c on dS1m [Acids]',
+                'effect of column c on dS1m [Bases]',
+                'effect of column c on ddS1 [Acids]',
+                'effect of column c on ddS1 [Bases]',
+                'effect of column c on dlogkwT',
+                'effect of column c on apH [Acids]',
+                'effect of column c on apH [Bases]',
+                'sd of BAV for clogkw [Neutral]',
+                'sd of BAV for cS1 [Neutral]',
+                'sd of BAV for cdS1 [Neutral]',
+                'sd of BAV for cdlogkw [Acids and Bases]',
+                'sd of BAV for cdS1m [Acids and Bases]',
+                'sd of BAV for cddS1 [Acids and Bases]',
+                'sd of BAV for dlogkT',
+                'typical value of S2m (log10 scale)',
+                'effect of ACN on logS2m',
+                'effect of MeOH on pKa [Acids]',
+                'effect of MeOH on pKa [Bases]',
+                'effect of ACN on alpham [Acids]',
+                'effect of ACN on alpham [Bases]',
+                'sd of BAV for pKalit',
+                'sd of BAV for alpham',
+                'sd of BAV for dalpha',
+                'typical sd of residuals for XBridge',
+                'sd of BAV of residuals for XBridge',
+                'effect of column c on msigma (log scale)',
+                'sd of BAV of residuals for column c'
+                )
+
+
+Priors = c('N(2.2,2)',
+         'N(4, 1)',
+         'N(1, 1)',
+         'N(1, 0.125)',
+         'N(0.5, 0.5)',
+         'N(-1, 0.125)',
+         'N(-1, 0.125)',
+         'N(0, 0.5)',
+         'N(0, 0.5)',
+         'N(0, 0.25)',
+         'N(0, 0.25)',
+         'N(0, 0.1)',
+         'N(0, 0.1)',
+         'N(-0.087, 0.022)',
+         'N+(0, 2)',
+         'N+(0, 2)',
+         'N+(0, 2)',
+         'LKJCORRN(0.75, 0.125)',
+         'N+(0, 0.022)',
+         'N+(0, 0.25)',
+         'N+(0, 0.25)',
+         'N+(0, 0.25)',
+         'N(0, 1)',
+         'N(0, 0.5)',
+         'N(0, 0.5)',
+         'N(0, 0.25)',
+         'N(0, 0.25)',
+         'N(0, 0.0625)',
+         'N(0, 0.0625)',
+         'N(0, 0.25)',
+         'N(0, 0.25)',
+         'N(0, 0.125)',
+         'N(0, 0.125)',
+         'N(0, 0.011)',
+         'N(0, 0.05)',
+         'N(0, 0.05)',
+         'N+(0, 1)',
+         'N+(0, 1)',
+         'N+(0, 1)',
+         'N+(0, 0.125)',
+         'N+(0, 0.125)',
+         'N+(0, 0.125)',
+         'N+(0, 0.011)',
+         'N(-0.7, 0.125);',
+         'N(1, 0.125);',
+         'N(2, 0.25)',
+         'N(-1, 0.25)',
+         'N(0, 0.125)',
+         'N(0, 0.125)',
+         'N+(0, 0.25)',
+         'N+(0, 0.125)',
+         'N+(0, 0.125)',
+         'N+(0,1)',
+         'N(0,1)',
+         'N+(0,125)',
+         'N+(0,125)')
+
+table_of_parameters = data.frame(Name,Namecode,Description,Priors)
+
+
+table_of_parameters %>%
+kableExtra::kbl(caption = "Desciption of model paramters", escape = FALSE, longtable=TRUE) %>%
+kableExtra::kable_classic(full_width = F, html_font = "Cambria") %>%
+kableExtra::kable_styling(latex_options = c("repeat_header")) %>%
+ kableExtra::pack_rows("XBridge Shield RP18 parameters", 1, 22) %>%
+ kableExtra::pack_rows("between column differences", 23, 43) %>%
+ kableExtra::pack_rows("S2", 44, 45) %>%
+ kableExtra::pack_rows("pKa", 46, 52) %>%
+ kableExtra::pack_rows("Residuals", 53, 56) %>%
+ unclass() %>%
+ cat()
+ 
+```
+
+{{< pagebreak >}}
+
+# Table S1. Summary of the MCMC simulations of the marginal posterior distributions of population-level model parameters. 
+
+Mean denotes sample mean, MCSE denotes Monte Carlo Standard Error, StdDev denotes sample standard deviation, 5%, 50%, 95% denote corresponding quantiles, N_Eff denotes effective sample size, R_Hat denotes a measure of chain equilibrium, must be within 0.05 of 1.0.
+
+```{r}
+fit <- cmdstanr::as_cmdstan_fit(c(
+                                  '../stanfiles/output_1.csv',
+                                  '../stanfiles/output_2.csv',
+                                  '../stanfiles/output_3.csv',
+                                  '../stanfiles/output_4.csv',
+                                  '../stanfiles/output_5.csv',
+                                  '../stanfiles/output_6.csv',
+                                  '../stanfiles/output_7.csv',
+                                  '../stanfiles/output_8.csv'
+                                ))
+```
+
+```{r}
+fit$print(c("logkwHat","S1mHat","dS1Hat",
+            "dlogkwHat","dS1mHat","ddS1Hat",
+            "logS2mHat","dlogS2Hat",
+            "beta",
+            "dlogkTHat","apH",
+            "omega","omegaT", "kappa",
+            "rho[2,1]",
+            "msigma","ssigma"), max_rows = 26)
+
+fit$print(c("alphamHat","dalphaHat",
+            "tau"), max_rows = 7)
+
+fit$print(c("clogkwHat","cS1mHat","cdS1Hat",
+            "cdlogkwHat","cdS1mHat","cddS1Hat",
+            "cbeta",
+            "cdlogkTHat",
+            "capH",
+            "comega", "ckappa", "comegaT",
+            "clogmsigma","cssigma"), max_rows = 92)
+
+```
+
+
+{{< pagebreak >}}
+
+# Figure S1. Raw data for 6 selected analytes.
+
+![](../figures/rawdata/Acridine.png)
+{{< pagebreak >}}
+![](../figures/rawdata/Baclofen.png)
+
+{{< pagebreak >}}
+![](../figures/rawdata/Hydrocortisone.png)
+
+{{< pagebreak >}}
+![](../figures/rawdata/Pioglitazone.png)
+{{< pagebreak >}}
+![](../figures/rawdata/Quinine.png)
+
+{{< pagebreak >}}
+![](../figures/rawdata/Tolbutamide.png)
+
+{{< pagebreak >}}
+
+# Figure S2. Summary of the MCMC simulations of the marginal posterior distributions of population-level model parameters. 
+
+![](../figures/param/Paramteres.XBridgeShieldRP18_1.png)
+{{< pagebreak >}}
+![](../figures/param/Paramteres.XBridgeShieldRP18_2.png)
+{{< pagebreak >}}
+![](../figures/param/Difference_1.png)
+{{< pagebreak >}}
+
+# Figure S3. Goodness of fit plots
+
+![](../figures/concordanceplots/residuals.png)
+{{< pagebreak >}}
+![](../figures/concordanceplots/individual.png)
+
+{{< pagebreak >}}
+![](../figures/concordanceplots/population.png)
+
+{{< pagebreak >}}
+
+# Figure S4. Individual gradient predictions.
+
+Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given the population-level parameters and all the retention data measured for a particular analyte.
+
+![](../figures/concordanceplots/Acridine.individual.png)
+{{< pagebreak >}}
+![](../figures/concordanceplots/Baclofen.individual.png)
+
+{{< pagebreak >}}
+![](../figures/concordanceplots/Hydrocortisone.individual.png)
+
+{{< pagebreak >}}
+![](../figures/concordanceplots/Pioglitazone.individual.png)
+{{< pagebreak >}}
+![](../figures/concordanceplots/Quinine.individual.png)
+
+{{< pagebreak >}}
+![](../figures/concordanceplots/Tolbutamide.individual.png)
+{{< pagebreak >}}
+# Figure S5. Population gradient predictions.
+
+Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given only population-level parameters and predictors (logP and pKa).
+
+![](../figures/concordanceplots/Acridine.population.png)
+{{< pagebreak >}}
+![](../figures/concordanceplots/Baclofen.population.png)
+
+{{< pagebreak >}}
+![](../figures/concordanceplots/Hydrocortisone.population.png)
+
+{{< pagebreak >}}
+![](../figures/concordanceplots/Pioglitazone.population.png)
+{{< pagebreak >}}
+![](../figures/concordanceplots/Quinine.population.png)
+
+{{< pagebreak >}}
+![](../figures/concordanceplots/Tolbutamide.population.png)
+{{< pagebreak >}}
+# Figure S6. Uncertainity chromatograms
+
+![](../figures/concordanceplots/uncertainitychromatogram.individual.png)
+{{< pagebreak >}}
+![](../figures/concordanceplots/uncertainitychromatogram.population.png)
+
+{{< pagebreak >}}
+
+# Licenses {.unnumbered}
+
+-   Code & copy; 2023, Paweł Wiczling, licensed under BSD-3.
+-   Text & copy; 2023, Paweł Wiczling, licensed under CC-BY-NC 4.0.
+
+# Original Computing Environment {.unnumbered}
+
+```{r}
+sessionInfo()
+```

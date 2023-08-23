@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Paweł Wiczling, Agnieszka Kamedulska">
-<meta name="dcterms.date" content="2023-08-22">
+<meta name="dcterms.date" content="2023-08-23">
 
 <title>Comparison of chromatographic stationary phases using Bayesian-based multilevel modeling</title>
 <style>
@@ -205,7 +205,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 22, 2023</p>
+      <p class="date">August 23, 2023</p>
     </div>
   </div>
   
@@ -3893,7 +3893,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <section id="isocratic-predictions" class="level2">
 <h2 class="anchored" data-anchor-id="isocratic-predictions">Isocratic predictions</h2>
 <p>To better asses the impact of parameters on retention we created graphs presenting the isocratic logarithm of retention factor vs.&nbsp;<span class="math inline">\(\varphi\)</span> for selected analytes. Separate graphs are shown for each dissociation form (r=1,r=2,r=3). Here the individual predictions (given all the data) are shown:</p>
-<div class="cell" data-hash="index_cache/html/unnamed-chunk-38_01baf4cf91c1f1b18a1961e7f8dd7cba">
+<div class="cell" data-hash="index_cache/html/unnamed-chunk-38_c964be547ab0cee7c0de7e63c300868f">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>analyte_ID_sample <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">17</span>,<span class="dv">33</span>,<span class="dv">58</span>,<span class="dv">140</span>,<span class="dv">180</span>)</span>
@@ -3967,7 +3967,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb51-69"><a href="#cb51-69" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb51-70"><a href="#cb51-70" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
 <span id="cb51-71"><a href="#cb51-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-72"><a href="#cb51-72" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".IsocraticPredictions"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb51-72"><a href="#cb51-72" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".isopred.individual"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb51-73"><a href="#cb51-73" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb51-74"><a href="#cb51-74" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb51-75"><a href="#cb51-75" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3998,7 +3998,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 </details>
 </div>
 <p>Similarly we can quantify the column effects (between column differences in logk using XBridge Shield RP18 as a reference column):</p>
-<div class="cell" data-hash="index_cache/html/unnamed-chunk-39_ee4eacf22c0446ab8697175d3beec554">
+<div class="cell" data-hash="index_cache/html/unnamed-chunk-39_43dc11d598577d5bf9077d1e3681a554">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>analyte_ID_sample <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">17</span>,<span class="dv">33</span>,<span class="dv">58</span>,<span class="dv">140</span>,<span class="dv">180</span>)</span>
@@ -4080,7 +4080,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb53-77"><a href="#cb53-77" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb53-78"><a href="#cb53-78" aria-hidden="true" tabindex="-1"></a> <span class="fu">print</span>(p)</span>
 <span id="cb53-79"><a href="#cb53-79" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb53-80"><a href="#cb53-80" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".IsocraticDifferences"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb53-80"><a href="#cb53-80" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".diff.individual"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb53-81"><a href="#cb53-81" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb53-82"><a href="#cb53-82" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb53-83"><a href="#cb53-83" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -4105,7 +4105,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 </div>
 </div>
 <p>or predict the organic modifier content leading to logk of 1:</p>
-<div class="cell" data-hash="index_cache/html/unnamed-chunk-40_7e00cfe945747e2a44fb52ea2b1b6eab">
+<div class="cell" data-hash="index_cache/html/unnamed-chunk-40_7e44c86adaabe2d3173ace6e90f9bf49">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>analyte_ID_sample <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">17</span>,<span class="dv">33</span>,<span class="dv">58</span>,<span class="dv">140</span>,<span class="dv">180</span>)</span>
@@ -4183,7 +4183,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb54-73"><a href="#cb54-73" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb54-74"><a href="#cb54-74" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
 <span id="cb54-75"><a href="#cb54-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-76"><a href="#cb54-76" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".filogk1"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb54-76"><a href="#cb54-76" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".filogk1.individual"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb54-77"><a href="#cb54-77" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
@@ -5295,7 +5295,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 </div>
 </div>
 <p>Similarly we can quantify the column effects (between column differences in logk using XBridge Shield RP18 as a reference column):</p>
-<div class="cell" data-hash="index_cache/html/unnamed-chunk-64_d7e0f40ba32d8ae478690b4021e69246">
+<div class="cell" data-hash="index_cache/html/unnamed-chunk-64_e8e585b2f132e621991128cbd8c9043e">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>analyte_ID_sample <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">17</span>,<span class="dv">33</span>,<span class="dv">58</span>,<span class="dv">140</span>,<span class="dv">180</span>)</span>
@@ -5377,7 +5377,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb95-77"><a href="#cb95-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),<span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
 <span id="cb95-78"><a href="#cb95-78" aria-hidden="true" tabindex="-1"></a> <span class="fu">print</span>(p)</span>
 <span id="cb95-79"><a href="#cb95-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb95-80"><a href="#cb95-80" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">"isodifferences.population"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb95-80"><a href="#cb95-80" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".diff.population"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb95-81"><a href="#cb95-81" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb95-82"><a href="#cb95-82" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -5401,7 +5401,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 </div>
 </div>
 <p>or predict the organic modifier content leading to logk of 1:</p>
-<div class="cell" data-hash="index_cache/html/unnamed-chunk-65_a45273240cbea31e041dec764fa33f8c">
+<div class="cell" data-hash="index_cache/html/unnamed-chunk-65_97f8f2851fd8e257d7a116b67e222e08">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>analyte_ID_sample <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">17</span>,<span class="dv">33</span>,<span class="dv">58</span>,<span class="dv">140</span>,<span class="dv">180</span>)</span>
@@ -5475,7 +5475,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb96-69"><a href="#cb96-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">labels=</span> <span class="fu">c</span>(<span class="st">"XBridge Shield RP18"</span>,<span class="st">"XTerra MS C18"</span>, <span class="st">"XBridge Phenyl"</span>, <span class="st">"XBridge C8"</span>, <span class="st">"Xterra MS C8"</span>))<span class="sc">+</span></span>
 <span id="cb96-70"><a href="#cb96-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(m<span class="sc">~</span>r, <span class="at">nrow =</span> <span class="dv">2</span>,<span class="at">labeller =</span> <span class="fu">labeller</span>(<span class="at">m=</span>mod.labs,<span class="at">r=</span>diss.labs))</span>
 <span id="cb96-71"><a href="#cb96-71" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
-<span id="cb96-72"><a href="#cb96-72" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">"filogk1.population"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb96-72"><a href="#cb96-72" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".filogk1.population"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb96-73"><a href="#cb96-73" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
@@ -6391,7 +6391,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <section id="plot-the-predicted-vs.-observed" class="level3">
 <h3 class="anchored" data-anchor-id="plot-the-predicted-vs.-observed">Plot the predicted vs.&nbsp;observed:</h3>
-<div class="cell" data-hash="index_cache/html/unnamed-chunk-87_a3da5ea910fb1ba59e739098777ca74c">
+<div class="cell" data-hash="index_cache/html/unnamed-chunk-87_5c126c99770c3479af09aee2ff53d881">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a>tr_sim_red_Cond <span class="ot">&lt;-</span> <span class="fu">apply</span>(draws_sim_red_df[,<span class="fu">which</span>(<span class="fu">colnames</span>(draws_sim_red_df) <span class="sc">%in%</span> <span class="fu">grep</span>(<span class="st">"^trCond"</span>, <span class="fu">names</span>(draws_sim_red_df), <span class="at">value =</span> <span class="cn">TRUE</span>))], <span class="at">MARGIN =</span> <span class="dv">2</span>, <span class="at">FUN =</span> quantile, <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">05</span>,.<span class="dv">5</span>,.<span class="dv">95</span>))</span>
@@ -6429,7 +6429,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <span id="cb138-33"><a href="#cb138-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb138-34"><a href="#cb138-34" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pi)</span>
 <span id="cb138-35"><a href="#cb138-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb138-36"><a href="#cb138-36" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">concordanceplots</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".IndividualPredictions"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>pi, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb138-36"><a href="#cb138-36" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">concordanceplots</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".png"</span>), <span class="at">plot=</span>pi, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb138-37"><a href="#cb138-37" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb138-38"><a href="#cb138-38" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -6457,7 +6457,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <section id="decision-making" class="level2">
 <h2 class="anchored" data-anchor-id="decision-making">Decision making</h2>
 <p>The same utility function was used:</p>
-<div class="cell" data-hash="index_cache/html/unnamed-chunk-88_2f7d972ee031b29508225cc41f665215">
+<div class="cell" data-hash="index_cache/html/unnamed-chunk-88_134066826e4356d7099182fcd4fdc97e">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>foo<span class="ot">&lt;-</span>datasim_red[<span class="sc">!</span><span class="fu">duplicated</span>(datasim_red<span class="sc">$</span>expid),]</span>
@@ -6538,8 +6538,8 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">decision</span><span class="sc">\\</span><span class="st">"</span>, <span class="st">"ExpectedUtility"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p1, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
-<span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">decision</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"Resolution"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p2, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">decision</span><span class="sc">\\</span><span class="st">"</span>, <span class="st">"expectedutility"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p1, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">decision</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"resolution"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p2, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb142-3"><a href="#cb142-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">decision</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"maxtr"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p3, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb142-4"><a href="#cb142-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb142-5"><a href="#cb142-5" aria-hidden="true" tabindex="-1"></a> <span class="co"># The best for XBridge Shield RP18</span></span>
@@ -9463,7 +9463,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb176-2123"><a href="#cb176-2123" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-2124"><a href="#cb176-2124" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
 <span id="cb176-2125"><a href="#cb176-2125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb176-2126"><a href="#cb176-2126" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".IsocraticPredictions"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb176-2126"><a href="#cb176-2126" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".isopred.individual"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb176-2127"><a href="#cb176-2127" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-2128"><a href="#cb176-2128" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-2129"><a href="#cb176-2129" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -9555,7 +9555,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb176-2217"><a href="#cb176-2217" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-2218"><a href="#cb176-2218" aria-hidden="true" tabindex="-1"></a> <span class="fu">print</span>(p)</span>
 <span id="cb176-2219"><a href="#cb176-2219" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb176-2220"><a href="#cb176-2220" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".IsocraticDifferences"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb176-2220"><a href="#cb176-2220" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".diff.individual"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb176-2221"><a href="#cb176-2221" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-2222"><a href="#cb176-2222" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-2223"><a href="#cb176-2223" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -9640,7 +9640,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb176-2304"><a href="#cb176-2304" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-2305"><a href="#cb176-2305" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
 <span id="cb176-2306"><a href="#cb176-2306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb176-2307"><a href="#cb176-2307" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".filogk1"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb176-2307"><a href="#cb176-2307" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".filogk1.individual"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb176-2308"><a href="#cb176-2308" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb176-2309"><a href="#cb176-2309" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb176-2310"><a href="#cb176-2310" aria-hidden="true" tabindex="-1"></a></span>
@@ -10583,7 +10583,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb176-3289"><a href="#cb176-3289" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),<span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
 <span id="cb176-3290"><a href="#cb176-3290" aria-hidden="true" tabindex="-1"></a> <span class="fu">print</span>(p)</span>
 <span id="cb176-3291"><a href="#cb176-3291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb176-3292"><a href="#cb176-3292" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">"isodifferences.population"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb176-3292"><a href="#cb176-3292" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".diff.population"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb176-3293"><a href="#cb176-3293" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-3294"><a href="#cb176-3294" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb176-3295"><a href="#cb176-3295" aria-hidden="true" tabindex="-1"></a></span>
@@ -10663,7 +10663,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb176-3371"><a href="#cb176-3371" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">labels=</span> <span class="fu">c</span>(<span class="st">"XBridge Shield RP18"</span>,<span class="st">"XTerra MS C18"</span>, <span class="st">"XBridge Phenyl"</span>, <span class="st">"XBridge C8"</span>, <span class="st">"Xterra MS C8"</span>))<span class="sc">+</span></span>
 <span id="cb176-3372"><a href="#cb176-3372" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(m<span class="sc">~</span>r, <span class="at">nrow =</span> <span class="dv">2</span>,<span class="at">labeller =</span> <span class="fu">labeller</span>(<span class="at">m=</span>mod.labs,<span class="at">r=</span>diss.labs))</span>
 <span id="cb176-3373"><a href="#cb176-3373" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
-<span id="cb176-3374"><a href="#cb176-3374" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">"filogk1.population"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb176-3374"><a href="#cb176-3374" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">izoparam</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".filogk1.population"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb176-3375"><a href="#cb176-3375" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb176-3376"><a href="#cb176-3376" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-3377"><a href="#cb176-3377" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
@@ -11461,7 +11461,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb176-4201"><a href="#cb176-4201" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-4202"><a href="#cb176-4202" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pi)</span>
 <span id="cb176-4203"><a href="#cb176-4203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb176-4204"><a href="#cb176-4204" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">concordanceplots</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".IndividualPredictions"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>pi, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb176-4204"><a href="#cb176-4204" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">concordanceplots</span><span class="sc">\\</span><span class="st">"</span>, <span class="fu">paste</span>(dataNames<span class="sc">$</span>Name[analyte_ID_sample[i]]), <span class="st">".png"</span>), <span class="at">plot=</span>pi, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb176-4205"><a href="#cb176-4205" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-4206"><a href="#cb176-4206" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb176-4207"><a href="#cb176-4207" aria-hidden="true" tabindex="-1"></a></span>
@@ -11535,8 +11535,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb176-4277"><a href="#cb176-4277" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-4278"><a href="#cb176-4278" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p3)</span>
 <span id="cb176-4279"><a href="#cb176-4279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb176-4280"><a href="#cb176-4280" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">decision</span><span class="sc">\\</span><span class="st">"</span>, <span class="st">"ExpectedUtility"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p1, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
-<span id="cb176-4281"><a href="#cb176-4281" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">decision</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"Resolution"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p2, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb176-4280"><a href="#cb176-4280" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">decision</span><span class="sc">\\</span><span class="st">"</span>, <span class="st">"expectedutility"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p1, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb176-4281"><a href="#cb176-4281" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">decision</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"resolution"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p2, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb176-4282"><a href="#cb176-4282" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">decision</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"maxtr"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p3, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
 <span id="cb176-4283"><a href="#cb176-4283" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb176-4284"><a href="#cb176-4284" aria-hidden="true" tabindex="-1"></a> <span class="co"># The best for XBridge Shield RP18</span></span>
