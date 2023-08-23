@@ -32,8 +32,10 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 # selected folders
+/manuscript/stare/
 /papers/
 /stanfiles/
+/index_files/
 stanfiles/*.csv
 # large and compiled files
 *.exe
