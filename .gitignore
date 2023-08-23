@@ -32,7 +32,6 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 # selected folders
-/manuscript/stare/
 /papers/
 /stanfiles/
 /index_files/
