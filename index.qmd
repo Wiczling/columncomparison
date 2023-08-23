@@ -3,6 +3,20 @@ title: "Comparison of chromatographic stationary phases using Bayesian-based mul
 author: "Paweł Wiczling, Agnieszka Kamedulska"
 adress: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
 date: "`r format(Sys.Date())`"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+    code-tools: true
+    fig-width: 7
+    fig-height: 7
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+    fig-width: 7
+    fig-height: 7
 ---
 
 ```{r setup, include=FALSE}
@@ -19,7 +33,7 @@ In this case study, we compared five RP-HPLC stationary phases (XBridge Shield R
 
 The data was collected using a mixture of 300 analytes and 84 gradient liquid chromatography experiments for each column. The experiments differed in gradient duration (30, 90, and 270 min) and pH of the mobile phase (from 2.5 to 10.5). Experiments were conducted in MeOH or ACN as organic modifiers and at two temperatures ($\small 25^0C$ and $\small 35^0C$).
 
-The molecular structure of the analytes was converted from SMILE format to MDL mol format using OpenBabel. The input molecules were then analyzed for the presence of approxi-mately 204 functional groups and structural elements using Checkmol (version 0.5b N. Haider, University of Vienna, 2003-2018). Functional groups that were not present on any analyte and functional groups merging other simpler functional groups were excluded from the analysis. The lipophilicity (log P), dissociation constant (pKalit) were added to the dataset. They were calculated using ACD/Labs program based on the structures of analytes generated from smiles strings.
+The molecular structure of the analytes was converted from SMILE format to MDL mol format using OpenBabel. The input molecules were then analyzed for the presence of approximately 204 functional groups and structural elements using Checkmol (version 0.5b N. Haider, University of Vienna, 2003-2018). Functional groups that were not present on any analyte and functional groups merging other simpler functional groups were excluded from the analysis. The lipophilicity (log P), dissociation constant (pKalit) were added to the dataset. They were calculated using ACD/Labs program based on the structures of analytes generated from smiles strings.
 
 # Setup
 
@@ -624,7 +638,7 @@ Priors = c('N(2.2,2)',
          'N+(0, 2)',
          'N+(0, 2)',
          'N+(0, 2)',
-         'LKJ_CORR_N(0.75, 0.125)',
+         'LKJCORRN(0.75, 0.125)',
          'N+(0, 0.022)',
          'N+(0, 0.25)',
          'N+(0, 0.25)',
@@ -668,8 +682,9 @@ table_of_parameters = data.frame(Name,Namecode,Description,Priors)
 
 
 table_of_parameters %>%
-kableExtra::kbl(caption = "Desciption of model paramters", escape = FALSE) %>%
+kableExtra::kbl(caption = "Desciption of model paramters", escape = FALSE, longtable=TRUE) %>%
 kableExtra::kable_classic(full_width = F, html_font = "Cambria") %>%
+kableExtra::kable_styling(latex_options = c("repeat_header")) %>%
  kableExtra::pack_rows("XBridge Shield RP18 parameters", 1, 22) %>%
  kableExtra::pack_rows("between column differences", 23, 43) %>%
  kableExtra::pack_rows("S2", 44, 45) %>%
