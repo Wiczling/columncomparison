@@ -51,7 +51,7 @@ The molecular structure of the analytes was converted from SMILE format to MDL m
 
 The packages we will use are listed below.
 
-```{r}
+```{r setup}
 library(pracma)
 library(dplyr)
 library(ggplot2)
@@ -75,7 +75,7 @@ Data can be accessed via github (data folder) or osf.io repositories [@kubik_XBr
 
 We will begin with loading and merging all the required datasets:
 
-```{r}
+```{r loaddata}
 data1 = read.csv('data/1-X_Bridge_Shield_C18_5cm.csv')
 data2 = read.csv('data/1-XTerra_MS_C18.csv')
 data3 = read.csv('data/1-X_Bridge_Phenyl.csv')
@@ -118,7 +118,7 @@ The data requires some cleaning:
 
 1.  we remove measurements with low score, analytes with less than 42 measurements per column, analytes with less than 210 measurements out of total 420, and use only measurements with the highest score (if several are present)
 
-```{r}
+```{r cleaning1}
 data <- data  %>%
   subset(Score>95) %>%
   group_by(METID,EXPID,Column) %>%
@@ -135,7 +135,7 @@ data <- data  %>%
 
 2.  we remove some outlying measurements (mismatch between literature pKa and observed data)
 
-```{r}
+```{r cleaning2}
 data <- data %>%  
   subset(METID!=72) %>%  # dilevalol is repeated in the dataset
   subset(!(tg==270 & Temp==25 & Mod2==1 & pH==5)) %>% 
@@ -148,7 +148,7 @@ data <- data %>%
 
 3.  we also prepare available predictors: pKa, logP and functional_groups
 
-```{r}
+```{r cleaning3}
 pKaslit = dataACD[,3:7]           # pKa values as predicted by ACD
 pKasliterror = dataACD[,25:29]    # pKa error as predicted by ACD
 chargesA = abs(dataACD[,13:18])   # number of ionized groups (anions)
@@ -177,7 +177,7 @@ rm(idx_included)
 
 4.  finally, we select analytes with \<=2 dissociation steps fot the analysis
 
-```{r}
+```{r cleaning4}
 maxR <- 2         
 idx <- which(dataACD$METID %in% data$METID)
  # max two dissociation steps        
@@ -237,9 +237,6 @@ names(diss.labs) <- c('1','2','3')
 
 During the exploratory data analysis phase, we create a series of plots to better understand our data.
 
-
-
-
 ### Plots
 
 The following graphs present retention time profiles for 6 analytes:
@@ -253,7 +250,7 @@ The following graphs present retention time profiles for 6 analytes:
 
 The vertical lines show ACD-based pKa values (solid line: acidic group; dotted line: basic group)
 
-```{r}
+```{r rawdata}
 
 analyte_ID_sample <- c(9,17,33,58,140,180)
 #analyte_ID_sample <-unique(data$METID) # if all
@@ -281,8 +278,6 @@ ggsave(paste0("figures\\rawdata\\", paste(dataNames$Name[analyte_ID_sample[i]]),
 
 ```
 
-
-
 ### Summary of the data
 
 1.  Number of identified analytes: `r nAnalytes`
@@ -292,7 +287,7 @@ ggsave(paste0("figures\\rawdata\\", paste(dataNames$Name[analyte_ID_sample[i]]),
 5.  Number of acidic and basic groups: `r round(length(pKaslitA),2)` and `r round(length(pKaslitB),2)`
 6.  Number of functional groups across all analytes included in the analysis:
 
-```{r}
+```{r functionalgroups}
 p<-totalnrgroups %>% tidyr::gather("Name", "count", 1:54)  %>% 
    ggplot(., aes(x=count, y=reorder(Name,count)))+
    geom_point()+
@@ -456,7 +451,7 @@ $$
 
 The detailed description of parameters and used priors is provided in the following table (BAV denotes between analyte variability):
 
-```{r results="asis"}
+```{r table, results="asis"}
 
 # to properly render in quarto: https://github.com/quarto-dev/quarto-cli/issues/3340
 
@@ -713,7 +708,7 @@ Multilevel modeling was performed in [Stan software](https://mc-stan.org/) linke
 
 ### Initialize variables and parameters
 
-```{r}
+```{r stansetup}
 # create Stan data set:
 
 datastruct <- with(data,
@@ -817,7 +812,7 @@ init <- function(){
 
 ### The Stan model:
 
-```{r}
+```{r stancode}
 writeLines(readLines("stan/hplc-gra-fivecolumns.stan"))
 ```
 
@@ -825,7 +820,7 @@ writeLines(readLines("stan/hplc-gra-fivecolumns.stan"))
 
 Compile the model:
 
-```{r eval = FALSE}
+```{r stancompile, eval = FALSE}
 mod1 <- cmdstan_model("stan/hplc-gra-fivecolumns.stan", 
                       stanc_options = list("O1"), 
                       cpp_options = list(stan_threads = TRUE))
@@ -836,7 +831,7 @@ modode <- cmdstan_model("stan/hplc-gra-fivecolumns.stan",
 
 The optimization was used for initial testing:
 
-```{r eval = FALSE}
+```{r stanoptimize, eval = FALSE}
 fit_ode <- modode$optimize(
   data = datastruct,
   output_dir = "stanfiles",
@@ -848,7 +843,7 @@ fit_ode$print(max_rows=100)
 
 For local computations one can use cmdstanr:
 
-```{r eval = FALSE}
+```{r stansample, eval = FALSE}
 # fit <- mod1$sample(
 #   data = datastruct,
 #   output_dir = "stanfiles",
@@ -867,7 +862,7 @@ We performed computations at the Academic Computer Center in Gdańsk, [Tryton Cl
 
 1.  we dumped the necessary data to .json format
 
-```{r eval = FALSE}
+```{r dumpfiles, eval = FALSE}
 write_stan_json(datastruct, "stan/standata.json", always_decimal = FALSE)
 write_stan_json(init(), "stan/init-1.json", always_decimal = FALSE)
 write_stan_json(init(), "stan/init-2.json", always_decimal = FALSE)
@@ -905,7 +900,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 
 3.  After calculations, we loaded the output files using cmdstanr. The files are accessible through [stan output files](https://cloud.gumed.edu.pl/s/MbHmekcg79w4ot4 "Stan output files").
 
-```{r}
+```{r stanload}
 fit <- cmdstanr::as_cmdstan_fit(c(
                                   'stanfiles/output_1.csv',
                                   'stanfiles/output_2.csv',
@@ -920,7 +915,7 @@ fit <- cmdstanr::as_cmdstan_fit(c(
 
 4.  finally we checked the diagnostics of Monte Carlo inferences based on the Stan documentation described here [](https://mc-stan.org/docs/cmdstan-guide/diagnose.html).
 
-```{r eval = FALSE}
+```{r standiagnose, eval = FALSE}
  #fit$cmdstan_diagnose()
  setwd("stanfiles")
  str = paste0(cmdstan_path(), "/bin/diagnose  output_*.csv")
@@ -959,7 +954,7 @@ The diagnostics are reasonable given model complexity. Output copied here to sav
 
 ## Summary of model parameters (table):
 
-```{r}
+```{r tbl-summary}
 # fit$print(max_rows=200) # for first 200 parameters
 
 fit$print(c("logkwHat","S1mHat","dS1Hat",
@@ -987,7 +982,7 @@ fit$print(c("clogkwHat","cS1mHat","cdS1Hat",
 
 The summary can also be extracted for individual parameters. Here presented for analyte 9 (`r dataNames$Name[9]`)
 
-```{r}
+```{r tbl-isummary}
 # which(unique(data$METID)==9) - 3rd compound in stan
 fit$print(c("logkwx[3,1,1]", "logkwx[3,1,2]", "logkwx[3,1,3]",
             "logkwx[3,2,1]", "logkwx[3,2,2]", "logkwx[3,2,3]",
@@ -1003,7 +998,7 @@ fit$print(c("logkwx[3,1,1]", "logkwx[3,1,2]", "logkwx[3,1,3]",
                 "sigmax[3,1]", "sigmax[3,2]"), max_rows = 31)
 ```
 
-```{r eval = FALSE, echo=FALSE}
+```{r summary2, eval = FALSE, echo=FALSE}
  x<-fit$summary(variables = c("logkwHat","S1mHat","dS1Hat",
              "dlogkwHat","dS1mHat","ddS1Hat",
              "logS2mHat","dlogS2Hat",
@@ -1020,7 +1015,7 @@ fit$print(c("logkwx[3,1,1]", "logkwx[3,1,2]", "logkwx[3,1,3]",
              "cdlogkTHat",
              "capH",
              "comega", "ckappa", "comegaT",
-             "clogmsigma","cssigma", "rho[2,1]", "crho"), "mean", "sd")
+             "clogmsigma","cssigma", "rho[2,1]", "corr_L"), "mean", "sd")
 
   print(x, n=141)
 ```
@@ -1029,15 +1024,15 @@ fit$print(c("logkwx[3,1,1]", "logkwx[3,1,2]", "logkwx[3,1,3]",
 
 Several trace plots are shown.
 
-```{r include=TRUE}
-bayesplot::mcmc_trace(fit$draws(c("logkwHat","S1mHat","dS1Hat","cdS1Hat"))) 
+```{r traceplots, include=TRUE}
+bayesplot::mcmc_trace(fit$draws(c("logkwHat","S1mHat","dS1Hat","clogkwHat","cS1mHat","cdS1Hat"))) 
 ```
 
 ## Summary of model parameters (figures)
 
 First plot presents parameter specific for XBridge Shield RP18 column and parameters common for all the columns:
 
-```{r include=TRUE}
+```{r fig-summary, include=TRUE}
 
 p1<-bayesplot::mcmc_intervals(fit$draws(c("logkwHat","S1mHat","dS1Hat","dlogkwHat",
                                   "dlogkTHat", "dS1mHat","ddS1Hat","logS2mHat","dlogS2Hat","beta",
@@ -1045,8 +1040,8 @@ p1<-bayesplot::mcmc_intervals(fit$draws(c("logkwHat","S1mHat","dS1Hat","dlogkwHa
 
 p2<-bayesplot::mcmc_intervals(fit$draws(c("omega","omegaT","kappa","msigma","ssigma", "tau","rho[2,1]")), point_size = 2)
 
-ggsave(paste0("figures\\param\\", "Paramteres.XBridgeShieldRP18_1", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\param\\", "Paramteres.XBridgeShieldRP18_2", ".png"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "XBridgeShieldRP18_1", ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "XBridgeShieldRP18_2", ".png"), plot=p2, width = 20, height = 20, units = "cm")
 
 print(p1)
 print(p2)
@@ -1055,7 +1050,7 @@ print(p2)
 
 Column effects relative to XBridge Shield RP18 column:
 
-```{r include=TRUE}
+```{r columneffects1, include=TRUE}
 p1<-bayesplot::mcmc_intervals(fit$draws(c("clogkwHat[1]","cS1mHat[1]","cdS1Hat[1]",
             "cdlogkwHat[1,1]", "cdlogkwHat[1,2]",
             "cdS1mHat[1,1]","cdS1mHat[1,2]", 
@@ -1130,11 +1125,11 @@ p=grid.arrange(p1+ggtitle("XTerra MS C18"),
                p4+ggtitle("Xterra MS C8"), ncol=4, widths=c(1.75,1,1,1))
 
 
-ggsave(paste0("figures\\param\\", "Difference_1", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "columneffects1", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
-```{r include=TRUE}
+```{r columneffects2, include=TRUE}
 p1<-bayesplot::mcmc_intervals(fit$draws(c("comega[1,1]",
                                           "comega[1,2]",
                                           "comega[1,3]",
@@ -1195,13 +1190,13 @@ p=grid.arrange(p1+ggtitle("XTerra MS C18"),
                p4+ggtitle("Xterra MS C8"), ncol=4, widths=c(1.75,1,1,1))
 
 
-ggsave(paste0("figures\\param\\", "Difference_2", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "columneffects2", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
 Parameters characterizing columns:
 
-```{r}
+```{r fig-clogkw}
 draws_df_subset <- fit$draws(format = "df", variable = c("clogkwHat","cdlogkwHat"))
 
 Neutral_results <-draws_df_subset %>%
@@ -1258,12 +1253,9 @@ p1<-bind_rows(Neutral_results, Acids_results, Basic_results) %>%
    ylab(' ') +
    xlab("Typical clogkw")
 
-
-print(p1)
-
 ```
 
-```{r}
+```{r fig-cS1}
 draws_df_subset <- fit$draws(format = "df", variable = c("S1mHat","cS1mHat","dS1mHat","cdS1mHat",
                                                          "dS1Hat","cdS1Hat","ddS1Hat","cddS1Hat"))
 
@@ -1370,7 +1362,6 @@ ACN_Basic_results  <-draws_df_subset %>%
   mutate(Type = "B")%>% 
   mutate(Modifier="ACN")
 
-
 p2<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results,
              ACN_Neutral_results,ACN_Acids_results, ACN_Basic_results) %>%
   ggplot(aes(y = ColumnNames, x = S1Hat, xmin = .lower, xmax = .upper,color = Type)) +
@@ -1379,12 +1370,9 @@ p2<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results,
   ylab(' ')+
   xlab("Typical cS1")+
   facet_wrap(.~Modifier)
-
-print(p2)
-
 ```
 
-```{r}
+```{r fig-cbeta}
 draws_df_subset <- fit$draws(format = "df", variable = c("beta","cbeta"))
 
 logkw_results <-draws_df_subset %>%
@@ -1428,11 +1416,9 @@ p3<-bind_rows(logkw_results, S1_results) %>%
   scale_color_manual(labels = c("clogkw", "cS1"), values = c("black", "gray"))+
   ylab(' ')+
   xlab("log P effect (c\u03b2)")
-
-print(p3)
 ```
 
-```{r}
+```{r fig-cpH}
 draws_df_subset <- fit$draws(format = "df", variable = c("apH","capH"))
 
 Acids_results <-draws_df_subset %>%
@@ -1477,10 +1463,9 @@ p4<-bind_rows(Acids_results, Bases_results) %>%
   ylab(' ')+
    xlab("pH effects (capH)")
 
-print(p4)
 ```
 
-```{r}
+```{r fig-ctemp}
 draws_df_subset <- fit$draws(format = "df", variable = c("dlogkTHat","cdlogkTHat"))
 
 Results <-draws_df_subset %>%
@@ -1505,23 +1490,22 @@ p5<-Results %>%
   ylab(' ')+
   xlab("Temp. effects (cdlogkT)")
 
-print(p5)
 ```
 
-```{r}
+```{r fig-column-effects-all}
 p=grid.arrange(p1+ theme(legend.position='none'), 
                p3+theme(axis.text.y=element_blank()), 
                p4+ theme(legend.position='none'),
                p5+theme(axis.text.y=element_blank()), 
                p2, ncol=2, widths = c(1,1), layout_matrix = rbind(c(1, 2),c(3, 4), c(5, 5)))
 
-ggsave(paste0("figures\\param\\", "Joined_Effects", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "column-effects-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
 Parameters characterizing columns:
 
-```{r}
+```{r fig-logkw}
 draws_df_subset <- fit$draws(format = "df", variable = c("logkwHat","clogkwHat","dlogkwHat","cdlogkwHat"))
 
 Neutral_results <-draws_df_subset %>%
@@ -1602,16 +1586,11 @@ p1<-bind_rows(Neutral_results, Acids_results, Basic_results) %>%
   scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
    ylab(' ') +
    xlab("Typical logkw")
-
-
-print(p1)
-
 ```
 
-```{r}
+```{r fig-S1}
 draws_df_subset <- fit$draws(format = "df", variable = c("S1mHat","cS1mHat","dS1mHat","cdS1mHat",
                                                          "dS1Hat","cdS1Hat","ddS1Hat","cddS1Hat"))
-
 MeOH_Neutral_results <-draws_df_subset %>%
   slice_sample(n=1000) %>%
   tidybayes::spread_draws(S1mHat,cS1mHat[c]) %>%
@@ -1772,11 +1751,9 @@ p2<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results,
   xlab("Typical S1")+
   facet_wrap(.~Modifier)
 
-print(p2)
-
 ```
 
-```{r}
+```{r fig-beta}
 draws_df_subset <- fit$draws(format = "df", variable = c("beta","cbeta"))
 
 logkw_results <-draws_df_subset %>%
@@ -1835,10 +1812,9 @@ p3<-bind_rows(logkw_results, S1_results) %>%
   ylab(' ')+
   xlab("logP effects (\u03b2)")
 
-print(p3)
 ```
 
-```{r}
+```{r fig-pH}
 draws_df_subset <- fit$draws(format = "df", variable = c("apH","capH"))
 
 Acids_results <-draws_df_subset %>%
@@ -1897,10 +1873,9 @@ p4<-bind_rows(Acids_results, Bases_results) %>%
   ylab(' ')+
    xlab("pH effects (apH)")
 
-print(p4)
 ```
 
-```{r}
+```{r fig-temp}
 draws_df_subset <- fit$draws(format = "df", variable = c("dlogkTHat","cdlogkTHat"))
 
 Results <-draws_df_subset %>%
@@ -1932,24 +1907,23 @@ p5<-Results %>%
   ylab(' ')+
   xlab("Temp. effects (dlogkT)")
 
-print(p5)
 ```
 
-```{r}
+```{r column-parameters-all}
 p=grid.arrange(p1+ theme(legend.position='none'), 
                p3+theme(axis.text.y=element_blank()), 
                p4+ theme(legend.position='none'),
                p5+theme(axis.text.y=element_blank()), 
                p2, ncol=2, widths = c(1,1), layout_matrix = rbind(c(1, 2),c(3, 4), c(5, 5)))
 
-ggsave(paste0("figures\\param\\", "Joined", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "column-parameters-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
 Standard deviations:
 
-```{r}
-draws_df_subset <- fit$draws(format = "df", variable = c("comega","ckappa"))
+```{r sd-column-effects-all}
+draws_df_subset <- fit$draws(format = "df", variable = c("comega","ckappa","crho"))
 
 comega_results <-draws_df_subset %>%
   slice_sample(n = 1000) %>%
@@ -2002,7 +1976,40 @@ p1<-bind_rows(comega_results, ckappa_results) %>%
 
 print(p1)
 
-ggsave(paste0("figures\\param\\", "Joined_SD", ".png"), plot=p1, width = 20, height = 10, units = "cm")
+crho_results <-draws_df_subset %>%
+  slice_sample(n = 1000) %>%
+  tidybayes::spread_draws(crho[c,r]) %>%
+  ungroup() %>%
+  mutate(columnnames1=recode(c,
+                                '1' = 'XTerra MS C18',
+                                '2' = 'XBridge Phenyl',
+                                '3' = 'XBridge C8',
+                                '4' = 'Xterra MS C8'))%>% 
+  mutate(columnnames2=recode(r,
+                                '1' = 'XTerra MS C18',
+                                '2' = 'XBridge Phenyl',
+                                '3' = 'XBridge C8',
+                                '4' = 'Xterra MS C8'))%>% 
+  mutate(namelong=paste0("crho","(", columnnames1,",", columnnames2, ")" )) %>%
+  mutate(name=paste0(c,r))%>%
+  mutate_if(is.character,as.factor) %>%
+  subset(name %in% c(21,31,32,41,42,43)) %>%
+  group_by(namelong)%>%
+  tidybayes::median_qi(param = crho)%>% 
+  mutate(Parameter="crho")
+
+p2<-ggplot(crho_results,aes(y = as.factor(namelong), x = param, xmin = .lower, xmax = .upper), color="black") +
+  tidybayes::geom_pointinterval(position = position_dodge(width = .3)) + 
+  ylab(' ')+
+  xlab("crho")+
+  theme(legend.position='none')+
+  scale_y_discrete(position = "right")
+
+
+p=grid.arrange(p1, 
+               p2, ncol=1)
+
+ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".png"), plot=p, width = 20, height = 10, units = "cm")
 
 ```
 
@@ -2010,7 +2017,7 @@ ggsave(paste0("figures\\param\\", "Joined_SD", ".png"), plot=p1, width = 20, hei
 
 To better asses the impact of parameters on retention we created graphs presenting the isocratic logarithm of retention factor vs. $\varphi$ for selected analytes. Separate graphs are shown for each dissociation form (r=1,r=2,r=3). Here the individual predictions (given all the data) are shown:
 
-```{r}
+```{r izo-pred-individual}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 
 for(i in 1:length(analyte_ID_sample)){
@@ -2082,7 +2089,7 @@ p <-draws_df_subset %>%
 
 print(p)
 
-ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".isopred.individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\izoparam\\isopred\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
 
 }
@@ -2094,7 +2101,7 @@ ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]])
 
 Similarly we can quantify the column effects (between column differences in logk using XBridge Shield RP18 as a reference column):
 
-```{r}
+```{r izo-diff-individual}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 
 
@@ -2174,7 +2181,7 @@ p<-draws_df_subset %>%
 
  print(p)
  
- ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".diff.individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\izoparam\\diff\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
 
 }
@@ -2183,7 +2190,7 @@ p<-draws_df_subset %>%
 
 or predict the organic modifier content leading to logk of 1:
 
-```{r}
+```{r izo-logk1-individual}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 
 
@@ -2259,7 +2266,7 @@ p<-draws_df_subset %>%
 
 print(p)
 
- ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".filogk1.individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\izoparam\\filogk1\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
 }
 ```
 
@@ -2269,14 +2276,14 @@ Individual parameter are the analyte-specific parameters estimated by the model.
 
 ### Neutral Form
 
-```{r}
+```{r draws_df}
 #Extract sample for plots
 draws_df <- fit$draws(format = "df")
 ```
 
 Individual parameters for the reference column (XBridge Shield RP18):
 
-```{r}
+```{r iparam-column-neutral}
 param <- apply(draws_df[,which(colnames(draws_df) %in% grep("^param", names(draws_df), value = TRUE))], MARGIN = 2, FUN = mean)
 param <- melt(param)
 param1 <- param[1:nAnalytes,]
@@ -2289,16 +2296,14 @@ colnames(data_to_plot_param) <- c(expression('logP'[i]),expression('logkwN'[i]),
 p<-ggpairs(as.data.frame(data_to_plot_param), columnLabels = colnames(data_to_plot_param) ,
         labeller = "label_parsed",upper = list(continuous = "points"))
 
+ggsave(paste0("figures\\iparam\\", "XBridgeShieldRP18.neutral", ".png"), plot=p, width = 20, height = 20, units = "cm")
+
 print(p)
-
-ggsave(paste0("figures\\iparam\\", "XBridgeShieldRP18.NeutralForm", ".png"), plot=p, width = 20, height = 20, units = "cm")
-
-
 ```
 
-Individual parameters for column effects
+Individual parameters for column effects:
 
-```{r}
+```{r iparam-columneffects-neutral}
 param <- apply(draws_df[,which(colnames(draws_df) %in% grep("^clogkwN", names(draws_df), value = TRUE))], MARGIN = 2, FUN = mean)
 param <- melt(param)
 param <- matrix(param$value, nrow = nAnalytes, byrow = TRUE)
@@ -2342,21 +2347,20 @@ colnames(data_to_plot_param) <- c(expression('logP'[i]),expression('cdS1N1'[i]),
 p3<-ggpairs(as.data.frame(data_to_plot_param), columnLabels = colnames(data_to_plot_param) ,
         labeller = "label_parsed",upper = list(continuous = "points"))
 
+ggsave(paste0("figures\\iparam\\", "columneffects.neutral.clogkwN", ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "columneffects.neutral.cS1mN", ".png"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "columneffects.neutral.cdS1N", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+
 print(p1)
 print(p2)
 print(p3)
-
- ggsave(paste0("figures\\iparam\\", "coleffects.NeutralForm_1", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-  ggsave(paste0("figures\\iparam\\", "coleffects.NeutralForm_2", ".png"), plot=p2, width = 20, height = 20, units = "cm")
-   ggsave(paste0("figures\\iparam\\", "coleffects.NeutralForm_3", ".png"), plot=p3, width = 20, height = 20, units = "cm")
-
 ```
 
-### Effect of dissociation
+### Effects of dissociation
 
 Individual parameters for the reference column (XBridge Shield RP18)
 
-```{r}
+```{r iparam-column-dissociated}
 dlogkwA <- apply(draws_df[,which(colnames(draws_df) %in% grep("^dlogkwA", names(draws_df), value = TRUE))], MARGIN = 2, FUN = mean)
 dlogkwA <- melt(dlogkwA)[,1]
 
@@ -2391,13 +2395,13 @@ p<-ggpairs(data_to_plot_diss,columns = 1:3, columnLabels = c("dlogkw","dS1m","dd
         scale_alpha(guide = "none")
 
 print(p)
-ggsave(paste0("figures\\iparam\\", "XBridgeShieldRP18.DissForm", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "XBridgeShieldRP18.dissociated", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
 Individual parameters for the particular column (1-4) relative to XBridge Shield RP18
 
-```{r}
+```{r iparam-columneffects-dissociated}
 paramA <- apply(draws_df[,which(colnames(draws_df) %in% grep("^cdlogkwA", names(draws_df), value = TRUE))], MARGIN = 2, FUN = mean)
 paramA <- melt(paramA)
 paramA <- matrix(paramA$value,nrow = datastruct$nGroupsA, byrow = TRUE)
@@ -2498,14 +2502,15 @@ print(p1)
 print(p2)
 print(p3)
 
-ggsave(paste0("figures\\iparam\\", "Differences.DissForm_1", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\iparam\\", "Differences.DissForm_2", ".png"), plot=p2, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\iparam\\", "Differences.DissForm_3", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdlogkw", ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdS1m", ".png"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdS1", ".png"), plot=p3, width = 20, height = 20, units = "cm")
 ```
 
 ### pKa-related paraemters
 
-```{r}
+```{r iparam-pKas}
+
 pKawA <- apply(draws_df[,which(colnames(draws_df) %in% grep("^pKawA", names(draws_df), value = TRUE))], MARGIN = 2, FUN = mean)
 pKawA <- melt(pKawA)[,1]
 pKawB <- apply(draws_df[,which(colnames(draws_df) %in% grep("^pKawB", names(draws_df), value = TRUE))], MARGIN = 2, FUN = mean)
@@ -2546,7 +2551,7 @@ ggsave(paste0("figures\\iparam\\", "pKas", ".png"), plot=p, width = 20, height =
 
 Eta plots shows the centered and standardized individual parameters (e.g. $\eta_{logkwN,i} = (logkwN_i-(\hat{logkwN} + \beta_1 \cdot \log P_i))/\omega_1$). They allow to visualize the unexplained between-analyte variability of chromatographic parameters.
 
-```{r eval = FALSE}
+```{r etaqq, eval = FALSE}
 model_etas <- cmdstan_model("stan/hplc-gra-fivecolumns-etas.stan")
 fit_etas  <- model_etas$generate_quantities(fit,
                                          data = datastruct,
@@ -2555,12 +2560,12 @@ fit_etas  <- model_etas$generate_quantities(fit,
                                          output_dir = "stanfiles")
 ```
 
-```{r}
+```{r etaload}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-etas-202308081442-1-656020.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-etas-202308081442-2-656020.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-etas-202308081442-3-656020.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-etas-202308081442-4-656020.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-etas-202308231335-1-45bb77.csv',
+                                  'stanfiles/hplc-gra-fivecolumns-etas-202308231335-2-45bb77.csv',
+                                  'stanfiles/hplc-gra-fivecolumns-etas-202308231335-3-45bb77.csv',
+                                  'stanfiles/hplc-gra-fivecolumns-etas-202308231335-4-45bb77.csv'
                                 ))
 draws_etas_df <- as_draws_df(x$generated_quantities)
 
@@ -2569,9 +2574,7 @@ draws_etas_df <- as_draws_df(x$generated_quantities)
 
 ### Neutral Forms
 
-etalogkwN:
-
-```{r}
+```{r etaplots-neutral}
 param1 <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etalogkwN", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
 
 cparam <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etaclogkwNc", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
@@ -2586,18 +2589,10 @@ cparam4 <- cparam[,4]
 data_to_plot_param <- cbind(dataACD$logP[which(dataACD$METID %in% data$METID)],param1,cparam1,cparam2,cparam3,cparam4)
 colnames(data_to_plot_param) <- c(expression('logP'[i]),expression('etalogkwN'),expression('etaclogkwN_1'),expression('etaclogkwN_2'), expression('etaclogkwN_3'),expression('etaclogkwN_4'))
 
-p<-ggpairs(as.data.frame(data_to_plot_param), columnLabels = colnames(data_to_plot_param) ,
+p1<-ggpairs(as.data.frame(data_to_plot_param), columnLabels = colnames(data_to_plot_param) ,
         labeller = "label_parsed",upper = list(continuous = "points"))
 
-print(p)
-ggsave(paste0("figures\\etaplots\\", "neutralforms_1", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
-
-```
-
-etaS1mN and etadS1N:
-
-```{r}
 param1 <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etaS1mN", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
 
 cparam <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etacS1mNc", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
@@ -2608,13 +2603,11 @@ cparam2 <- cparam[,2]
 cparam3 <- cparam[,3]
 cparam4 <- cparam[,4]
 
-
 data_to_plot_param <- cbind(dataACD$logP[which(dataACD$METID %in% data$METID)],param1,cparam1,cparam2,cparam3,cparam4)
 colnames(data_to_plot_param) <- c(expression('logP'[i]),expression('etaS1mN'),expression('etacS1mN_1'),expression('etacS1mN_2'), expression('etacS1mN_3'),expression('etacS1mN_4'))
 
 p2<-ggpairs(as.data.frame(data_to_plot_param), columnLabels = colnames(data_to_plot_param) ,
         labeller = "label_parsed",upper = list(continuous = "points"))
-
 
 param1 <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etadS1N", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
 
@@ -2626,63 +2619,24 @@ cparam2 <- cparam[,2]
 cparam3 <- cparam[,3]
 cparam4 <- cparam[,4]
 
-
 data_to_plot_param <- cbind(dataACD$logP[which(dataACD$METID %in% data$METID)],param1,cparam1,cparam2,cparam3,cparam4)
 colnames(data_to_plot_param) <- c(expression('logP'[i]),expression('etadS1N'),expression('etacdS1N_1'),expression('etacdS1N_2'), expression('etacdS1N_3'),expression('etacdS1N_4'))
 
 p3<-ggpairs(as.data.frame(data_to_plot_param), columnLabels = colnames(data_to_plot_param) ,
         labeller = "label_parsed",upper = list(continuous = "points"))
 
-print(p2)
-print(p3)
-ggsave(paste0("figures\\etaplots\\", "neutralforms_2", ".png"), plot=p2, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\etaplots\\", "neutralforms_3", ".png"), plot=p3, width = 20, height = 20, units = "cm")
-
-```
-
-### Effect of functional groups (exploratory)
-
-The following ETA plots present the relationship between individual eta values for logkwN and number of functional groups. This part is exploratory. Graphs are shown if there are at least 10 functional groups present in the dataset.
-
-```{r}
-param1 <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etalogkwN", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
-
-cparam <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etaclogkwNc", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
-cparam <- melt(cparam)
-cparam <- matrix(cparam$value,nrow = nAnalytes, byrow = TRUE)
-cparam1 <- cparam[,1]
-cparam2 <- cparam[,2]
-cparam3 <- cparam[,3]
-cparam4 <- cparam[,4]
-
-for(i in which(totalnrgroups>10)){
-nrgroups = as.factor(nrfungroups[,i])
-
-data_to_plot_fungr <- data.frame(param1,cparam1,cparam2,cparam3,cparam4, nrgroups)
-
-p1<-data_to_plot_fungr %>% tidyr::gather("name", "count", 1:5)  %>%
-   mutate(etaname = case_when(name == "param1" ~ "etalogkwN",
-                        name == "cparam1" ~ "etaclogkwN_1",
-                        name == "cparam2" ~ "etaclogkwN_2",
-                        name == "cparam3" ~ "etaclogkwN_3",
-                        name == "cparam4" ~ "etaclogkwN_4"
-                        ))  %>%
-   ggplot(., aes(y=count, x=nrgroups))+
-   geom_boxplot()+
-   facet_wrap(.~etaname)+
-   labs(title=paste(functionalgroupsnames[i,2]), x="Nr of functional groups", y="eta")
+ggsave(paste0("figures\\etaplots\\", "neutral.logkwN", ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "neutral.S1mN", ".png"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "neutral.dS1N", ".png"), plot=p3, width = 20, height = 20, units = "cm")
 
 print(p1)
-
-
- ggsave(paste0("figures\\etaplots\\", functionalgroupsnames[i,2], ".functionalgroupseffects", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-
-}
+print(p2)
+print(p3)
 ```
 
 ### Effect of dissociation
 
-```{r}
+```{r etaplots-dissociated}
 paramA <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etacdlogkwAc", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
 paramA <- melt(paramA)
 paramA <- matrix(paramA$value,nrow = datastruct$nGroupsA, byrow = TRUE)
@@ -2788,17 +2742,57 @@ print(p1)
 print(p2)
 print(p3)
 
-ggsave(paste0("figures\\etaplots\\", "dissociatedforms_1", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\etaplots\\", "dissociatedforms_2", ".png"), plot=p2, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\etaplots\\", "dissociatedforms_3", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "dissociated.dlogkw", ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "dissociated.dS1m", ".png"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "dissociated.dS1", ".png"), plot=p3, width = 20, height = 20, units = "cm")
 
+```
+
+### Effect of functional groups (exploratory)
+
+The following ETA plots present the relationship between individual eta values for logkwN and number of functional groups. This part is exploratory. Graphs are shown if there are at least 10 functional groups present in the dataset.
+
+```{r functionalgroupseffects}
+param1 <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etalogkwN", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
+
+cparam <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etaclogkwNc", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
+cparam <- melt(cparam)
+cparam <- matrix(cparam$value,nrow = nAnalytes, byrow = TRUE)
+cparam1 <- cparam[,1]
+cparam2 <- cparam[,2]
+cparam3 <- cparam[,3]
+cparam4 <- cparam[,4]
+
+for(i in which(totalnrgroups>10)){
+nrgroups = as.factor(nrfungroups[,i])
+
+data_to_plot_fungr <- data.frame(param1,cparam1,cparam2,cparam3,cparam4, nrgroups)
+
+p1<-data_to_plot_fungr %>% tidyr::gather("name", "count", 1:5)  %>%
+   mutate(etaname = case_when(name == "param1" ~ "etalogkwN",
+                        name == "cparam1" ~ "etaclogkwN_1",
+                        name == "cparam2" ~ "etaclogkwN_2",
+                        name == "cparam3" ~ "etaclogkwN_3",
+                        name == "cparam4" ~ "etaclogkwN_4"
+                        ))  %>%
+   ggplot(., aes(y=count, x=nrgroups))+
+   geom_boxplot()+
+   facet_wrap(.~etaname)+
+   labs(title=paste(functionalgroupsnames[i,2]), x="Nr of functional groups", y="eta")
+
+print(p1)
+
+
+ ggsave(paste0("figures\\etaplots\\functionalgroupseffects\\", functionalgroupsnames[i,2], ".png"), plot=p1, width = 20, height = 20, units = "cm")
+
+}
 ```
 
 # Comparison of observed and model predicted retention times
 
 The individual and population model predictions were simulated using a more dense design. The individual predictions are based on population-level parameters, predictors, and all of the observed retention time measurements. The population predictions are based on population-level parameters and predictors.
 
-```{r}
+```{r load-fitsim}
 fitsim <- cmdstanr::as_cmdstan_fit(c(
                                  #  'stanfiles/output_1.csv',
                                  #  'stanfiles/output_2.csv',
@@ -2812,7 +2806,7 @@ fitsim <- cmdstanr::as_cmdstan_fit(c(
 
 ```
 
-```{r}
+```{r load-design}
 design <- read.csv('data/hplcparam_design.csv')
 design$Mod  = as.character(design$Mod)
 design$Mod2 = ifelse(design$Mod=="MeOH",1,2) # MeOH = 1, ACN = 2
@@ -2850,7 +2844,7 @@ datastructsim$trobs = rep(0,datastructsim$nObs)
 
 ```
 
-```{r eval = FALSE}
+```{r sim-gg, eval = FALSE}
 
 model_sim <- cmdstan_model("stan/hplc-gra-fivecolumns-sim.stan")
 
@@ -2861,42 +2855,35 @@ fit_sim  <- model_sim$generate_quantities(fitsim,
                                          output_dir = "stanfiles")
 ```
 
-```{r}
+```{r sim-load}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-sim-202308082137-1-2fe368.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-sim-202308240900-1-3a5236.csv'
                                 ))
 
 draws_sim_df <- as_draws_df(x$generated_quantities)
 
 # draws_sim_df <- fit_sim$draws(format = "df")
-```
 
-```{r}
 tr_sim_Cond <- apply(draws_sim_df[,which(colnames(draws_sim_df) %in% grep("^trCond", names(draws_sim_df), value = TRUE))], MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
-
 tr_sim_Pred <- apply(draws_sim_df[,which(colnames(draws_sim_df) %in% grep("^trPred", names(draws_sim_df), value = TRUE))], MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
 
 tr_sim_Cond<-as.data.frame(t(tr_sim_Cond))
 
 datasim$trCond_l=tr_sim_Cond$`5%`
-
 datasim$trCond_m=tr_sim_Cond$`50%`
-
 datasim$trCond_h=tr_sim_Cond$`95%`
 
 tr_sim_Pred<-as.data.frame(t(tr_sim_Pred))
 
 datasim$trPred_l=tr_sim_Pred$`5%`
-
 datasim$trPred_m=tr_sim_Pred$`50%`
-
 datasim$trPred_h=tr_sim_Pred$`95%`
 
 ```
 
 ## Individual predictions:
 
-```{r}
+```{r individualpred}
 analyte_ID_sample <- c(9,17,33,58,140,180)
 
 #analyte_ID_sample <-unique(data$METID)
@@ -2918,16 +2905,17 @@ p <- ggplot()+
            color = "tg, min",
            fill = "tg, min")
 
+ggsave(paste0("figures\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
+
 print(p)
 
-ggsave(paste0("figures\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
 }
 
 ```
 
 ## Population predictions:
 
-```{r}
+```{r populationrped}
 analyte_ID_sample <- c(9,17,33,58,140,180)
 
 for(i in 1:length(analyte_ID_sample)){
@@ -2945,18 +2933,18 @@ p <- ggplot()+
            y = "Retention time (population), min",
            color = "tg, min",
            fill = "tg, min")
-print(p)
 
 ggsave(paste0("figures\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+
+print(p)
 }
 
 ```
-
 # Uncertainity chromatogram
 
 Below is the example of an uncertainty chromatogram expected for tg = 90 min, pH = 4.9, Temp = $25^oC$ in MeOH. The individual and population predictions are shown.
 
-```{r eval = FALSE}
+```{r epred-gq, eval = FALSE}
 
 model_epred <- cmdstan_model("stan/hplc-gra-fivecolumns-epred.stan")
 
@@ -2967,18 +2955,15 @@ fit_epred  <- model_epred$generate_quantities(fitsim,
                                          output_dir = "stanfiles")
 ```
 
-```{r}
+```{r load-epred-gq}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-epred-202308090811-1-779433.csv'
+                                'stanfiles/hplc-gra-fivecolumns-epred-202308240927-1-1ff2c7.csv'
                                 ))
 
 draws_epred_df <- as_draws_df(x$generated_quantities)
-
-# draws_epred_df <- fit_epred$draws(format = "df")
-
 ```
 
-```{r}
+```{r uncertainitychromatogram}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 
 col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")
@@ -3019,7 +3004,7 @@ p1 <- ggplot(data = wpCond)+
      facet_wrap(.~Column, nrow=3,scales = "free")+
      theme(legend.position = c(1, 0),
         legend.justification = c(1, 0))
-print(p1)
+
 
 p2 <- ggplot(data = wpPred)+
      geom_density(aes(x=value, colour=variable)) +
@@ -3032,19 +3017,19 @@ p2 <- ggplot(data = wpPred)+
      theme(legend.position = c(1, 0),
         legend.justification = c(1, 0))
 
-print(p2)
-
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.individual", ".png"), plot=p1, width = 20, height = 20, units = "cm")
 
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.population", ".png"), plot=p2, width = 20, height = 20, units = "cm")
 
+print(p1)
+print(p2)
 ```
 
 ## Isocratic predictions (population predictions)
 
-To better asses the impact of parameters on retention we created graphs presenting the isocratic logarithm of retention factor vs. φ for selected analytes. Separate graphs are shown for each dissociation form (r=1,r=2,r=3). Here the population predictions are shown:
+To better asses the impact of parameters on retention we created graphs presenting the isocratic logarithm of retention factor vs. $\small \varphi$ for selected analytes. Separate graphs are shown for each dissociation form (r=1, r=2, r=3). Here the population predictions are shown:
 
-```{r}
+```{r izo-pred-population}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 
 for(i in 1:length(analyte_ID_sample)){
@@ -3113,16 +3098,17 @@ p<-draws_df_subset %>%
   scale_fill_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")) +
   scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
   geom_hline(yintercept= c(0,1), linetype="dashed",color="gray")
-print(p)
 
-ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".isopred.population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\izoparam\\isopred\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+
+print(p)
 }
 
 ```
 
 Similarly we can quantify the column effects (between column differences in logk using XBridge Shield RP18 as a reference column):
 
-```{r}
+```{r izo-diff-population}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 
 for(i in 1:length(analyte_ID_sample)){
@@ -3200,9 +3186,10 @@ p<-draws_df_subset %>%
   scale_color_discrete(labels= c("XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
    geom_hline(yintercept= c(0), linetype="dashed",color="gray") +
   coord_cartesian(xlim=c(0,1),ylim=c(-1,1))
- print(p)
 
- ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".diff.population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\izoparam\\diff\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ 
+ print(p)
 
 }
 
@@ -3210,7 +3197,7 @@ p<-draws_df_subset %>%
 
 or predict the organic modifier content leading to logk of 1:
 
-```{r}
+```{r izo-logk1-population}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 
 for(i in 1:length(analyte_ID_sample)){
@@ -3281,43 +3268,41 @@ p<-draws_df_subset %>%
   scale_fill_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")) +
   scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
   facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))
+
+ggsave(paste0("figures\\izoparam\\filogk1\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ 
 print(p)
- ggsave(paste0("figures\\izoparam\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".filogk1.population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+
 }
 
 ```
 
 # Effect of logP
 
-The following plot show the effect of logP on isocratic retention times (population predictions) for typical neutral, basic and acidic analyte. The uncertainties are large. They are not shown to improve visibility.
+The following plot show the effect of log P on isocratic retention times (population predictions) for typical neutral, basic and acidic analyte. The uncertainties are large. They are not shown to improve visibility.
 
-```{r eval = FALSE}
+```{r logPgq, eval = FALSE}
 
 model_logP <- cmdstan_model("stan/hplc-gra-fivecolumns-logP.stan")
 
-fit_logP  <- model_logP$generate_quantities(fit,
+fit_logP  <- model_logP$generate_quantities(fitsim,
                                          data = datastruct,
                                          seed = 123,
                                          parallel_chains = 4,
                                          output_dir = "stanfiles")
 ```
 
-```{r}
+```{r load-logP}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-logP-202308082058-1-09b416.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-logP-202308082058-2-09b416.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-logP-202308082058-3-09b416.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-logP-202308082058-4-09b416.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-logP-202308240954-1-6e86d7.csv'
                                 ))
-
 draws_logP_df <- as_draws_df(x$generated_quantities)
-
 # draws_epred_df <- fit_epred$draws(format = "df")
-
 ```
 
 
-```{r}
+```{r plot-logP-effects}
+
 logPsim = c(0,1.5,3,4.5,6)
 col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")
 names(col.labs) <- c('1','2','3','4','5')
@@ -3409,7 +3394,7 @@ ggsave(paste0("figures\\logPeffects\\logPjoined", ".png"), plot=p, width = 20, h
 
 Several goodness of fit plots were used to describe how well the model fits our set of observations.
 
-```{r eval = FALSE}
+```{r residualsqq, eval = FALSE}
 
 model_restr <- cmdstan_model("stan/hplc-gra-fivecolumns-residuals.stan")
 
@@ -3421,18 +3406,14 @@ fit_restr  <- model_restr$generate_quantities(fitsim,
 
 ```
 
-```{r}
+```{r residuals-load}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-residuals-202308082123-1-1fff1f.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-residuals-202308240959-1-8d8bd3.csv'
                                 ))
 
 draws_restr_df <- as_draws_df(x$generated_quantities)
-
 # draws_restr_df <- fit_restr$draws(format = "df")
 
-```
-
-```{r}
 trCond <- apply(draws_restr_df[,which(colnames(draws_restr_df) %in% grep("^trHatCond", names(draws_restr_df), value = TRUE))], MARGIN = 2, FUN = mean)
 
 trPred <- apply(draws_restr_df[,which(colnames(draws_restr_df) %in% grep("^trHatPred", names(draws_restr_df), value = TRUE))], MARGIN = 2, FUN = mean)
@@ -3445,25 +3426,25 @@ data$trCond = trCond
 data$trPred = trPred
 data$restrCond = restrCond
 data$restrPred = restrPred
-
 ```
 
 Residuals:
 
-```{r}
+```{r plot-residuals}
 p1 <- ggplot()+
       geom_jitter(data=data, aes(x = pHs, y = restrCond, color = as.factor(tg), shape=as.factor(ColumnName)),width = 0.1, height = 0)+
       facet_grid(ColumnName~Mod2+Temp, labeller = labeller(Temp=temp.labs,Mod2=mod.labs))+
       labs(x ="pH", y = "Individual residuals, min", color = "Gradient time, min", shape = 'Column')+
       ylim(-10,10)
-print(p1)
+
 ggsave(paste0("figures\\concordanceplots\\", "residuals", ".png"), plot=p1, width = 20, height = 20, units = "cm")
 
+print(p1)
 ```
 
 Observed vs. population and individual predictions:
 
-```{r}
+```{r plot-dv-vs-pred}
 p1 <- ggplot()+
       geom_point(data=data, aes(x = trCond, y = RT, color = as.factor(tg), shape=as.factor(ColumnName)))+
       facet_grid(ColumnName~Mod2+Temp, labeller = labeller(Temp=temp.labs,Mod2=mod.labs))+
@@ -3474,8 +3455,6 @@ p1 <- ggplot()+
       xlim(0,300) +
       ylim(0,300) +
       geom_abline(intercept = 0, slope = 1)
-
-print(p1)
 
 p2 <- ggplot()+
       geom_point(data=data, aes(x = trPred, y = RT, color = as.factor(tg), shape=as.factor(ColumnName)))+
@@ -3488,20 +3467,20 @@ p2 <- ggplot()+
       ylim(0,300) +
       geom_abline(intercept = 0, slope = 1)
 
-print(p2)
-
 ggsave(paste0("figures\\concordanceplots\\", "individual", ".png"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\concordanceplots\\", "population", ".png"), plot=p2, width = 20, height = 20, units = "cm")
 
+print(p1)
+print(p2)
+
 ```
 
-# Predictions and decision making. Case 1
+# Predictions and decision making. Case Study 1
 
-Predicting best chromatogram using all the available data.
+Here we want to show applicability of the model to predicting the best chromatogram using all the available data.
 
-```{r eval = FALSE}
-
-fit_red2<- cmdstanr::as_cmdstan_fit(c(
+```{r casestudy1-fitdata, eval = FALSE}
+fit_red1<- cmdstanr::as_cmdstan_fit(c(
                                  # 'stanfiles/output_1.csv',
                                  # 'stanfiles/output_2.csv',
                                  # 'stanfiles/output_3.csv',
@@ -3513,7 +3492,6 @@ fit_red2<- cmdstanr::as_cmdstan_fit(c(
                                 ))
 
 ```
-
 ## Utility maps
 
 Let's find the best chromatogram that maximize utility using the set of experiments used to build the model.
@@ -3529,7 +3507,7 @@ $$
  I(x) = 0 \ if \ condition \ x  \ is \ false
 $$
 
-```{r}
+```{r casestudy1-preparedatasim}
 upH <- datasim %>%
   select(1:20) %>%
   distinct(Temp,Mod, pHo, alpha1, alpha2) %>%
@@ -3584,29 +3562,27 @@ datastructsim_red$analytesim=match(datastructsim_red$analyte, unique(datastructs
 
 ```
 
-```{r eval = FALSE}
+```{r casestudy1-simgg, eval = FALSE}
 
 model_sim_red <- cmdstan_model("stan/hplc-gra-fivecolumns-fixed-sim.stan")
 
-fit_sim_red2  <- model_sim_red$generate_quantities(fit_red2,
+fit_sim_red1  <- model_sim_red$generate_quantities(fit_red1,
                                          data = datastructsim_red,
                                          seed = 123,
                                          parallel_chains = 4,
                                          output_dir = "stanfiles")
 ```
 
-```{r}
+```{r casestudy1-loaddata}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308090855-1-54912f.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308241032-1-261ea0.csv'
                                 ))
 
 draws_sim_red_df <- as_draws_df(x$generated_quantities)
-
 #draws_sim_red_df <- fit_sim_red$draws(format = "df")
-
 ```
 
-```{r}
+```{r casestudy1-utylitymaps-alldata}
 foo<-datasim_red[!duplicated(datasim_red$expid),]
 x<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mindifftr", names(draws_sim_red_df), value = TRUE))]
 y<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^maxtr", names(draws_sim_red_df), value = TRUE))]
@@ -3643,16 +3619,12 @@ p11 <- ggplot()+
           y = "tg, min",
           fill = "Expected Utility")
 
-print(p11)
-
 p12 <- ggplot()+
      geom_contour_filled(data=subset(foo,Column==2), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
-
-print(p12)
 
 p13 <- ggplot()+
      geom_contour_filled(data=subset(foo,Column==3), aes(x = pHs, y=tg, z = EUtility))+
@@ -3661,16 +3633,12 @@ p13 <- ggplot()+
           y = "tg, min",
           fill = "Expected Utility")
 
-print(p13)
-
 p14 <- ggplot()+
      geom_contour_filled(data=subset(foo,Column==4), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
-
-print(p14)
 
 p15 <- ggplot()+
      geom_contour_filled(data=subset(foo,Column==5), aes(x = pHs, y=tg, z = EUtility))+
@@ -3679,13 +3647,17 @@ p15 <- ggplot()+
           y = "tg, min",
           fill = "Expected Utility")
 
-print(p15)
-
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap1", ".png"), plot=p11, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap2", ".png"), plot=p12, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap3", ".png"), plot=p13, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap4", ".png"), plot=p14, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap5", ".png"), plot=p15, width = 20, height = 20, units = "cm")
+
+print(p11)
+print(p12)
+print(p13)
+print(p14)
+print(p15)
 
  # The best for XBridge Shield RP18
 
@@ -3718,7 +3690,7 @@ ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap5", ".png"), plot
 
 Let's visualize chromatograms with the highest expected utility
 
-```{r}
+```{r casestudy1-uncertainity-chrom}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")
 datasim_red$fio = as.factor(datasim_red$fio)
@@ -3801,7 +3773,7 @@ ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".png"), plo
 
 The proposed model can be used for decision making having access to limiet data. Here we want to ilustrate this by predicting XTerra MS C18, XBridge Phenyl, XBridge C8, Xterra MS C8 retention times based on XBridge Shield RP18 data.
 
-```{r}
+```{r casestudy2-standata}
 analyte_ID_sample = c(9,17,33,58,140,180)
 
 idx <- which(data$METID %in% analyte_ID_sample &
@@ -3946,7 +3918,7 @@ etaclogsigma   = matrix(rnorm(nAnalytes*(nColumns-1),0,0.125),nrow=(nColumns-1))
 
 ```
 
-```{r eval = FALSE}
+```{r casestudy2-sampling, eval = FALSE}
 
 mod_fixed <- cmdstan_model("stan/hplc-gra-fivecolumns-fixed.stan",
                       stanc_options = list("O1"))
@@ -3965,12 +3937,12 @@ fit_red <- mod_fixed$sample(
 
 ```
 
-```{r}
+```{r casestudy2-load-fitdata}
 fit_red <- cmdstanr::as_cmdstan_fit(c(
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-202308090920-1-544cd2.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-202308090920-2-544cd2.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-202308090920-3-544cd2.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-202308090920-4-544cd2.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-202308241051-1-738454.csv',
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-202308241051-2-738454.csv',
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-202308241051-3-738454.csv',
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-202308241051-4-738454.csv'
 
                                 ))
 
@@ -3980,7 +3952,7 @@ fit_red <- cmdstanr::as_cmdstan_fit(c(
 
 Here shown for analyte 9 (`r dataNames$Name[9]`)
 
-```{r}
+```{r casestudy2-summary}
 # which(unique(data$METID)==9) - 3rd compound in stan
 
 fit_red$print(c("logkwx[3,1,1]", "logkwx[3,1,2]", "logkwx[3,1,3]",
@@ -4000,7 +3972,7 @@ fit_red$print(c("logkwx[3,1,1]", "logkwx[3,1,2]", "logkwx[3,1,3]",
 
 ## Predicted retention times
 
-```{r}
+```{r  casestudy2-datasim}
 analyte_ID_sample =  c(9,17,33,58,140,180)
 idx <- which(datasim$METID %in% analyte_ID_sample)
 datasim_red = datasim[idx,1:20]
@@ -4019,10 +3991,8 @@ datastructsim_red$analytesim=match(datastructsim_red$analyte, unique(datastructs
 
 ```
 
-```{r eval = FALSE}
-
+```{r casestudy2-datasim-gq, eval = FALSE}
 model_sim_red <- cmdstan_model("stan/hplc-gra-fivecolumns-fixed-sim.stan")
-
 fit_sim_red  <- model_sim_red$generate_quantities(fit_red,
                                          data = datastructsim_red,
                                          seed = 123,
@@ -4030,12 +4000,12 @@ fit_sim_red  <- model_sim_red$generate_quantities(fit_red,
                                          output_dir = "stanfiles")
 ```
 
-```{r}
+```{r casestudy2-datasim-dataload}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308091209-1-392f75.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308091209-2-392f75.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308091209-3-392f75.csv',
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308091209-4-392f75.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308241208-1-66415a.csv',
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308241208-2-66415a.csv',
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308241208-3-66415a.csv',
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308241208-4-66415a.csv'
                                 ))
 
 draws_sim_red_df <- as_draws_df(x$generated_quantities)
@@ -4044,7 +4014,7 @@ draws_sim_red_df <- as_draws_df(x$generated_quantities)
 
 ### Plot the predicted vs. observed:
 
-```{r}
+```{r casestudy2-pred}
 tr_sim_red_Cond <- apply(draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^trCond", names(draws_sim_red_df), value = TRUE))], MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
 
 tr_sim_Cond<-as.data.frame(t(tr_sim_red_Cond))
@@ -4067,20 +4037,15 @@ for(i in 1:length(analyte_ID_sample)){
 pi <- ggplot()+
       geom_point(data=data[which(data$METID %in% analyte_ID_sample[i]),], aes(x = pHs, y = RT, color = as.factor(tg)), shape = 1)+
       geom_point(data=data_red[which(data_red$METID %in% analyte_ID_sample[i]),], aes(x = pHs, y = RT, color = as.factor(tg)))+
-
      geom_line(data=datasim_red[which(datasim_red$METID %in% analyte_ID_sample[i]),], aes(x = pHs, y = trCond_m, color = as.factor(tg)))+
-
      geom_ribbon(data=datasim_red[which(datasim_red$METID %in% analyte_ID_sample[i]),], aes(x = pHs, ymin = trCond_l, ymax = trCond_h, fill = as.factor(tg)), alpha = 0.25)+
-
   xlim(2,11)+
-
 facet_grid(ColumnName~Mod2+Temp, labeller = labeller(Temp=temp.labs,Mod2=mod.labs))+
-
       labs(title=paste(dataNames$Name[analyte_ID_sample[i]]), x ="pH", y = "Retention time, min", color = "tg, min", fill = "tg, min")
 
-print(pi)
-
 ggsave(paste0("figures\\casestudy2\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".png"), plot=pi, width = 20, height = 20, units = "cm")
+
+print(pi)
 
 }
 
@@ -4090,13 +4055,12 @@ ggsave(paste0("figures\\casestudy2\\concordanceplots\\", paste(dataNames$Name[an
 
 The same utility function was used:
 
-```{r}
+```{r casestudy2-utylitymaps}
+
 foo<-datasim_red[!duplicated(datasim_red$expid),]
 
 x<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mindifftr", names(draws_sim_red_df), value = TRUE))]
-
 y<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^maxtr", names(draws_sim_red_df), value = TRUE))]
-
 z<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mintr", names(draws_sim_red_df), value = TRUE))]
 
 u=x;
@@ -4128,8 +4092,6 @@ p1 <- ggplot()+
           y = "Expected Utility",
           color = "tg, min")
 
-print(p1)
-
 p2 <- ggplot()+
      geom_line(data=foo, aes(x = pHs, y = mindifftr_m, color = as.factor(tg)))+
      geom_ribbon(data=foo, aes(x = pHs, ymin = mindifftr_l, ymax = mindifftr_h, fill = as.factor(tg)), alpha = 0.25)+
@@ -4139,8 +4101,6 @@ p2 <- ggplot()+
           y = "Resolution (difference), min",
           color = "tg, min",
           fill = "tg, min")
-
-print(p2)
 
 p3 <- ggplot()+
      geom_line(data=foo, aes(x = pHs, y = maxtr_m, color = as.factor(tg)))+
@@ -4152,39 +4112,39 @@ p3 <- ggplot()+
           color = "tg, min",
           fill = "tg, min")
 
-print(p3)
 
 ggsave(paste0("figures\\casestudy2\\decision\\", "expectedutility", ".png"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\decision\\",  "resolution", ".png"), plot=p2, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\decision\\",  "maxtr", ".png"), plot=p3, width = 20, height = 20, units = "cm")
 
- # The best for XBridge Shield RP18
+print(p1)
+print(p2)
+print(p3)
+
+cat("1. The best choice for XBridge Shield RP18")
  foo1<-foo[foo$Column==1,];
  foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pH','pHo','Temp','ColumnName','EUtility')]
-
- # The best choice for XTerra MS C18
+cat("2. The best choice for XTerra MS C18")
  foo2<-foo[foo$Column==2,];
  foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pH','pHo','Temp','ColumnName','EUtility')]
-
-  # The best choice for XBridge Phenyl
+cat("3. The best choice for XBridge Phenyl")
  foo3<-foo[foo$Column==3,];
  foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pH','pHo','Temp','ColumnName','EUtility')]
-
-  # The best choice for XBridge C8
+cat("4. The best choice for XBridge C8")
  foo4<-foo[foo$Column==4,];
  foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pH','pHo','Temp','ColumnName','EUtility')]
-
-  # The best choice for Xterra MS C8
+cat("5. The best choice for Xterra MS C8")
  foo5<-foo[foo$Column==5,];
  foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pH','pHo','Temp','ColumnName','EUtility')]
 
+ 
 ```
 
 ### Uncertainity chromatogram
 
 Below is the example of a chromatogram (along with uncertainty) expected for tg = 90 min, pH = 8.9, Temp = 25oC in ACN.
 
-```{r}
+```{r  casestudy2-uncertainity-chrom}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 
 col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")
@@ -4192,7 +4152,6 @@ col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge 
 wpCond= data.frame()
 
 for (i in 1:5) {
-
 idx <- which(datasim_red$METID %in% analyte_ID_sample &
                datasim_red$tg==90 & # c(30, 90, 270)
                datasim_red$pH== 7 &   # c(1:9)
@@ -4207,7 +4166,6 @@ colnames(data_to_plot) <- paste(dataNames$Name[analyte_ID_sample])
 wpCond1 <- melt(data_to_plot)
 wpCond1$Column <- unname(col.labs[i])
 wpCond= rbind(wpCond,wpCond1)
-
 }
 
 wpCond$Column=as.factor(wpCond$Column)
@@ -4222,17 +4180,16 @@ p <- ggplot(data = wpCond)+
      theme(legend.position = c(1, 0),
      legend.justification = c(1, 0))
 
-print(p)
-
 ggsave(paste0("figures\\casestudy2\\decision\\",  "Chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
+print(p)
 ```
 
 ## Utility maps
 
 We can also determine more detailed graph presenting relationship between the expected utility and design variables:
 
-```{r}
+```{r casestudy2-preparedata}
 upH <- datasim %>%
   select(1:20) %>%
   distinct(Temp,Mod, pHo, alpha1, alpha2) %>%
@@ -4286,8 +4243,7 @@ datastructsim_red$analytesim=match(datastructsim_red$analyte, unique(datastructs
 
 ```
 
-```{r eval = FALSE}
-
+```{r casestudy2-qq, eval = FALSE}
 model_sim_red <- cmdstan_model("stan/hplc-gra-fivecolumns-fixed-sim.stan")
 fit_sim_red  <- model_sim_red$generate_quantities(fit_red,
                                          data = datastructsim_red,
@@ -4297,9 +4253,9 @@ fit_sim_red  <- model_sim_red$generate_quantities(fit_red,
 
 ```
 
-```{r}
+```{r casestudy2-loaddata}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308091217-1-637877.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308241235-1-3ef502.csv'
                                 ))
 
 draws_sim_red_df <- as_draws_df(x$generated_quantities)
@@ -4309,7 +4265,7 @@ draws_sim_red_df <- as_draws_df(x$generated_quantities)
 
 The best chromatogram can be sought based on utility map:
 
-```{r}
+```{r casestudy2-utylitymaps-danse}
 foo<-datasim_red[!duplicated(datasim_red$expid),]
 
 x<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mindifftr", names(draws_sim_red_df), value = TRUE))]
@@ -4349,16 +4305,12 @@ p11 <- ggplot()+
           y = "tg, min",
           fill = "Expected Utility")
 
-print(p11)
-
 p12 <- ggplot()+
      geom_contour_filled(data=subset(foo,Column==2), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
-
-print(p12)
 
 p13 <- ggplot()+
      geom_contour_filled(data=subset(foo,Column==3), aes(x = pHs, y=tg, z = EUtility))+
@@ -4367,16 +4319,12 @@ p13 <- ggplot()+
           y = "tg, min",
           fill = "Expected Utility")
 
-print(p13)
-
 p14 <- ggplot()+
      geom_contour_filled(data=subset(foo,Column==4), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
-
-print(p14)
 
 p15 <- ggplot()+
      geom_contour_filled(data=subset(foo,Column==5), aes(x = pHs, y=tg, z = EUtility))+
@@ -4385,31 +4333,31 @@ p15 <- ggplot()+
           y = "tg, min",
           fill = "Expected Utility")
 
-print(p15)
-
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap1", ".png"), plot=p11, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap2", ".png"), plot=p12, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap3", ".png"), plot=p13, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap4", ".png"), plot=p14, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap5", ".png"), plot=p15, width = 20, height = 20, units = "cm")
 
+print(p11)
+print(p12)
+print(p13)
+print(p14)
+print(p15)
+
  # The best for XBridge Shield RP18
  foo1<-foo[foo$Column==1,];
  foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
-
  # The best choice for XTerra MS C18
  foo2<-foo[foo$Column==2,];
  foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
-
-  # The best choice for XBridge Phenyl
+ # The best choice for XBridge Phenyl
  foo3<-foo[foo$Column==3,];
  foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
-
-  # The best choice for XBridge C8
+ # The best choice for XBridge C8
  foo4<-foo[foo$Column==4,];
  foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
-
-  # The best choice for Xterra MS C8
+ # The best choice for Xterra MS C8
  foo5<-foo[foo$Column==5,];
  foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
 
@@ -4419,7 +4367,7 @@ ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap5", ".png"), plot
 
 Let's visualize chromatograms with the highest expected utility given the experimental data.
 
-```{r}
+```{r casestudy2-chromatogram-dense}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 
 col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")
@@ -4507,10 +4455,9 @@ p <- ggplot(data = wpCond)+
      theme(legend.position = c(1, 0),
         legend.justification = c(1, 0))
 
-print(p)
-
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
 
+print(p)
 ```
 
 # Conclusions
@@ -4529,6 +4476,6 @@ The large gradient retention time data and multilevel modeling allow to characte
 
 # Original Computing Environment {.unnumbered}
 
-```{r}
+```{r sessionInfo}
 sessionInfo()
 ```

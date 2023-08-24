@@ -491,11 +491,14 @@ fit$print(c("clogkwHat","cS1mHat","cdS1Hat",
 
 # Figure S2. Summary of the MCMC simulations of the marginal posterior distributions of population-level model parameters. 
 
-![](../figures/param/Paramteres.XBridgeShieldRP18_1.png)
+![](../figures/param/XBridgeShieldRP18_1.png)
 {{< pagebreak >}}
-![](../figures/param/Paramteres.XBridgeShieldRP18_2.png)
+![](../figures/param/XBridgeShieldRP18_2.png)
 {{< pagebreak >}}
-![](../figures/param/Difference_1.png)
+![](../figures/param/columneffects1.png)
+{{< pagebreak >}}
+![](../figures/param/columneffects2.png)
+
 {{< pagebreak >}}
 
 # Figure S3. Goodness of fit plots
@@ -547,11 +550,17 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 {{< pagebreak >}}
 ![](../figures/concordanceplots/Tolbutamide.population.png)
 {{< pagebreak >}}
+
 # Figure S6. Uncertainity chromatograms
 
 ![](../figures/concordanceplots/uncertainitychromatogram.individual.png)
 {{< pagebreak >}}
 ![](../figures/concordanceplots/uncertainitychromatogram.population.png)
+{{< pagebreak >}}
+
+Limited data predictions:
+
+![](../figures/casestudy2/utilitymap/chromatogram.png)
 
 {{< pagebreak >}}
 # Licenses {.unnumbered}

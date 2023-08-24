@@ -8,6 +8,7 @@ functions {
     return lpdf;
   }
   
+
   // pH and fi at a given time at column inlet
   vector gra_state(real t, vector hplcparam) {
     vector[2] sol;
@@ -217,7 +218,7 @@ data {
 transformed data {
   int grainsize = 1;
   array[nObs] int ind = rep_array(1, nObs);
-  int Nsim = 5;
+  int Nsim=5;
 }
 
 parameters {
@@ -249,12 +250,13 @@ parameters {
   matrix[nColumns-1,2] cdS1mHat;        // effect of column on dS1m [Acids, Bases]
   matrix[nColumns-1,2] cddS1Hat;        // effect of column on ddS1 [Acids, Bases] 
   matrix[nColumns-1,2]  cbeta;
-  vector[nColumns-1]   cdlogkTHat; // ffect of column on dlogkTHat
-  matrix[nColumns-1,2] capH;            // effect of column on apH  [Acids, Bases]
+  vector[nColumns-1]   cdlogkTHat;       // effect of column on dlogkTHat
+  matrix[nColumns-1,2] capH;             // effect of column on apH  [Acids, Bases]
   matrix<lower=0>[nColumns-1,3] comega;  // sd of BAV [clogkw,cS1m,cdS1]
   vector<lower=0>[nColumns-1]  comegaT;  // sd of BAV [cdlogkT]
-  matrix<lower=0>[nColumns-1,3] ckappa;  //sd of BAV [cdlogkw,cdS1m,cddS1]
-
+  matrix<lower=0>[nColumns-1,3] ckappa;  // sd of BAV [cdlogkw,cdS1m,cddS1]
+  cholesky_factor_corr[nColumns-1] corr_L;   // cholesky factor correlation matrix 
+  
   // 1st column
   array[nAnalytes] vector[2] paramN;
   vector[nAnalytes] dS1N;
@@ -267,9 +269,9 @@ parameters {
   vector[nGroupsB] dS1B;
 
   // 2nd column
-  array[nColumns-1] vector[nAnalytes] clogkwN;
-  array[nColumns-1] vector[nAnalytes] cS1mN;
-  array[nColumns-1] vector[nAnalytes] cdS1N;
+  matrix[nColumns-1, nAnalytes] etaclogkwNStd;
+  array[nColumns-1] vector[nAnalytes] etacS1mN;
+  array[nColumns-1] vector[nAnalytes] etacdS1N;
   array[nColumns-1] vector[nAnalytes] etacdlogkT;
   array[nColumns-1] vector[nGroupsA] etacdlogkwA;
   array[nColumns-1] vector[nGroupsB] etacdlogkwB;
@@ -298,8 +300,9 @@ parameters {
 transformed parameters {
   
   cov_matrix[2] Omega;
+  
   array[nAnalytes] vector[3] miu;
-  array[nColumns-1,nAnalytes] vector[3] cmiu;
+  array[nAnalytes,3] vector[nColumns-1] cmiu;
   array[nAnalytes,nColumns]   vector[maxR + 1] logkwx;
   array[nAnalytes,nModifiers, nColumns] vector[maxR + 1] S1x;
   array[nModifiers,nColumns]  real S2x;
@@ -309,6 +312,10 @@ transformed parameters {
   array[nAnalytes] vector[maxR] pKawx;
   array[nAnalytes] vector[nColumns] sigmax;
   
+  array[nColumns-1] vector[nAnalytes] clogkwN;
+  matrix[nColumns-1, nAnalytes] etaclogkwN;
+  array[nColumns-1] vector[nAnalytes] cS1mN;
+  array[nColumns-1] vector[nAnalytes] cdS1N;
   array[nColumns-1] vector[nGroupsA] cdlogkwA;
   array[nColumns-1] vector[nGroupsB] cdlogkwB;
   array[nColumns-1] vector[nGroupsA] cdS1mA;
@@ -332,14 +339,18 @@ transformed parameters {
   
    for (i in 1 : nAnalytes) {
     for (c in 1 : (nColumns-1)) {
-    cmiu[c, i, 1] = clogkwHat[c] + cbeta[c,1] * (logPobs[i] - 2.2);
-    cmiu[c, i, 2] = cS1mHat[c]   + cbeta[c,2] * (logPobs[i] - 2.2);
-    cmiu[c, i, 3] = cdS1Hat[c];
+    cmiu[i, 1, c] = clogkwHat[c] + cbeta[c,1] * (logPobs[i] - 2.2);
+    cmiu[i, 2, c] = cS1mHat[c]   + cbeta[c,2] * (logPobs[i] - 2.2);
+    cmiu[i, 3, c] = cdS1Hat[c];
   }}
+   
+  // Matt's trick to use unit scale 
+  etaclogkwN = diag_pre_multiply(comega[,1], corr_L * etaclogkwNStd); 
   
   for (i in 1 : nAnalytes) { 
    logkwx[i, 1, : ]  =  paramN[i,1]*[1,1,1]';
   for (c in 1 : (nColumns-1)) {
+   clogkwN[c,i] = cmiu[i, 1, c]  + etaclogkwN[c,i];
    logkwx[i, c+1, : ]  =  (paramN[i,1]+clogkwN[c,i])*[1,1,1]'; 
   }}
    
@@ -395,10 +406,13 @@ transformed parameters {
     apHx[idxGroupsB[d,1], c+1, 1] += apH[2]+capH[c,2];
    }}}
    
+  
   for (i in 1 : nAnalytes) { 
    S1x[i, 1, 1, : ]  =  paramN[i,2]*[1,1,1]';
    S1x[i, 2, 1, : ]  =  paramN[i,2]*[1,1,1]' + dS1N[i]; 
   for (c in 1 : (nColumns-1)) {
+   cS1mN[c,i] = cmiu[i,2,c] + comega[c,2]*etacS1mN[c,i];
+   cdS1N[c,i] = cmiu[i,3,c] + comega[c,3]*etacdS1N[c,i];
    S1x[i, 1, c+1, : ]  =  (paramN[i,2]+cS1mN[c,i])*[1,1,1]' ;
    S1x[i, 2, c+1, : ]  =  (paramN[i,2]+cS1mN[c,i])*[1,1,1]' + (dS1N[i]+cdS1N[c,i]); 
   }}
@@ -490,7 +504,7 @@ transformed parameters {
 model {
   logkwHat ~ normal(2.2, 2);
   S1mHat ~ normal(4, 1);
-  dS1Hat ~ normal(1, 1);
+  dS1Hat ~ normal(1, 0.5);
   dlogkwHat ~ normal(-1, 0.125);
   dS1mHat   ~ normal(0, 0.5);
   ddS1Hat   ~ normal(0, 0.25);
@@ -513,17 +527,18 @@ model {
     
   clogkwHat ~ normal(0, 1);
   cS1mHat ~ normal(0, 0.5);
-  cdS1Hat ~ normal(0, 0.5);
+  cdS1Hat ~ normal(0, 0.25);
   to_vector(cdlogkwHat) ~ normal(0, 0.0625);
   to_vector(cdS1mHat) ~ normal(0, 0.25);
   to_vector(cddS1Hat) ~ normal(0, 0.125); 
   to_vector(cbeta) ~ normal(0, 0.25);
   cdlogkTHat ~ normal(0, 0.011);
   to_vector(capH) ~ normal(0, 0.05);
-  to_vector(comega) ~ normal(0, 1);
+  to_vector(comega) ~ normal(0, 0.5);
   comegaT ~ normal(0, 0.011);
   to_vector(ckappa) ~ normal(0, 0.125);
-
+   
+  corr_L~lkj_corr_cholesky(2.0);
   
   for (i in 1 : nAnalytes) {
   paramN[i] ~ multi_normal(miu[i,1:2], Omega);
@@ -538,10 +553,11 @@ model {
   dS1A ~ normal(ddS1Hat[1], kappa[3]);
   dS1B ~ normal(ddS1Hat[2], kappa[3]);
   
- for (c in 1 : (nColumns-1)) {   
-  clogkwN[c] ~ normal(cmiu[c, ,1], comega[c,1]);
-  cS1mN[c] ~ normal(cmiu[c, ,2], comega[c,2]);
-  cdS1N[c] ~ normal(cmiu[c, ,3], comega[c,3]);
+  to_vector(etaclogkwNStd) ~ normal(0, 1);
+  
+ for (c in 1 : (nColumns-1)) { 
+  etacS1mN[c] ~ normal(0,1);
+  etacdS1N[c] ~ normal(0,1);
   etacdlogkT[c] ~ normal(0,1);
   etacdlogkwA[c] ~ normal(0,1);
   etacdlogkwB[c] ~ normal(0,1);
@@ -568,13 +584,6 @@ model {
   for (c in 1 : (nColumns-1)) { 
   etaclogsigma[c]  ~ normal(0,1); 
   }
-  
-  if (run_estimation == 1) {
-
-    target += reduce_sum(partial_sum, ind, grainsize, trobs, steps,
-                         hplcparam, analyte, column, modifier, R, logkwx, apHx,
-                         S1x, S2x, pKawx, alphax, dlogkTx, sigmax);
-  }
 }
 
 
@@ -582,7 +591,7 @@ generated quantities {
  
 vector[Nsim] logPsim =[0,1.5,3,4.5,6]';
  array[Nsim] vector[3] miuPred;
- array[nColumns-1,Nsim] vector[3] cmiuPred;
+ array[Nsim, 3] vector[nColumns-1] cmiuPred;
   
 // 1st column
   array[Nsim] vector[2] paramNPred;
@@ -596,6 +605,8 @@ vector[Nsim] logPsim =[0,1.5,3,4.5,6]';
   vector[Nsim] dS1BPred;
   
 // 2nd column
+  matrix[nColumns-1, Nsim] etaclogkwNStdPred;
+  matrix[nColumns-1, Nsim] etaclogkwNPred;
   array[nColumns-1] vector[Nsim] clogkwNPred;
   array[nColumns-1] vector[Nsim] cS1mNPred;
   array[nColumns-1] vector[Nsim] cdS1NPred;
@@ -616,9 +627,9 @@ vector[Nsim] logPsim =[0,1.5,3,4.5,6]';
     miuPred[i, 2] = S1mHat   + beta[2] * (logPsim[i] - 2.2);
     miuPred[i, 3] = dS1Hat;
     for (c in 1 : (nColumns-1)) {
-    cmiuPred[c,i, 1] = clogkwHat[c] + cbeta[c,1] * (logPsim[i] - 2.2);
-    cmiuPred[c,i, 2] = cS1mHat[c]   + cbeta[c,2] * (logPsim[i] - 2.2);
-    cmiuPred[c,i, 3] = cdS1Hat[c];
+    cmiuPred[i, 1, c] = clogkwHat[c] + cbeta[c,1] * (logPsim[i] - 2.2);
+    cmiuPred[i, 2, c] = cS1mHat[c]   + cbeta[c,2] * (logPsim[i] - 2.2);
+    cmiuPred[i, 3, c] = cdS1Hat[c];
   }}
   
   for(i in 1:Nsim){
@@ -634,11 +645,20 @@ vector[Nsim] logPsim =[0,1.5,3,4.5,6]';
     dS1BPred[i] = normal_rng(ddS1Hat[2],kappa[3]);
   }
   
+     for(c in 1:(nColumns-1)){
+      for(i in 1:Nsim){ 
+        etaclogkwNStdPred[c, i] = normal_rng(0, 1);
+      }
+    }
+  
+  etaclogkwNPred = diag_pre_multiply(comega[,1], corr_L * etaclogkwNStdPred); 
+  
+  
   for(i in 1:Nsim){
     for (c in 1 : (nColumns-1)) {
-    clogkwNPred[c,i]   = normal_rng(cmiuPred[c,i,1], comega[c,1]);
-    cS1mNPred[c,i]     = normal_rng(cmiuPred[c,i,2], comega[c,2]);
-    cdS1NPred[c,i]   = normal_rng(cmiuPred[c,i,3], comega[c,3]);
+    clogkwNPred[c,i] = cmiuPred[i, 1, c]  + etaclogkwNPred[c,i];
+    cS1mNPred[c,i]     = normal_rng(cmiuPred[i,2,c], comega[c,2]);
+    cdS1NPred[c,i]   = normal_rng(cmiuPred[i,3,c], comega[c,3]);
     cdlogkwAPred[c,i] = normal_rng(cdlogkwHat[c,1], ckappa[c,1]);
     cdS1mAPred[c,i] = normal_rng(cdS1mHat[c,1], ckappa[c,2]);
     cdS1APred[c,i] = normal_rng(cddS1Hat[c,1], ckappa[c,3]);

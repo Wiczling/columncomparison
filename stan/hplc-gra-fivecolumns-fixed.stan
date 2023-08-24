@@ -8,6 +8,29 @@ functions {
     return lpdf;
   }
   
+    
+  vector lower_tri(matrix mat) {
+    int d = rows(mat);
+    int lower_tri_d = d * (d - 1) / 2;
+    vector[lower_tri_d] lowera;
+    int count = 1;
+    for(r in 2:d) {
+      for(c in 1:(r - 1)) {
+	lowera[count] = mat[r,c];
+	count += 1;
+      }
+    }
+    return(lowera);
+  }
+  
+    real lkj_corr_cholesky_point_lower_tri_lpdf(matrix cor_L, vector point_mu_lower, vector point_scale_lower) {
+    real lpdf = lkj_corr_cholesky_lpdf(cor_L | 1);
+    int d = rows(cor_L);
+    matrix[d,d] cor = multiply_lower_tri_self_transpose(cor_L);
+    lpdf += normal_lpdf(lower_tri(cor) | point_mu_lower, point_scale_lower);
+    return(lpdf);
+  }
+  
   // pH and fi at a given time at column inlet
   vector gra_state(real t, vector hplcparam) {
     vector[2] sol;
@@ -253,12 +276,13 @@ parameters {
   matrix[nColumns-1,2] cdS1mHat;        // effect of column on dS1m [Acids, Bases]
   matrix[nColumns-1,2] cddS1Hat;        // effect of column on ddS1 [Acids, Bases] 
   matrix[nColumns-1,2]  cbeta;
-  vector[nColumns-1]   cdlogkTHat; // ffect of column on dlogkTHat
-  matrix[nColumns-1,2] capH;            // effect of column on apH  [Acids, Bases]
+  vector[nColumns-1]   cdlogkTHat;       // effect of column on dlogkTHat
+  matrix[nColumns-1,2] capH;             // effect of column on apH  [Acids, Bases]
   matrix<lower=0>[nColumns-1,3] comega;  // sd of BAV [clogkw,cS1m,cdS1]
   vector<lower=0>[nColumns-1]  comegaT;  // sd of BAV [cdlogkT]
-  matrix<lower=0>[nColumns-1,3] ckappa;  //sd of BAV [cdlogkw,cdS1m,cddS1]
-
+  matrix<lower=0>[nColumns-1,3] ckappa;  // sd of BAV [cdlogkw,cdS1m,cddS1]
+  cholesky_factor_corr[nColumns-1] corr_L;   // cholesky factor correlation matrix 
+  
   // 1st column
   array[nAnalytes] vector[2] paramN;
   vector[nAnalytes] dS1N;
@@ -271,9 +295,9 @@ parameters {
   vector[nGroupsB] dS1B;
 
   // 2nd column
-  array[nColumns-1] vector[nAnalytes] clogkwN;
-  array[nColumns-1] vector[nAnalytes] cS1mN;
-  array[nColumns-1] vector[nAnalytes] cdS1N;
+  matrix[nColumns-1, nAnalytes] etaclogkwNStd;
+  array[nColumns-1] vector[nAnalytes] etacS1mN;
+  array[nColumns-1] vector[nAnalytes] etacdS1N;
   array[nColumns-1] vector[nAnalytes] etacdlogkT;
   array[nColumns-1] vector[nGroupsA] etacdlogkwA;
   array[nColumns-1] vector[nGroupsB] etacdlogkwB;
@@ -302,8 +326,9 @@ parameters {
 transformed parameters {
   
   cov_matrix[2] Omega;
+  
   array[nAnalytes] vector[3] miu;
-  array[nColumns-1,nAnalytes] vector[3] cmiu;
+  array[nAnalytes,3] vector[nColumns-1] cmiu;
   array[nAnalytes,nColumns]   vector[maxR + 1] logkwx;
   array[nAnalytes,nModifiers, nColumns] vector[maxR + 1] S1x;
   array[nModifiers,nColumns]  real S2x;
@@ -313,6 +338,10 @@ transformed parameters {
   array[nAnalytes] vector[maxR] pKawx;
   array[nAnalytes] vector[nColumns] sigmax;
   
+  array[nColumns-1] vector[nAnalytes] clogkwN;
+  matrix[nColumns-1, nAnalytes] etaclogkwN;
+  array[nColumns-1] vector[nAnalytes] cS1mN;
+  array[nColumns-1] vector[nAnalytes] cdS1N;
   array[nColumns-1] vector[nGroupsA] cdlogkwA;
   array[nColumns-1] vector[nGroupsB] cdlogkwB;
   array[nColumns-1] vector[nGroupsA] cdS1mA;
@@ -336,14 +365,18 @@ transformed parameters {
   
    for (i in 1 : nAnalytes) {
     for (c in 1 : (nColumns-1)) {
-    cmiu[c, i, 1] = clogkwHat[c] + cbeta[c,1] * (logPobs[i] - 2.2);
-    cmiu[c, i, 2] = cS1mHat[c]   + cbeta[c,2] * (logPobs[i] - 2.2);
-    cmiu[c, i, 3] = cdS1Hat[c];
+    cmiu[i, 1, c] = clogkwHat[c] + cbeta[c,1] * (logPobs[i] - 2.2);
+    cmiu[i, 2, c] = cS1mHat[c]   + cbeta[c,2] * (logPobs[i] - 2.2);
+    cmiu[i, 3, c] = cdS1Hat[c];
   }}
+   
+  // Matt's trick to use unit scale 
+  etaclogkwN = diag_pre_multiply(comega[,1], corr_L * etaclogkwNStd); 
   
   for (i in 1 : nAnalytes) { 
    logkwx[i, 1, : ]  =  paramN[i,1]*[1,1,1]';
   for (c in 1 : (nColumns-1)) {
+   clogkwN[c,i] = cmiu[i, 1, c]  + etaclogkwN[c,i];
    logkwx[i, c+1, : ]  =  (paramN[i,1]+clogkwN[c,i])*[1,1,1]'; 
   }}
    
@@ -399,10 +432,13 @@ transformed parameters {
     apHx[idxGroupsB[d,1], c+1, 1] += apH[2]+capH[c,2];
    }}}
    
+  
   for (i in 1 : nAnalytes) { 
    S1x[i, 1, 1, : ]  =  paramN[i,2]*[1,1,1]';
    S1x[i, 2, 1, : ]  =  paramN[i,2]*[1,1,1]' + dS1N[i]; 
   for (c in 1 : (nColumns-1)) {
+   cS1mN[c,i] = cmiu[i,2,c] + comega[c,2]*etacS1mN[c,i];
+   cdS1N[c,i] = cmiu[i,3,c] + comega[c,3]*etacdS1N[c,i];
    S1x[i, 1, c+1, : ]  =  (paramN[i,2]+cS1mN[c,i])*[1,1,1]' ;
    S1x[i, 2, c+1, : ]  =  (paramN[i,2]+cS1mN[c,i])*[1,1,1]' + (dS1N[i]+cdS1N[c,i]); 
   }}
@@ -493,133 +529,135 @@ transformed parameters {
 
 
 model {
-
-logkwHat~normal(3.6,0.0793);
-S1mHat~normal(4.96,0.0832);
-dS1Hat~normal(0.612,0.0512);
-dlogkwHat[1]~normal(-0.786,0.0718);
-dlogkwHat[2]~normal(-0.97,0.0503);
-dS1mHat[1]~normal(0.176,0.121);
-dS1mHat[2]~normal(0.11,0.0744);
-ddS1Hat[1]~normal(0.279,0.0865);
-ddS1Hat[2]~normal(-0.651,0.0564);
-logS2mHat~normal(-0.308,0.0143);
-dlogS2Hat~normal(0.42,0.0076);
-beta[1]~normal(0.831,0.0407);
-beta[2]~normal(0.483,0.0449);
-alphamHat[1]~normal(2.23,0.155);
-alphamHat[2]~normal(-1.36,0.102);
-dalphaHat[1]~normal(0.212,0.0981);
-dalphaHat[2]~normal(-0.188,0.0744);
-dlogkTHat~normal(-0.0898,0.00292);
-apH[1]~normal(-0.0275,0.00118);
-apH[2]~normal(0.0806,0.0008);
-omega[1]~normal(0.925,0.0549);
-omega[2]~normal(0.941,0.059);
-omega[3]~normal(0.565,0.0343);
-omegaT~normal(0.0337,0.00212);
-kappa[1]~normal(0.584,0.035);
-kappa[2]~normal(0.694,0.0475);
-kappa[3]~normal(0.57,0.0378);
-msigma~normal(0.386,0.0263);
-ssigma~normal(0.813,0.0496);
-tau[1]~normal(0.882,0.0494);
-tau[2]~normal(0.958,0.0584);
-tau[3]~normal(0.793,0.0506);
-clogkwHat[1]~normal(0.424,0.0115);
-clogkwHat[2]~normal(0.173,0.0132);
-clogkwHat[3]~normal(0.105,0.0118);
-clogkwHat[4]~normal(0.166,0.0101);
-cS1mHat[1]~normal(0.588,0.0198);
-cS1mHat[2]~normal(-0.122,0.0218);
-cS1mHat[3]~normal(0.362,0.018);
-cS1mHat[4]~normal(0.479,0.0167);
-cdS1Hat[1]~normal(0.151,0.0134);
-cdS1Hat[2]~normal(0.828,0.0278);
-cdS1Hat[3]~normal(0.552,0.0535);
-cdS1Hat[4]~normal(0.0308,0.0157);
-cdlogkwHat[1,1]~normal(0.0412,0.0154);
-cdlogkwHat[2,1]~normal(-0.0515,0.0208);
-cdlogkwHat[3,1]~normal(-0.0321,0.0167);
-cdlogkwHat[4,1]~normal(0.0426,0.0164);
-cdlogkwHat[1,2]~normal(0.00532,0.0135);
-cdlogkwHat[2,2]~normal(-0.0312,0.0154);
-cdlogkwHat[3,2]~normal(-0.0578,0.0127);
-cdlogkwHat[4,2]~normal(-0.0205,0.0137);
-cdS1mHat[1,1]~normal(-0.024,0.0449);
-cdS1mHat[2,1]~normal(-0.202,0.0591);
-cdS1mHat[3,1]~normal(-0.501,0.0452);
-cdS1mHat[4,1]~normal(-0.218,0.0412);
-cdS1mHat[1,2]~normal(0.375,0.0343);
-cdS1mHat[2,2]~normal(-0.394,0.0371);
-cdS1mHat[3,2]~normal(-0.0862,0.0296);
-cdS1mHat[4,2]~normal(0.313,0.033);
-cddS1Hat[1,1]~normal(0.0505,0.0267);
-cddS1Hat[2,1]~normal(0.134,0.0484);
-cddS1Hat[3,1]~normal(0.457,0.0879);
-cddS1Hat[4,1]~normal(0.00183,0.0243);
-cddS1Hat[1,2]~normal(0.17,0.0155);
-cddS1Hat[2,2]~normal(0.573,0.0301);
-cddS1Hat[3,2]~normal(0.504,0.0608);
-cddS1Hat[4,2]~normal(-0.0301,0.0153);
-cbeta[1,1]~normal(0.00719,0.00644);
-cbeta[2,1]~normal(-0.00576,0.00746);
-cbeta[3,1]~normal(-0.0241,0.0076);
-cbeta[4,1]~normal(-0.0102,0.00595);
-cbeta[1,2]~normal(-0.0664,0.0107);
-cbeta[2,2]~normal(0.113,0.0127);
-cbeta[3,2]~normal(-0.0198,0.0103);
-cbeta[4,2]~normal(-0.00871,0.00955);
-cdlogkTHat[1]~normal(-0.00595,0.00125);
-cdlogkTHat[2]~normal(-0.0208,0.0016);
-cdlogkTHat[3]~normal(-0.00605,0.00105);
-cdlogkTHat[4]~normal(-0.00302,0.00104);
-capH[1,1]~normal(-0.0149,0.00159);
-capH[2,1]~normal(-0.0219,0.00165);
-capH[3,1]~normal(0.00482,0.00146);
-capH[4,1]~normal(-0.0226,0.00149);
-capH[1,2]~normal(-0.0336,0.00118);
-capH[2,2]~normal(-0.044,0.00105);
-capH[3,2]~normal(-0.0506,0.000875);
-capH[4,2]~normal(-0.013,0.000997);
-comega[1,1]~normal(0.107,0.00755);
-comega[2,1]~normal(0.129,0.0091);
-comega[3,1]~normal(0.114,0.00763);
-comega[4,1]~normal(0.0966,0.00656);
-comega[1,2]~normal(0.0971,0.0193);
-comega[2,2]~normal(0.146,0.0172);
-comega[3,2]~normal(0.0901,0.0157);
-comega[4,2]~normal(0.0713,0.0169);
-comega[1,3]~normal(0.141,0.0108);
-comega[2,3]~normal(0.309,0.0203);
-comega[3,3]~normal(0.608,0.04);
-comega[4,3]~normal(0.172,0.0124);
-ckappa[1,1]~normal(0.0688,0.00642);
-ckappa[2,1]~normal(0.116,0.00844);
-ckappa[3,1]~normal(0.0855,0.00672);
-ckappa[4,1]~normal(0.0873,0.00623);
-ckappa[1,2]~normal(0.0714,0.0353);
-ckappa[2,2]~normal(0.199,0.0302);
-ckappa[3,2]~normal(0.0932,0.0314);
-ckappa[4,2]~normal(0.0334,0.0238);
-ckappa[1,3]~normal(0.0738,0.02);
-ckappa[2,3]~normal(0.277,0.0232);
-ckappa[3,3]~normal(0.717,0.0417);
-ckappa[4,3]~normal(0.0861,0.0164);
-comegaT[1]~normal(0.0023,0.00159);
-comegaT[2]~normal(0.0115,0.00122);
-comegaT[3]~normal(0.00179,0.00122);
-comegaT[4]~normal(0.00114,0.000838);
-clogmsigma[1]~normal(0.2,0.017);
-clogmsigma[2]~normal(-0.017,0.0207);
-clogmsigma[3]~normal(-0.26,0.0205);
-clogmsigma[4]~normal(-0.1,0.017);
-cssigma[1]~normal(0.0927,0.0236);
-cssigma[2]~normal(0.169,0.02);
-cssigma[3]~normal(0.161,0.019);
-cssigma[4]~normal(0.0854,0.0245);
-rho~lkj_corr_point_lower_tri(0.864,0.0231);
   
+logkwHat~normal(3.6,0.0777);
+S1mHat~normal(4.92,0.0805);
+dS1Hat~normal(0.608,0.049);
+dlogkwHat[1]~normal(-0.79,0.0725);
+dlogkwHat[2]~normal(-0.965,0.0507);
+dS1mHat[1]~normal(0.172,0.12);
+dS1mHat[2]~normal(0.117,0.0734);
+ddS1Hat[1]~normal(0.28,0.081);
+ddS1Hat[2]~normal(-0.666,0.0534);
+logS2mHat~normal(-0.306,0.0146);
+dlogS2Hat~normal(0.42,0.00761);
+beta[1]~normal(0.837,0.0409);
+beta[2]~normal(0.507,0.046);
+alphamHat[1]~normal(2.22,0.154);
+alphamHat[2]~normal(-1.35,0.102);
+dalphaHat[1]~normal(0.216,0.0981);
+dalphaHat[2]~normal(-0.198,0.0723);
+dlogkTHat~normal(-0.089,0.00291);
+apH[1]~normal(-0.0276,0.00118);
+apH[2]~normal(0.0807,0.000815);
+omega[1]~normal(0.922,0.0571);
+omega[2]~normal(0.932,0.0586);
+omega[3]~normal(0.554,0.0345);
+omegaT~normal(0.0335,0.00215);
+kappa[1]~normal(0.586,0.0346);
+kappa[2]~normal(0.689,0.0467);
+kappa[3]~normal(0.551,0.0362);
+msigma~normal(0.39,0.0274);
+ssigma~normal(0.812,0.0503);
+tau[1]~normal(0.882,0.0481);
+tau[2]~normal(0.964,0.0585);
+tau[3]~normal(0.792,0.049);
+clogkwHat[1]~normal(0.43,0.0124);
+clogkwHat[2]~normal(0.184,0.0137);
+clogkwHat[3]~normal(0.108,0.0121);
+clogkwHat[4]~normal(0.177,0.0104);
+cS1mHat[1]~normal(0.592,0.0179);
+cS1mHat[2]~normal(-0.0998,0.022);
+cS1mHat[3]~normal(0.369,0.0168);
+cS1mHat[4]~normal(0.498,0.0153);
+cdS1Hat[1]~normal(0.151,0.0138);
+cdS1Hat[2]~normal(0.812,0.0252);
+cdS1Hat[3]~normal(0.507,0.0401);
+cdS1Hat[4]~normal(0.0357,0.0154);
+cdlogkwHat[1,1]~normal(0.0445,0.0155);
+cdlogkwHat[2,1]~normal(-0.0498,0.0205);
+cdlogkwHat[3,1]~normal(-0.03,0.0164);
+cdlogkwHat[4,1]~normal(0.043,0.0163);
+cdlogkwHat[1,2]~normal(-0.00173,0.0129);
+cdlogkwHat[2,2]~normal(-0.0402,0.0159);
+cdlogkwHat[3,2]~normal(-0.0609,0.0124);
+cdlogkwHat[4,2]~normal(-0.031,0.013);
+cdS1mHat[1,1]~normal(-0.0146,0.0442);
+cdS1mHat[2,1]~normal(-0.194,0.0584);
+cdS1mHat[3,1]~normal(-0.489,0.0455);
+cdS1mHat[4,1]~normal(-0.229,0.0404);
+cdS1mHat[1,2]~normal(0.359,0.0326);
+cdS1mHat[2,2]~normal(-0.406,0.0382);
+cdS1mHat[3,2]~normal(-0.0859,0.0301);
+cdS1mHat[4,2]~normal(0.288,0.0317);
+cddS1Hat[1,1]~normal(0.0489,0.0257);
+cddS1Hat[2,1]~normal(0.134,0.0481);
+cddS1Hat[3,1]~normal(0.462,0.0864);
+cddS1Hat[4,1]~normal(0.0034,0.0234);
+cddS1Hat[1,2]~normal(0.167,0.0152);
+cddS1Hat[2,2]~normal(0.571,0.0299);
+cddS1Hat[3,2]~normal(0.504,0.0601);
+cddS1Hat[4,2]~normal(-0.0366,0.0151);
+cbeta[1,1]~normal(0.000974,0.00713);
+cbeta[2,1]~normal(-0.0168,0.00791);
+cbeta[3,1]~normal(-0.0317,0.00744);
+cbeta[4,1]~normal(-0.0191,0.00628);
+cbeta[1,2]~normal(-0.0692,0.0102);
+cbeta[2,2]~normal(0.0963,0.0129);
+cbeta[3,2]~normal(-0.0267,0.00965);
+cbeta[4,2]~normal(-0.0171,0.0085);
+cdlogkTHat[1]~normal(-0.0061,0.00127);
+cdlogkTHat[2]~normal(-0.0216,0.00154);
+cdlogkTHat[3]~normal(-0.0066,0.00104);
+cdlogkTHat[4]~normal(-0.0035,0.00105);
+capH[1,1]~normal(-0.0149,0.00157);
+capH[2,1]~normal(-0.022,0.00167);
+capH[3,1]~normal(0.00488,0.00147);
+capH[4,1]~normal(-0.0223,0.00146);
+capH[1,2]~normal(-0.0335,0.00119);
+capH[2,2]~normal(-0.0441,0.00106);
+capH[3,2]~normal(-0.0507,0.000885);
+capH[4,2]~normal(-0.0135,0.00102);
+comega[1,1]~normal(0.115,0.0078);
+comega[2,1]~normal(0.134,0.00958);
+comega[3,1]~normal(0.12,0.00809);
+comega[4,1]~normal(0.101,0.00642);
+comega[1,2]~normal(0.0571,0.0198);
+comega[2,2]~normal(0.148,0.0161);
+comega[3,2]~normal(0.0523,0.0148);
+comega[4,2]~normal(0.0193,0.0123);
+comega[1,3]~normal(0.143,0.0112);
+comega[2,3]~normal(0.29,0.0197);
+comega[3,3]~normal(0.47,0.0314);
+comega[4,3]~normal(0.165,0.012);
+ckappa[1,1]~normal(0.0698,0.00633);
+ckappa[2,1]~normal(0.114,0.00851);
+ckappa[3,1]~normal(0.083,0.0066);
+ckappa[4,1]~normal(0.0832,0.00574);
+ckappa[1,2]~normal(0.0741,0.0348);
+ckappa[2,2]~normal(0.203,0.0299);
+ckappa[3,2]~normal(0.109,0.0263);
+ckappa[4,2]~normal(0.0352,0.0243);
+ckappa[1,3]~normal(0.0743,0.0187);
+ckappa[2,3]~normal(0.275,0.023);
+ckappa[3,3]~normal(0.715,0.0409);
+ckappa[4,3]~normal(0.0853,0.0174);
+comegaT[1]~normal(0.00216,0.00152);
+comegaT[2]~normal(0.0113,0.00123);
+comegaT[3]~normal(0.00164,0.00115);
+comegaT[4]~normal(0.00106,0.0008);
+clogmsigma[1]~normal(0.197,0.0162);
+clogmsigma[2]~normal(-0.0136,0.0207);
+clogmsigma[3]~normal(-0.258,0.021);
+clogmsigma[4]~normal(-0.0996,0.0166);
+cssigma[1]~normal(0.0713,0.0277);
+cssigma[2]~normal(0.168,0.0194);
+cssigma[3]~normal(0.163,0.0191);
+cssigma[4]~normal(0.0816,0.0264);
+rho~lkj_corr_point_lower_tri(0.864,0.0231);
+
+corr_L~lkj_corr_cholesky_point_lower_tri([0.568,0.781,0.55,0.719,0.554,0.918]',[0.0704,0.0413,0.0737,0.0462,0.0704,0.017]');
+
   for (i in 1 : nAnalytes) {
   paramN[i] ~ multi_normal(miu[i,1:2], Omega);
   }
@@ -633,10 +671,11 @@ rho~lkj_corr_point_lower_tri(0.864,0.0231);
   dS1A ~ normal(ddS1Hat[1], kappa[3]);
   dS1B ~ normal(ddS1Hat[2], kappa[3]);
   
- for (c in 1 : (nColumns-1)) {   
-  clogkwN[c] ~ normal(cmiu[c, ,1], comega[c,1]);
-  cS1mN[c] ~ normal(cmiu[c, ,2], comega[c,2]);
-  cdS1N[c] ~ normal(cmiu[c, ,3], comega[c,3]);
+  to_vector(etaclogkwNStd) ~ normal(0, 1);
+  
+ for (c in 1 : (nColumns-1)) { 
+  etacS1mN[c] ~ normal(0,1);
+  etacdS1N[c] ~ normal(0,1);
   etacdlogkT[c] ~ normal(0,1);
   etacdlogkwA[c] ~ normal(0,1);
   etacdlogkwB[c] ~ normal(0,1);

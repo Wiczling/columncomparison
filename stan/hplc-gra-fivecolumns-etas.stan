@@ -642,6 +642,7 @@ generated quantities {
     etacdS1mAc[c,d] = etacdS1mA[c,d];
     etacdS1Ac[c,d] = etacdS1A[c,d];
     }
+    
     for(d in 1:nGroupsB){ 
     etacdlogkwBc[c,d] = etacdlogkwB[c,d]; 
     etacdS1mBc[c,d] = etacdS1mB[c,d];
