@@ -472,43 +472,43 @@ fit$print(c("clogkwHat","cS1mHat","cdS1Hat",
 
 # Figure S1. Raw data for 6 selected analytes.
 
-![](../figures/rawdata/Acridine.png)
+![](../figures/rawdata/Acridine.pdf)
 {{< pagebreak >}}
-![](../figures/rawdata/Baclofen.png)
+![](../figures/rawdata/Baclofen.pdf)
 
 {{< pagebreak >}}
-![](../figures/rawdata/Hydrocortisone.png)
+![](../figures/rawdata/Hydrocortisone.pdf)
 
 {{< pagebreak >}}
-![](../figures/rawdata/Pioglitazone.png)
+![](../figures/rawdata/Pioglitazone.pdf)
 {{< pagebreak >}}
-![](../figures/rawdata/Quinine.png)
+![](../figures/rawdata/Quinine.pdf)
 
 {{< pagebreak >}}
-![](../figures/rawdata/Tolbutamide.png)
+![](../figures/rawdata/Tolbutamide.pdf)
 
 {{< pagebreak >}}
 
 # Figure S2. Summary of the MCMC simulations of the marginal posterior distributions of population-level model parameters. 
 
-![](../figures/param/XBridgeShieldRP18_1.png)
+![](../figures/param/XBridgeShieldRP18_1.pdf)
 {{< pagebreak >}}
-![](../figures/param/XBridgeShieldRP18_2.png)
+![](../figures/param/XBridgeShieldRP18_2.pdf)
 {{< pagebreak >}}
-![](../figures/param/columneffects1.png)
+![](../figures/param/columneffects1.pdf)
 {{< pagebreak >}}
-![](../figures/param/columneffects2.png)
+![](../figures/param/columneffects2.pdf)
 
 {{< pagebreak >}}
 
 # Figure S3. Goodness of fit plots
 
-![](../figures/concordanceplots/residuals.png)
+![](../figures/concordanceplots/residuals.pdf)
 {{< pagebreak >}}
-![](../figures/concordanceplots/individual.png)
+![](../figures/concordanceplots/individual.pdf)
 
 {{< pagebreak >}}
-![](../figures/concordanceplots/population.png)
+![](../figures/concordanceplots/population.pdf)
 
 {{< pagebreak >}}
 
@@ -516,51 +516,52 @@ fit$print(c("clogkwHat","cS1mHat","cdS1Hat",
 
 Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given the population-level parameters and all the retention data measured for a particular analyte.
 
-![](../figures/concordanceplots/Acridine.individual.png)
+![](../figures/concordanceplots/Acridine.individual.pdf)
 {{< pagebreak >}}
-![](../figures/concordanceplots/Baclofen.individual.png)
+![](../figures/concordanceplots/Baclofen.individual.pdf)
 
 {{< pagebreak >}}
-![](../figures/concordanceplots/Hydrocortisone.individual.png)
+![](../figures/concordanceplots/Hydrocortisone.individual.pdf)
 
 {{< pagebreak >}}
-![](../figures/concordanceplots/Pioglitazone.individual.png)
+![](../figures/concordanceplots/Pioglitazone.individual.pdf)
 {{< pagebreak >}}
-![](../figures/concordanceplots/Quinine.individual.png)
+![](../figures/concordanceplots/Quinine.individual.pdf)
 
 {{< pagebreak >}}
-![](../figures/concordanceplots/Tolbutamide.individual.png)
+![](../figures/concordanceplots/Tolbutamide.individual.pdf)
 {{< pagebreak >}}
 # Figure S5. Population gradient predictions.
 
 Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given only population-level parameters and predictors (logP and pKa).
 
-![](../figures/concordanceplots/Acridine.population.png)
+![](../figures/concordanceplots/Acridine.population.pdf)
 {{< pagebreak >}}
-![](../figures/concordanceplots/Baclofen.population.png)
+![](../figures/concordanceplots/Baclofen.population.pdf)
 
 {{< pagebreak >}}
-![](../figures/concordanceplots/Hydrocortisone.population.png)
+![](../figures/concordanceplots/Hydrocortisone.population.pdf)
 
 {{< pagebreak >}}
-![](../figures/concordanceplots/Pioglitazone.population.png)
-{{< pagebreak >}}
-![](../figures/concordanceplots/Quinine.population.png)
+![](../figures/concordanceplots/Pioglitazone.population.pdf)
 
 {{< pagebreak >}}
-![](../figures/concordanceplots/Tolbutamide.population.png)
+![](../figures/concordanceplots/Quinine.population.pdf)
+
+{{< pagebreak >}}
+![](../figures/concordanceplots/Tolbutamide.population.pdf)
 {{< pagebreak >}}
 
 # Figure S6. Uncertainity chromatograms
 
-![](../figures/concordanceplots/uncertainitychromatogram.individual.png)
+![](../figures/concordanceplots/uncertainitychromatogram.individual.pdf)
 {{< pagebreak >}}
-![](../figures/concordanceplots/uncertainitychromatogram.population.png)
+![](../figures/concordanceplots/uncertainitychromatogram.population.pdf)
 {{< pagebreak >}}
 
 Limited data predictions:
 
-![](../figures/casestudy2/utilitymap/chromatogram.png)
+![](../figures/casestudy2/utilitymap/chromatogram.pdf)
 
 {{< pagebreak >}}
 # Licenses {.unnumbered}

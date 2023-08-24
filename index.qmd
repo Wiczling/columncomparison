@@ -11,29 +11,11 @@ format:
     code-tools: true
     fig-width: 7
     fig-height: 7
-  pdf:
-    toc: true
-    number-sections: true
-    colorlinks: true
-    fig-width: 7
-    fig-height: 7
 ---
-
-::: {.content-visible when-format="html"}
 
 ```{r setuphtml, include=FALSE}
 knitr::opts_chunk$set(cache=TRUE, message=FALSE, error=FALSE, warning=FALSE, comment=NA, out.width='95%')
 ```
-
-:::
-
-::: {.content-visible when-format="pdf"}
-
-```{r setuppdf, include=FALSE}
-knitr::opts_chunk$set(cache=TRUE, message=FALSE, error=FALSE, warning=FALSE, echo=FALSE, comment=NA, out.width='95%')
-```
-
-:::
 
 # Introduction
 
@@ -272,8 +254,8 @@ p <- ggplot(data[which(data$METID %in% analyte_ID_sample[i]),])+
   xlim(2,11)
 print(p)
 
-ggsave(paste0("figures\\rawdata\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".png"), plot=p, width = 20, height = 20, units = "cm")
-
+ggsave(paste0("figures\\rawdata\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".png"), plot=p, width = 20, height = 20, units = "cm", dpi = 300)
+ggsave(paste0("figures\\rawdata\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".pdf"), plot=p, width = 20, height = 20, units = "cm", dpi = 300)
 }
 
 ```
@@ -293,8 +275,11 @@ p<-totalnrgroups %>% tidyr::gather("Name", "count", 1:54)  %>%
    geom_point()+
    labs(x="Number of functional groups", y="Functional group name")
 
-print(p)
 ggsave(paste0("figures\\predictors\\", "functionalgroups", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\predictors\\", "functionalgroups", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
+print(p)
+
 
 ```
 
@@ -1042,7 +1027,8 @@ p2<-bayesplot::mcmc_intervals(fit$draws(c("omega","omegaT","kappa","msigma","ssi
 
 ggsave(paste0("figures\\param\\", "XBridgeShieldRP18_1", ".png"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\param\\", "XBridgeShieldRP18_2", ".png"), plot=p2, width = 20, height = 20, units = "cm")
-
+ggsave(paste0("figures\\param\\", "XBridgeShieldRP18_1", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "XBridgeShieldRP18_2", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
 print(p1)
 print(p2)
 
@@ -1126,6 +1112,7 @@ p=grid.arrange(p1+ggtitle("XTerra MS C18"),
 
 
 ggsave(paste0("figures\\param\\", "columneffects1", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "columneffects1", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
@@ -1191,6 +1178,7 @@ p=grid.arrange(p1+ggtitle("XTerra MS C18"),
 
 
 ggsave(paste0("figures\\param\\", "columneffects2", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "columneffects2", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
@@ -1500,6 +1488,7 @@ p=grid.arrange(p1+ theme(legend.position='none'),
                p2, ncol=2, widths = c(1,1), layout_matrix = rbind(c(1, 2),c(3, 4), c(5, 5)))
 
 ggsave(paste0("figures\\param\\", "column-effects-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "column-effects-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
@@ -1917,6 +1906,7 @@ p=grid.arrange(p1+ theme(legend.position='none'),
                p2, ncol=2, widths = c(1,1), layout_matrix = rbind(c(1, 2),c(3, 4), c(5, 5)))
 
 ggsave(paste0("figures\\param\\", "column-parameters-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "column-parameters-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
@@ -2010,6 +2000,7 @@ p=grid.arrange(p1,
                p2, ncol=1)
 
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".png"), plot=p, width = 20, height = 10, units = "cm")
+ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".pdf"), plot=p, width = 20, height = 10, units = "cm")
 
 ```
 
@@ -2090,7 +2081,7 @@ p <-draws_df_subset %>%
 print(p)
 
 ggsave(paste0("figures\\izoparam\\isopred\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
-
+ggsave(paste0("figures\\izoparam\\isopred\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 }
 
@@ -2182,6 +2173,8 @@ p<-draws_df_subset %>%
  print(p)
  
  ggsave(paste0("figures\\izoparam\\diff\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\izoparam\\diff\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
 
 
 }
@@ -2267,6 +2260,7 @@ p<-draws_df_subset %>%
 print(p)
 
  ggsave(paste0("figures\\izoparam\\filogk1\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
+  ggsave(paste0("figures\\izoparam\\filogk1\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 }
 ```
 
@@ -2297,6 +2291,7 @@ p<-ggpairs(as.data.frame(data_to_plot_param), columnLabels = colnames(data_to_pl
         labeller = "label_parsed",upper = list(continuous = "points"))
 
 ggsave(paste0("figures\\iparam\\", "XBridgeShieldRP18.neutral", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "XBridgeShieldRP18.neutral", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 print(p)
 ```
@@ -2350,6 +2345,9 @@ p3<-ggpairs(as.data.frame(data_to_plot_param), columnLabels = colnames(data_to_p
 ggsave(paste0("figures\\iparam\\", "columneffects.neutral.clogkwN", ".png"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\iparam\\", "columneffects.neutral.cS1mN", ".png"), plot=p2, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\iparam\\", "columneffects.neutral.cdS1N", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "columneffects.neutral.clogkwN", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "columneffects.neutral.cS1mN", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "columneffects.neutral.cdS1N", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
 
 print(p1)
 print(p2)
@@ -2394,8 +2392,10 @@ p<-ggpairs(data_to_plot_diss,columns = 1:3, columnLabels = c("dlogkw","dS1m","dd
         upper = list(continuous = "points"))+
         scale_alpha(guide = "none")
 
-print(p)
 ggsave(paste0("figures\\iparam\\", "XBridgeShieldRP18.dissociated", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "XBridgeShieldRP18.dissociated", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
+print(p)
 
 ```
 
@@ -2497,14 +2497,18 @@ p3<-ggpairs(data_to_plot_diss,columns = 1:4, columnLabels = c("cdS11","cdS12","c
         aes(color = GroupType, alpha = 0.5),
         upper = list(continuous = "points"))+
         scale_alpha(guide = "none")
+ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdlogkw", ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdS1m", ".png"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdS1", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdlogkw", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdS1m", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdS1", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
 
 print(p1)
 print(p2)
 print(p3)
 
-ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdlogkw", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdS1m", ".png"), plot=p2, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\iparam\\", "coleffects.diss.cdS1", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+
 ```
 
 ### pKa-related paraemters
@@ -2542,8 +2546,11 @@ p<-ggpairs(data_to_plot_param,columns = 1:4, columnLabels = c("pKalit", "pKapred
         aes(color = GroupType, alpha = 0.5),
         upper = list(continuous = "points"))+
         scale_alpha(guide = "none")
-print(p)
+
 ggsave(paste0("figures\\iparam\\", "pKas", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\iparam\\", "pKas", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
+print(p)
 
 ```
 
@@ -2628,6 +2635,9 @@ p3<-ggpairs(as.data.frame(data_to_plot_param), columnLabels = colnames(data_to_p
 ggsave(paste0("figures\\etaplots\\", "neutral.logkwN", ".png"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\etaplots\\", "neutral.S1mN", ".png"), plot=p2, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\etaplots\\", "neutral.dS1N", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "neutral.logkwN", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "neutral.S1mN", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "neutral.dS1N", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
 
 print(p1)
 print(p2)
@@ -2737,14 +2747,17 @@ p3<-ggpairs(data_to_plot_diss,columns = 1:4, columnLabels = c("etacdS11","etacdS
         aes(color = GroupType, alpha = 0.5),
         upper = list(continuous = "points"))+
         scale_alpha(guide = "none")
+ggsave(paste0("figures\\etaplots\\", "dissociated.dlogkw", ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "dissociated.dS1m", ".png"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "dissociated.dS1", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "dissociated.dlogkw", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "dissociated.dS1m", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\etaplots\\", "dissociated.dS1", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
 
 print(p1)
 print(p2)
 print(p3)
 
-ggsave(paste0("figures\\etaplots\\", "dissociated.dlogkw", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\etaplots\\", "dissociated.dS1m", ".png"), plot=p2, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\etaplots\\", "dissociated.dS1", ".png"), plot=p3, width = 20, height = 20, units = "cm")
 
 ```
 
@@ -2780,10 +2793,10 @@ p1<-data_to_plot_fungr %>% tidyr::gather("name", "count", 1:5)  %>%
    facet_wrap(.~etaname)+
    labs(title=paste(functionalgroupsnames[i,2]), x="Nr of functional groups", y="eta")
 
-print(p1)
-
 
  ggsave(paste0("figures\\etaplots\\functionalgroupseffects\\", functionalgroupsnames[i,2], ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\etaplots\\functionalgroupseffects\\", functionalgroupsnames[i,2], ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+ print(p1)
 
 }
 ```
@@ -2906,6 +2919,7 @@ p <- ggplot()+
            fill = "tg, min")
 
 ggsave(paste0("figures\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".individual", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 print(p)
 
@@ -2935,6 +2949,7 @@ p <- ggplot()+
            fill = "tg, min")
 
 ggsave(paste0("figures\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 print(p)
 }
@@ -3018,9 +3033,9 @@ p2 <- ggplot(data = wpPred)+
         legend.justification = c(1, 0))
 
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.individual", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.population", ".png"), plot=p2, width = 20, height = 20, units = "cm")
-
+ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.individual", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.population", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
 print(p1)
 print(p2)
 ```
@@ -3100,7 +3115,7 @@ p<-draws_df_subset %>%
   geom_hline(yintercept= c(0,1), linetype="dashed",color="gray")
 
 ggsave(paste0("figures\\izoparam\\isopred\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".png"), plot=p, width = 20, height = 20, units = "cm")
-
+ggsave(paste0("figures\\izoparam\\isopred\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 print(p)
 }
 
@@ -3188,7 +3203,8 @@ p<-draws_df_subset %>%
   coord_cartesian(xlim=c(0,1),ylim=c(-1,1))
 
 ggsave(paste0("figures\\izoparam\\diff\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".png"), plot=p, width = 20, height = 20, units = "cm")
- 
+ggsave(paste0("figures\\izoparam\\diff\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+  
  print(p)
 
 }
@@ -3270,6 +3286,7 @@ p<-draws_df_subset %>%
   facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))
 
 ggsave(paste0("figures\\izoparam\\filogk1\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\izoparam\\filogk1\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".population", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
  
 print(p)
 
@@ -3384,9 +3401,10 @@ p<-draws_df_subset %>%
   theme(strip.text.x = element_text(size = 6),strip.text.y = element_text(size = 6))+
   coord_cartesian(xlim=c(0,1),ylim=c(-2,4))
 
-print(p)
-
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\logPeffects\\logPjoined", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
+print(p)
 
 ```
 
@@ -3438,6 +3456,7 @@ p1 <- ggplot()+
       ylim(-10,10)
 
 ggsave(paste0("figures\\concordanceplots\\", "residuals", ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", "residuals", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
 
 print(p1)
 ```
@@ -3469,6 +3488,8 @@ p2 <- ggplot()+
 
 ggsave(paste0("figures\\concordanceplots\\", "individual", ".png"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\concordanceplots\\", "population", ".png"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", "individual", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", "population", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
 
 print(p1)
 print(p2)
@@ -3652,6 +3673,11 @@ ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap2", ".png"), plot
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap3", ".png"), plot=p13, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap4", ".png"), plot=p14, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap5", ".png"), plot=p15, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap1", ".pdf"), plot=p11, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap2", ".pdf"), plot=p12, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap3", ".pdf"), plot=p13, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap4", ".pdf"), plot=p14, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap5", ".pdf"), plot=p15, width = 20, height = 20, units = "cm")
 
 print(p11)
 print(p12)
@@ -3659,28 +3685,23 @@ print(p13)
 print(p14)
 print(p15)
 
- # The best for XBridge Shield RP18
-
+cat("1. The best for XBridge Shield RP18:")
  foo1<-foo[foo$Column==1 & foo$pHo<7,];
  foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
 
- # The best choice for XTerra MS C18
-
+cat(" The best choice for XTerra MS C18:")
  foo2<-foo[foo$Column==2& foo$pHo<7,];
  foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
 
-  # The best choice for XBridge Phenyl
-
+cat(" The best choice for XBridge Phenyl:")
  foo3<-foo[foo$Column==3& foo$pHo<7,];
  foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
 
-  # The best choice for XBridge C8
-
+cat(" The best choice for XBridge C8:")
  foo4<-foo[foo$Column==4& foo$pHo<7,];
  foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
 
-  # The best choice for Xterra MS C8
-
+cat(" The best choice for Xterra MS C8:")
  foo5<-foo[foo$Column==5& foo$pHo<7,];
  foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
 
@@ -3763,10 +3784,10 @@ p <- ggplot(data = wpCond)+
      theme(legend.position = c(1, 0),
         legend.justification = c(1, 0))
 
-print(p)
-
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
+print(p)
 ```
 
 # Predictions and decision making. Case 2
@@ -4044,7 +4065,7 @@ facet_grid(ColumnName~Mod2+Temp, labeller = labeller(Temp=temp.labs,Mod2=mod.lab
       labs(title=paste(dataNames$Name[analyte_ID_sample[i]]), x ="pH", y = "Retention time, min", color = "tg, min", fill = "tg, min")
 
 ggsave(paste0("figures\\casestudy2\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".png"), plot=pi, width = 20, height = 20, units = "cm")
-
+ggsave(paste0("figures\\casestudy2\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".pdf"), plot=pi, width = 20, height = 20, units = "cm")
 print(pi)
 
 }
@@ -4116,6 +4137,9 @@ p3 <- ggplot()+
 ggsave(paste0("figures\\casestudy2\\decision\\", "expectedutility", ".png"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\decision\\",  "resolution", ".png"), plot=p2, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\decision\\",  "maxtr", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\decision\\", "expectedutility", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\decision\\",  "resolution", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\decision\\",  "maxtr", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
 
 print(p1)
 print(p2)
@@ -4180,7 +4204,8 @@ p <- ggplot(data = wpCond)+
      theme(legend.position = c(1, 0),
      legend.justification = c(1, 0))
 
-ggsave(paste0("figures\\casestudy2\\decision\\",  "Chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 print(p)
 ```
@@ -4338,6 +4363,11 @@ ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap2", ".png"), plot
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap3", ".png"), plot=p13, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap4", ".png"), plot=p14, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap5", ".png"), plot=p15, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap1", ".pdf"), plot=p11, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap2", ".pdf"), plot=p12, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap3", ".pdf"), plot=p13, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap4", ".pdf"), plot=p14, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "utilitymap5", ".pdf"), plot=p15, width = 20, height = 20, units = "cm")
 
 print(p11)
 print(p12)
@@ -4345,19 +4375,19 @@ print(p13)
 print(p14)
 print(p15)
 
- # The best for XBridge Shield RP18
+ cat("1. The best for XBridge Shield RP18:")
  foo1<-foo[foo$Column==1,];
  foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
- # The best choice for XTerra MS C18
+ cat("2.  The best choice for XTerra MS C18:")
  foo2<-foo[foo$Column==2,];
  foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
- # The best choice for XBridge Phenyl
+ cat("3.  The best choice for XBridge Phenyl:")
  foo3<-foo[foo$Column==3,];
  foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
- # The best choice for XBridge C8
+ cat("4.  The best choice for XBridge C8:")
  foo4<-foo[foo$Column==4,];
  foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
- # The best choice for Xterra MS C8
+ cat("5.  The best choice for Xterra MS C8:")
  foo5<-foo[foo$Column==5,];
  foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
 
@@ -4456,6 +4486,7 @@ p <- ggplot(data = wpCond)+
         legend.justification = c(1, 0))
 
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 print(p)
 ```
