@@ -55,7 +55,7 @@ Data can be accessed via github (data folder) or osf.io repositories [@kubik_XBr
 
 ## Prepare the data
 
-We will begin with loading and merging all the required datasets:
+We will begin with loading and merging the analyzed datasets:
 
 ```{r loaddata}
 data1 = read.csv('data/1-X_Bridge_Shield_C18_5cm.csv')
@@ -98,7 +98,7 @@ rm(data1, data2, data3, data4, data5)
 
 The data requires some cleaning:
 
-1.  we remove measurements with low score, analytes with less than 42 measurements per column, analytes with less than 210 measurements out of total 420, and use only measurements with the highest score (if several are present)
+1.  we remove measurements with low score, analytes with less than 42 measurements per column, analytes with less than 210 measurements out of total 420, and use only measurements with the highest score (if several are present),
 
 ```{r cleaning1}
 data <- data  %>%
@@ -115,7 +115,7 @@ data <- data  %>%
   ungroup()
 ```
 
-2.  we remove some outlying measurements (mismatch between literature pKa and observed data)
+2.  we remove some outlying measurements (mismatch between literature pKa and observed data),
 
 ```{r cleaning2}
 data <- data %>%  
@@ -128,7 +128,7 @@ data <- data %>%
 
 ```
 
-3.  we also prepare available predictors: pKa, logP and functional_groups
+3.  we also prepare several predictors: pKa, logP and functional_groups,
 
 ```{r cleaning3}
 pKaslit = dataACD[,3:7]           # pKa values as predicted by ACD
@@ -157,7 +157,7 @@ functional_groups <- functional_groups[,idx_included]
 rm(idx_included)
 ```
 
-4.  finally, we select analytes with \<=2 dissociation steps fot the analysis
+4.  finally, we select onlt analytes with \<=2 dissociation steps.
 
 ```{r cleaning4}
 maxR <- 2         
@@ -221,7 +221,7 @@ During the exploratory data analysis phase, we create a series of plots to bette
 
 ### Plots
 
-The following graphs present retention time profiles for 6 analytes:
+The following plots present retention time profiles for 6 analytes:
 
 1.  acridine (monoprotic acid)
 2.  baclofen (zwitterion: acidic and basic group)
@@ -394,8 +394,7 @@ $$
 & cddS1A_{c,a} \sim N(\hat{cddS1_{c,1}}, c\kappa_{c,3}) \text{ for c=1...4}, \\
 & cddS1B_{c,b} \sim N(\hat{cddS1_{c,2}}, c\kappa_{c,3}) \text{ for c=1...4}. \\
 \end{aligned}
-$$ 
-where a=1..`r nGroupsA` and b=1..`r nGroupsB` denote the indexes of acidic and basic groups.
+$$ where a=1..`r nGroupsA` and b=1..`r nGroupsB` denote the indexes of acidic and basic groups.
 
 Similarly $\small pKa$ an $\small \alpha$ parameters were described separately for acids and based:
 
@@ -882,7 +881,6 @@ wait
 ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hmc engine=nuts max_depth=10 stepsize=0.01 adapt delta=0.9 data file=$PWD/standata.json init=$PWD/init-${SLURM_ARRAY_TASK_ID}.json  num_threads=${SLURM_NTASKS} output file=$PWD/output_${SLURM_ARRAY_TASK_ID}.csv 
 </pre>
 ```
-
 3.  After calculations, we loaded the output files using cmdstanr. The files are accessible through [stan output files](https://cloud.gumed.edu.pl/s/MbHmekcg79w4ot4 "Stan output files").
 
 ```{r stanload}
@@ -898,7 +896,7 @@ fit <- cmdstanr::as_cmdstan_fit(c(
                                 ))
 ```
 
-4.  finally we checked the diagnostics of Monte Carlo inferences based on the Stan documentation described here [](https://mc-stan.org/docs/cmdstan-guide/diagnose.html).
+4.  finally we checked the diagnostics of Monte Carlo inferences based on the Stan documentation described here .
 
 ```{r standiagnose, eval = FALSE}
  #fit$cmdstan_diagnose()
@@ -934,7 +932,6 @@ The diagnostics are reasonable given model complexity. Output copied here to sav
 [21] "Processing complete."                                                                 
 </pre>
 ```
-
 # Results
 
 ## Summary of model parameters (table):
@@ -2955,6 +2952,7 @@ print(p)
 }
 
 ```
+
 # Uncertainity chromatogram
 
 Below is the example of an uncertainty chromatogram expected for tg = 90 min, pH = 4.9, Temp = $25^oC$ in MeOH. The individual and population predictions are shown.
@@ -3317,7 +3315,6 @@ draws_logP_df <- as_draws_df(x$generated_quantities)
 # draws_epred_df <- fit_epred$draws(format = "df")
 ```
 
-
 ```{r plot-logP-effects}
 
 logPsim = c(0,1.5,3,4.5,6)
@@ -3513,6 +3510,7 @@ fit_red1<- cmdstanr::as_cmdstan_fit(c(
                                 ))
 
 ```
+
 ## Utility maps
 
 Let's find the best chromatogram that maximize utility using the set of experiments used to build the model.
