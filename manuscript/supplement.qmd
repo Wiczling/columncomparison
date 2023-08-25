@@ -40,7 +40,7 @@ $$
 \int_0^{t_{R,z}-t_{0,z}-t_e}\frac{dt}{t_{0,z}\cdot ki_z(t) }=1,
 $$
 
-where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an ith-analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
+where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an i-th analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
 
 $$
 ki_z(t)=\frac{k_{z,i[z],1}(t)+\sum_{r=1}^{R[i[z]]} k_{z,i[z],r+1}(t) \cdot 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i]} pKa_{z,i[z],r}(t)} }{1+\sum_{r=1}^R 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i[z]]} pKa_{z,i[z],r}(t) } }
@@ -55,9 +55,9 @@ $$
 \end{aligned}
 $$
 
-where $\small logkw_{col,i,r}$ represents logarithm of retention factors extrapolated to 0% of organic modifier content for column $\small col$, $\small i$-th analyte and $\small r$-th analyte form; $\small S1_{i,m,col,r}$ and $\small S2_m$ are the slopes in the Neue equation for column $\small c$, modifier $\small m$, $\small i$-th analyte and $\small r$-th analyte form. In this parametrization of the Neue equation, $\small S1$ reflects the difference between logarithm of retention factors corresponding to water (0% of organic modifier content) and MeOH or ACN (100% of organic modifier content) as eluents. $\small dlogkT_{col,i}$ denotes the change in $\small logkw$ due to the increase in temperature by $\small 10^oC$. $\small apH_{col,m,i,r}$ denotes the pH effects on $\small logkw$;
+where $\small logkw_{col,i,r}$ represents logarithm of retention factors extrapolated to 0% of organic modifier content for column $\small col$, $\small i$-th analyte and $\small r$-th analyte form; $\small S1_{i,m,col,r}$ and $\small S2_m$ are the slopes in the Neue equation for column $\small c$, modifier $\small m$, $\small i$-th analyte and $\small r$-th analyte form. In this parametrization of the Neue equation, $\small S1$ reflects the difference between logarithm of retention factors corresponding to water (0% of organic modifier content) and MeOH or ACN (100% of organic modifier content) as eluents. $\small dlogkT_{col,i}$ denotes the change in $\small logkw$ due to the increase in temperature by $\small 10^oC$. $\small apH_{col,m,i,r}$ denotes the pH effects on $\small logkw$ for ionized forms of analyte.
 
-Further a linear relationship between $\small pKa$ values and the organic modifier content was assumed:
+Further we assume a linear relationship between $\small pKa$ values and the organic modifier content:
 
 $$
 pKa_{z,i,r}(t)=pKaw_{i,r}+\alpha_{m[z],i,r}\cdot\varphi_z(t)
@@ -71,7 +71,7 @@ $$
 pH_z(t)=pHo_z+\alpha 1_z\cdot \varphi_z(t)+\alpha2_z\cdot {\varphi_z(t)}^2
 $$
 
-First, individual values of $\small logkw$, $\small S1$ are defined for the neutral form of an analyte in MeOH for the Xbridge Sheld RP18 column (denoted as $\small logkwN_i$ and $\small S1mN_i$). The effect of ACN was described as ($\small dS1N_i$), the effect of column ($\small c=1..4$) was described by $\small clogkwN_{c,i}$, $\small cS1mN_{c,i}$, and $\small cdS1N_{c,i}$). The individual parameters for the neutral forms were described using the following equations:
+The individual values of $\small logkw$, $\small S1$ were first defined for the neutral form of an analyte in MeOH for the Xbridge Sheld RP18 column (denoted as $\small logkwN_i$ and $\small S1mN_i$). The effect of ACN was described as ($\small dS1N_i$), thus S1 in ACN equals $\small S1aN_i = S1mN_i +dS1N_i$ the effect of column ($\small c=1..4$) was described by $\small clogkwN_{c,i}$, $\small cS1mN_{c,i}$, and $\small cdS1N_{c,i}$). The individual parameters for the neutral forms were described using the following equations:
 
 $$
 \begin{aligned}
@@ -114,7 +114,7 @@ diag(c\omega) \cdot \begin{bmatrix}
 \end{aligned}
 $$
 
-were MVN denotes the multivariate normal distribution; $\small \hat{logkw}$, $\small \hat{S1m}$, $\small \hat{dS1}$ are the mean values of individual chromatographic parameters that correspond to a typical neutral analyte with $\small logP$ =2.2 at $\small 25^oC$ on Xbridge Shield RP18 stationary phase. $\small \beta s$ are regression coefficients between the individual chromatographic parameters and the $\small logP_i$. $\small \omega$ denotes the standard deviation for between analyte variability (BAV). $\small \hat{dlogkT}$ denotes the effect of temperature for a typical analyte and $\small \omega_T$ the standard deviation for between analyte variability for temperature effects. Similar set of equations was used for column effects. Here c denoted the column effect (4 differences with respect to he reference column).
+were MVN denotes the multivariate normal distribution; $\small \hat{logkw}$, $\small \hat{S1m}$, $\small \hat{dS1}$ are the mean values of individual chromatographic parameters that correspond to a typical neutral analyte with $\small logP$ =2.2 at $\small 25^oC$ for Xbridge Shield RP18 stationary phase. $\small \beta s$ are regression coefficients between the individual chromatographic parameters and the $\small logP_i$. $\small \omega$ denotes the standard deviation for between analyte variability (BAV). $\small \hat{dlogkT}$ denotes the effect of temperature for a typical analyte and $\small \omega_T$ the standard deviation for between analyte variability for temperature effects. Similar set of equations was used for column effects. Here c denoted the column effect (4 differences with respect to the reference Xbridge Shield RP18 column).
 
 The difference in retention between the ionized form of an analyte and the neutral form of an analyte was separately estimated for acids and bases for $\small logkw$, $\small S1m$, $\small dS1$ parameters. Similar set of equations was used for column effects.
 
@@ -133,7 +133,9 @@ $$
 & cddS1A_{c,a} \sim N(\hat{cddS1_{c,1}}, c\kappa_{c,3}) \text{ for c=1...4}, \\
 & cddS1B_{c,b} \sim N(\hat{cddS1_{c,2}}, c\kappa_{c,3}) \text{ for c=1...4}. \\
 \end{aligned}
-$$ where a=1..46 and b=1..120 denote the indexes of acidic and basic groups.
+$$ 
+
+where a=1..46 and b=1..120 denote the indexes of acidic and basic groups.
 
 Similarly $\small pKa$ an $\small \alpha$ parameters were described separately for acids and based:
 
@@ -148,11 +150,11 @@ $$
 \end{aligned}
 $$
 
-Further, we created the matrices containing the value of parameters for i-th analyte, col-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the model code.
+Further, we created the matrices containing the value of $\small logkw$,$\small S1$,$\small S2$,$\small pKaw$, and $\small alpha$ for i-th analyte, col-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the model code.
 
 $$
 \begin{aligned}
-& logkw_{col,i,r}= f(logkwN_i,clogkwN_{c,i},dlogkwA_{a},cdlogkwA_{c,a}, dlogkwB_{b}, cdlogkwB_{c.b},...) \\
+& logkw_{col,i,r}= f(logkwN_i,clogkwN_{c,i},dlogkwA_{a},cdlogkwA_{c,a}, dlogkwB_{b}, cdlogkwB_{c,b},...) \\
 & S1_{m,col,i,r}  = f(S1mN_i,cS1mN_{c,i}, dS1mA_a, cdS1mA_{c,a}, S1mB_b, cdS1mB_{c,b}, ...\\
 & dS1N_i, cdS1N_{c,i}, ddS1A_a, cddS1A_{c,a}, ddS1B_b, cddS1B_{c,b},...) \\
 & apH_{m,col,i,r} = f(\hat{apH_1},\hat{capH_{c,1}},\hat{apH_2},\hat{capH_{c,2}},...) \\
@@ -162,11 +164,11 @@ $$
 \end{aligned}
 $$
 
-Residual error model assumes different parameters for each column and analyte:
+Three dots represent additional arguments. Residual error model assumes different parameters for each column and analyte:
 
 $$
 \begin{aligned}
-& log(\sigma_{col,i}) = f(log\sigma_i, clog\sigma_{c,i}) \\
+& log(\sigma_{col,i}) = f(log\sigma_i, clog\sigma_{c,i},...) \\
 & log\sigma_i  \sim N(log(m\sigma),s\sigma) \\
 & clog\sigma_{c,i} \sim N(clogm\sigma_c,cs\sigma_c) \text{ for c=1...4},
 \end{aligned}
@@ -174,7 +176,7 @@ $$
 
 The detailed description of parameters and used priors is provided in the following table (BAV denotes between analyte variability):
 
-```{r results="asis"}
+```{r table, results="asis"}
 
 # to properly render in quarto: https://github.com/quarto-dev/quarto-cli/issues/3340
 
@@ -215,6 +217,7 @@ Name = c('$\\hat{logkw}$',
          '$capH_{c,1}$',
          '$capH_{c,2}$',
          '$c\\omega_{c,1}$',
+         '$c\\rho$',
          '$c\\omega_{c,2}$',
          '$c\\omega_{c,3}$',
          '$c\\kappa_{c,1}$',
@@ -252,7 +255,7 @@ Namecode = c('logkwHat',
          'omega[1]',
          'omega[2]',
          'omega[3]',
-         'rho[2,1]',
+         'rho',
          'omegaT',
          'kappa[1]',
          'kappa[2]',
@@ -272,6 +275,7 @@ Namecode = c('logkwHat',
          'capH[c,1]',
          'capH[c,2]',
          'comega[c,1]',
+         'crho',
          'comega[c,2]',
          'comega[c,3]',
          'ckappa[c,1]',
@@ -329,6 +333,7 @@ Description = c('typical logkw [Neutral]',
                 'effect of column c on apH [Acids]',
                 'effect of column c on apH [Bases]',
                 'sd of BAV for clogkw [Neutral]',
+                'corr beetwen clogkw [Neutral]',
                 'sd of BAV for cS1 [Neutral]',
                 'sd of BAV for cdS1 [Neutral]',
                 'sd of BAV for cdlogkw [Acids and Bases]',
@@ -388,6 +393,7 @@ Priors = c('N(2.2,2)',
          'N(0, 0.05)',
          'N(0, 0.05)',
          'N+(0, 1)',
+         'LKJ(2)',
          'N+(0, 1)',
          'N+(0, 1)',
          'N+(0, 0.125)',
@@ -416,15 +422,14 @@ kableExtra::kbl(caption = "Desciption of model paramters", escape = FALSE, longt
 kableExtra::kable_classic(full_width = F, html_font = "Cambria") %>%
 kableExtra::kable_styling(latex_options = c("repeat_header")) %>%
  kableExtra::pack_rows("XBridge Shield RP18 parameters", 1, 22) %>%
- kableExtra::pack_rows("between column differences", 23, 43) %>%
- kableExtra::pack_rows("S2", 44, 45) %>%
- kableExtra::pack_rows("pKa", 46, 52) %>%
- kableExtra::pack_rows("Residuals", 53, 56) %>%
+ kableExtra::pack_rows("between column differences", 23, 44) %>%
+ kableExtra::pack_rows("S2", 45, 46) %>%
+ kableExtra::pack_rows("pKa", 47, 53) %>%
+ kableExtra::pack_rows("Residuals", 54, 57) %>%
  unclass() %>%
  cat()
  
 ```
-
 {{< pagebreak >}}
 
 # Table S1. Summary of the MCMC simulations of the marginal posterior distributions of population-level model parameters. 
@@ -503,20 +508,30 @@ fit$print(c("clogkwHat","cS1mHat","cdS1Hat",
 
 # Figure S3. Goodness of fit plots
 
-![](../figures/concordanceplots/residuals.pdf)
+Individual residuals:
+
+![](../figures/concordanceplots/individualresiduals.pdf)
+
 {{< pagebreak >}}
+Population residuals:
+
+![](../figures/concordanceplots/populationresiduals.pdf)
+
+{{< pagebreak >}}
+The observed vs. the mean individual-predicted retention times (i.e., a posteriori mean of a predictive distribution conditioned on the observed data from the same analyte).
 ![](../figures/concordanceplots/individual.pdf)
 
 {{< pagebreak >}}
+The observed vs. the mean population-predicted retention times (i.e., a posteriori means of predictive distributions corresponding to the future observations of a new analyte) 
 ![](../figures/concordanceplots/population.pdf)
 
 {{< pagebreak >}}
-
 # Figure S4. Individual gradient predictions.
 
 Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given the population-level parameters and all the retention data measured for a particular analyte.
 
 ![](../figures/concordanceplots/Acridine.individual.pdf)
+
 {{< pagebreak >}}
 ![](../figures/concordanceplots/Baclofen.individual.pdf)
 
@@ -525,17 +540,20 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 
 {{< pagebreak >}}
 ![](../figures/concordanceplots/Pioglitazone.individual.pdf)
+
 {{< pagebreak >}}
 ![](../figures/concordanceplots/Quinine.individual.pdf)
 
 {{< pagebreak >}}
 ![](../figures/concordanceplots/Tolbutamide.individual.pdf)
+
 {{< pagebreak >}}
 # Figure S5. Population gradient predictions.
 
 Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given only population-level parameters and predictors (logP and pKa).
 
 ![](../figures/concordanceplots/Acridine.population.pdf)
+
 {{< pagebreak >}}
 ![](../figures/concordanceplots/Baclofen.population.pdf)
 
@@ -550,15 +568,86 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 
 {{< pagebreak >}}
 ![](../figures/concordanceplots/Tolbutamide.population.pdf)
-{{< pagebreak >}}
 
-# Figure S6. Uncertainity chromatograms
+{{< pagebreak >}}
+# Figure S6. Limited data gradient predictions.
+
+Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given  population-level parameters and predictors (logP and pKa) and XBridge Shield RP18 data.
+
+![](../figures/casestudy2/concordanceplots/Acridine.pdf)
+
+{{< pagebreak >}}
+![](../figures/casestudy2/concordanceplots/Baclofen.pdf)
+
+{{< pagebreak >}}
+![](../figures/casestudy2/concordanceplots/Hydrocortisone.pdf)
+
+{{< pagebreak >}}
+![](../figures/casestudy2/concordanceplots/Pioglitazone.pdf)
+
+{{< pagebreak >}}
+![](../figures/casestudy2/concordanceplots/Quinine.pdf)
+
+{{< pagebreak >}}
+![](../figures/casestudy2/concordanceplots/Tolbutamide.pdf)
+{{< pagebreak >}}
+# Figure S7. Individual izocratic predictions.
+
+Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given the population-level parameters and all the retention data measured for a particular analyte.
+
+![](../figures/izoparam/isopred/Acridine.individual.pdf)
+
+{{< pagebreak >}}
+![](../figures/izoparam/isopred/Baclofen.individual.pdf)
+
+{{< pagebreak >}}
+![](../figures/izoparam/isopred/Hydrocortisone.individual.pdf)
+
+{{< pagebreak >}}
+![](../figures/izoparam/isopred/Pioglitazone.individual.pdf)
+
+{{< pagebreak >}}
+![](../figures/izoparam/isopred/Quinine.individual.pdf)
+
+{{< pagebreak >}}
+![](../figures/izoparam/isopred/Tolbutamide.individual.pdf)
+
+{{< pagebreak >}}
+# Figure S8. Population isocratic predictions.
+
+Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given only population-level parameters and predictors (logP and pKa).
+
+![](../figures/izoparam/isopred/Acridine.population.pdf)
+
+{{< pagebreak >}}
+![](../figures/izoparam/isopred/Baclofen.population.pdf)
+
+{{< pagebreak >}}
+![](../figures/izoparam/isopred/Hydrocortisone.population.pdf)
+
+{{< pagebreak >}}
+![](../figures/izoparam/isopred/Pioglitazone.population.pdf)
+
+{{< pagebreak >}}
+![](../figures/izoparam/isopred/Quinine.population.pdf)
+
+{{< pagebreak >}}
+![](../figures/izoparam/isopred/Tolbutamide.population.pdf)
+
+{{< pagebreak >}}
+# Figure S9. Uncertainity chromatograms
+
+Individual predictions:
 
 ![](../figures/concordanceplots/uncertainitychromatogram.individual.pdf)
-{{< pagebreak >}}
-![](../figures/concordanceplots/uncertainitychromatogram.population.pdf)
-{{< pagebreak >}}
 
+
+{{< pagebreak >}}
+Population predictions:
+
+![](../figures/concordanceplots/uncertainitychromatogram.population.pdf)
+
+{{< pagebreak >}}
 Limited data predictions:
 
 ![](../figures/casestudy2/utilitymap/chromatogram.pdf)
