@@ -39,3 +39,5 @@ stanfiles/*.csv
 # large and compiled files
 *.exe
 /.quarto/
+# Word temporary
+~$*.doc*

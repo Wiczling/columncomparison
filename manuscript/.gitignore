@@ -1,2 +1,4 @@
 /.quarto/
-~$*
+# Word temporary
+~$*.doc*
+~$*.tmp
