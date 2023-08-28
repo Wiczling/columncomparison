@@ -1,6 +1,6 @@
 ---
 title: |
-  | Supporting Information
+  | Supporting Information for
   | Comparison of chromatographic stationary phases using Bayesian-based multilevel modeling
 author: "Paweł Wiczling, Agnieszka Kamedulska"
 adress: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
@@ -32,7 +32,7 @@ $$
 t_{Robs,z} \sim student_t(\nu, t_{R,z} ,\sigma_{col[z],i[z]})
 $$
 
-where z denotes z-th observation and student_t denotes the Student's t-distribution with the mean given by the predicted retention time $\small t_{R,z}$, scale $\small \sigma_{i,col}$ (analyte and column-specific), and normality parameter $\small \nu$ (set to 3).
+where z denotes z-th observation and student_t denotes the Student's t-distribution with the mean given by the predicted retention time $\small t_{R,z}$, scale $\small \sigma_{col,i}$ (analyte and column-specific), and normality parameter $\small \nu$ (set to 3).
 
 Gradient retention time $\small t_{R,z}$ was calculated utilizing the well-known integral equation:
 
@@ -55,7 +55,7 @@ $$
 \end{aligned}
 $$
 
-where $\small logkw_{col,i,r}$ represents logarithm of retention factors extrapolated to 0% of organic modifier content for column $\small col$, $\small i$-th analyte and $\small r$-th analyte form; $\small S1_{i,m,col,r}$ and $\small S2_m$ are the slopes in the Neue equation for column $\small c$, modifier $\small m$, $\small i$-th analyte and $\small r$-th analyte form. In this parametrization of the Neue equation, $\small S1$ reflects the difference between logarithm of retention factors corresponding to water (0% of organic modifier content) and MeOH or ACN (100% of organic modifier content) as eluents. $\small dlogkT_{col,i}$ denotes the change in $\small logkw$ due to the increase in temperature by $\small 10^oC$. $\small apH_{col,m,i,r}$ denotes the pH effects on $\small logkw$ for ionized forms of analyte.
+where $\small logkw_{col,i,r}$ represents logarithm of retention factors extrapolated to 0% of organic modifier content for column $\small col$, $\small i$-th analyte and $\small r$-th analyte form; $\small S1_{i,m,col,r}$ and $\small S2_m$ are the slopes in the Neue equation for column $\small col$, modifier $\small m$, $\small i$-th analyte and $\small r$-th analyte form. In this parametrization of the Neue equation, $\small S1$ reflects the difference between logarithm of retention factors corresponding to water (0% of organic modifier content) and MeOH or ACN (100% of organic modifier content) as eluents. $\small dlogkT_{col,i}$ denotes the change in $\small logkw$ due to the increase in temperature by $\small 10^oC$. $\small apH_{col,m,i,r}$ denotes the pH effects on $\small logkw$ for ionized forms of analyte.
 
 Further we assume a linear relationship between $\small pKa$ values and the organic modifier content:
 
@@ -71,7 +71,7 @@ $$
 pH_z(t)=pHo_z+\alpha 1_z\cdot \varphi_z(t)+\alpha2_z\cdot {\varphi_z(t)}^2
 $$
 
-The individual values of $\small logkw$, $\small S1$ were first defined for the neutral form of an analyte in MeOH for the Xbridge Sheld RP18 column (denoted as $\small logkwN_i$ and $\small S1mN_i$). The effect of ACN was described as ($\small dS1N_i$), thus S1 in ACN equals $\small S1aN_i = S1mN_i +dS1N_i$ the effect of column ($\small c=1..4$) was described by $\small clogkwN_{c,i}$, $\small cS1mN_{c,i}$, and $\small cdS1N_{c,i}$). The individual parameters for the neutral forms were described using the following equations:
+The individual values of $\small logkw$, $\small S1$ were first defined for the neutral form of an analyte in MeOH for the Xbridge Sheld RP18 column (denoted as $\small logkwN_i$ and $\small S1mN_i$). The effect of ACN was described as ($\small dS1N_i$), thus S1 in ACN equals $\small S1aN_i = S1mN_i +dS1N_i$, the effect of column ($\small c=1..4$) was described by $\small clogkwN_{c,i}$, $\small cS1mN_{c,i}$, and $\small cdS1N_{c,i}$). The individual parameters for the neutral forms were described using the following equations:
 
 $$
 \begin{aligned}
@@ -380,7 +380,7 @@ Priors = c('N(2.2,2)',
          'N+(0, 0.25)',
          'N(0, 1)',
          'N(0, 0.5)',
-         'N(0, 0.5)',
+         'N(0, 0.25)',
          'N(0, 0.25)',
          'N(0, 0.25)',
          'N(0, 0.0625)',
@@ -411,8 +411,8 @@ Priors = c('N(2.2,2)',
          'N+(0, 0.125)',
          'N+(0,1)',
          'N(0,1)',
-         'N+(0,125)',
-         'N+(0,125)')
+         'N+(0,0.125)',
+         'N+(0,0.125)')
 
 table_of_parameters = data.frame(Name,Namecode,Description,Priors)
 

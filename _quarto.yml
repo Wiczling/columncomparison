@@ -8,3 +8,4 @@ knitr:
     dev: "ragg_png"
     
 bibliography: references.bib
+csl: analytical-chemistry.csl
