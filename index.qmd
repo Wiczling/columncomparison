@@ -942,7 +942,7 @@ The diagnostics are reasonable given model complexity. Output copied here to sav
 
 The [stansummary](https://mc-stan.org/docs/cmdstan-guide/stansummary.html) function was used to report summary and diagnostic statistics over model parameters. 
 
-```{r tbl-summary}
+```{r tblsummary}
 # fit$print(max_rows=200) # for first 200 parameters
 
 fit$print(c("logkwHat","S1mHat","dS1Hat",
@@ -970,7 +970,7 @@ fit$print(c("clogkwHat","cS1mHat","cdS1Hat",
 
 The summary can also be extracted for individual parameters. Here presented for analyte 9 (`r dataNames$Name[9]`)
 
-```{r tbl-isummary}
+```{r tblisummary}
 # which(unique(data$METID)==9) - 3rd compound in stan
 fit$print(c("logkwx[3,1,1]", "logkwx[3,1,2]", "logkwx[3,1,3]",
             "logkwx[3,2,1]", "logkwx[3,2,2]", "logkwx[3,2,3]",
@@ -1037,7 +1037,7 @@ print(p2)
 
 ```
 
-Column effects relative to XBridge Shield RP18 column:
+Other plors provide a summury of column effects (relative to XBridge Shield RP18 column):
 
 ```{r columneffects1, include=TRUE}
 p1<-bayesplot::mcmc_intervals(fit$draws(c("clogkwHat[1]","cS1mHat[1]","cdS1Hat[1]",
@@ -1185,7 +1185,7 @@ ggsave(paste0("figures\\param\\", "columneffects2", ".pdf"), plot=p, width = 20,
 
 ```
 
-Parameters characterizing column effects:
+Below we combine separate plot into the one graphic to characterizing column effects:
 
 ```{r figclogkw}
 draws_df_subset <- fit$draws(format = "df", variable = c("clogkwHat","cdlogkwHat"))
@@ -1495,7 +1495,7 @@ ggsave(paste0("figures\\param\\", "column-effects-all", ".pdf"), plot=p, width =
 
 ```
 
-Parameters characterizing columns:
+Below we combine separate plot into the one graphic to characterizing parameters characterizing particular columns:
 
 ```{r figlogkw}
 draws_df_subset <- fit$draws(format = "df", variable = c("logkwHat","clogkwHat","dlogkwHat","cdlogkwHat"))
@@ -1913,7 +1913,7 @@ ggsave(paste0("figures\\param\\", "column-parameters-all", ".pdf"), plot=p, widt
 
 ```
 
-Standard deviations:
+Similarly we display standard deviations and correlations of BAV characterizing column effects.
 
 ```{r sd-column-effects-all}
 draws_df_subset <- fit$draws(format = "df", variable = c("comega","ckappa","comegaT","crho"))
@@ -4438,7 +4438,7 @@ print(p)
 
 # Conclusions
 
-Large retention time datasets and multilevel modeling allow to characterize RP HPLC stationary phases.
+This work demonstrates the application of a Bayesian multilevel model to compare various stationary phases using large datasets of retention time collected for a wide range of chromatographic conditions.
 
 # References {.unnumbered}
 
