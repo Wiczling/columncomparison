@@ -528,7 +528,7 @@ The observed vs. the mean population-predicted retention times (i.e., a posterio
 {{< pagebreak >}}
 # Figure S4. Individual gradient predictions.
 
-Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given the population-level parameters and all the retention data measured for a particular analyte.
+Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Predictions corresponding to future observations given the population-level parameters and all the retention data measured for a particular analyte.
 
 ![](../figures/concordanceplots/Acridine.individual.pdf)
 
@@ -550,7 +550,7 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 {{< pagebreak >}}
 # Figure S5. Population gradient predictions.
 
-Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given only population-level parameters and predictors (logP and pKa).
+Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Predictions corresponding to future observations given only population-level parameters and predictors (logP and pKa).
 
 ![](../figures/concordanceplots/Acridine.population.pdf)
 
@@ -572,7 +572,7 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 {{< pagebreak >}}
 # Figure S6. Limited data gradient predictions.
 
-Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given  population-level parameters and predictors (logP and pKa) and XBridge Shield RP18 data.
+Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given  population-level parameters and predictors (logP and pKa) and XBridge Shield RP18 data. Closed dotes represent data used for predictions.
 
 ![](../figures/casestudy2/concordanceplots/Acridine.pdf)
 
@@ -593,7 +593,7 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 {{< pagebreak >}}
 # Figure S7. Individual izocratic predictions.
 
-Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given the population-level parameters and all the retention data measured for a particular analyte.
+Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Predictions corresponding to future observations given the population-level parameters and all the retention data measured for a particular analyte.
 
 ![](../figures/izoparam/isopred/Acridine.individual.pdf)
 
@@ -615,7 +615,7 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 {{< pagebreak >}}
 # Figure S8. Population isocratic predictions.
 
-Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Observed retention factors are shown as dots. Predictions corresponding to future observations given only population-level parameters and predictors (logP and pKa).
+Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Predictions corresponding to future observations given only population-level parameters and predictors (logP and pKa).
 
 ![](../figures/izoparam/isopred/Acridine.population.pdf)
 
@@ -633,24 +633,6 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 
 {{< pagebreak >}}
 ![](../figures/izoparam/isopred/Tolbutamide.population.pdf)
-
-{{< pagebreak >}}
-# Figure S9. Uncertainity chromatograms
-
-Individual predictions:
-
-![](../figures/concordanceplots/uncertainitychromatogram.individual.pdf)
-
-
-{{< pagebreak >}}
-Population predictions:
-
-![](../figures/concordanceplots/uncertainitychromatogram.population.pdf)
-
-{{< pagebreak >}}
-Limited data predictions:
-
-![](../figures/casestudy2/utilitymap/chromatogram.pdf)
 
 {{< pagebreak >}}
 # Licenses {.unnumbered}

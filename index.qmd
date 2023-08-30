@@ -1037,7 +1037,7 @@ print(p2)
 
 ```
 
-Other plors provide a summury of column effects (relative to XBridge Shield RP18 column):
+The plots below provide a summary of column effects (relative to XBridge Shield RP18 column):
 
 ```{r columneffects1, include=TRUE}
 p1<-bayesplot::mcmc_intervals(fit$draws(c("clogkwHat[1]","cS1mHat[1]","cdS1Hat[1]",
@@ -2981,7 +2981,7 @@ print(p)
 
 ### Uncertainity chromatogram
 
-Below is the example of an uncertainty chromatogram expected for tg = 90 min, pH = 8.9, Temp = $25^oC$ in ACN The individual and population predictions are shown.
+Below is the example of an uncertainty chromatogram expected for tg = 90 min, pH = 8.9, Temp = $25^oC$ in ACN. The individual and population predictions are shown.
 
 ```{r epred-gq, eval = FALSE}
 
@@ -3077,8 +3077,7 @@ ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.populatio
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".png"), plot=p3, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
 
-print(p1)
-print(p2)
+print(p3)
 ```
 
 ## Isocratic predictions (population predictions)
@@ -3615,17 +3614,19 @@ fit_red1<- cmdstanr::as_cmdstan_fit(c(
 
 ## Utility maps
 
-For that purpose, we will use decision theory. We start by specifying a notion of utility to each outcome (uncertainty chromatogram). The Bayesian-based optimal decision is the one that maximizes expected utility. Our utility function includes the lowest retention time across analytes ($\small mintr$), the highest retention time across analytes $\small maxtr$, and the difference in retention times between the critical pair of analytes ($\small res$). This utility is zero if at least one of the analytes has retention higher than 40, less than 2 min, or the difference in retention times is less than 2. Otherwise, it favors shorter runs. (.) denotes design variables.
+For that purpose, we will use decision theory. We start by specifying a notion of utility to each outcome (uncertainty chromatogram). The Bayesian-based optimal decision is the one that maximizes expected utility. Our utility function is calcualted based on the lowest retention time across analytes ($\small mintr$), the highest retention time across analytes $\small maxtr$, and the difference in retention times between the critical pair of analytes ($\small res$). This utility is zero if at least one of the analytes has retention higher than 40, less than 2 min, or the difference in retention times is less than 2. Otherwise, it favors shorter runs. (.) denotes design variables.
 
 $$
 U(.)= I((mintr(.)>2) \ \& \ (res(.)>2)) \cdot (40-maxtr(.)) \cdot I(maxtr(.)<40)
 $$
 
 $$
- I(x) = 1 \ if \ condition \ x  \ is \ true \\
+\begin{aligned}
+ I(x) = 1 \ if \ condition \ x  \ is \ true, \\
  I(x) = 0 \ if \ condition \ x  \ is \ false
+\end{aligned}
 $$
-To find the maximum we use a grid search over a dense set of possible chromatographic conditions:
+To find the maximum we use a grid search over a wide range of chromatographic conditions:
 
 ```{r casestudy1-preparedatasim}
 upH <- datasim %>%
@@ -4177,7 +4178,7 @@ print(pi)
 
 ### Uncertainity chromatogram
 
-Below is the example of a chromatogram (along with uncertainty) expected for tg = 90 min, pH = 8.9, Temp = 25oC in ACN.
+Below is the example of a chromatogram (along with uncertainty) expected for tg = 90 min, pH = 8.9, Temp = $25^oC$ in ACN.
 
 ```{r  casestudy2-uncertainity-chrom}
 analyte_ID_sample <-c(9,17,33,58,140,180)
