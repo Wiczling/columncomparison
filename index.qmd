@@ -1353,21 +1353,21 @@ ACN_Basic_results  <-draws_df_subset %>%
   mutate(Type = "B")%>% 
   mutate(Modifier="ACN")
 
-p2<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results,
-             ACN_Neutral_results,ACN_Acids_results, ACN_Basic_results) %>%
-  ggplot(aes(y = ColumnNames, x = S1Hat, xmin = .lower, xmax = .upper,color = Type)) +
-   tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
-  scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
-  ylab(' ')+
-  xlab("Column effects on S1 (cS1)")+
-  facet_wrap(.~Modifier)
+# p2<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results,
+#              ACN_Neutral_results,ACN_Acids_results, ACN_Basic_results) %>%
+#   ggplot(aes(y = ColumnNames, x = S1Hat, xmin = .lower, xmax = .upper,color = Type)) +
+#    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
+#   scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
+#   ylab(' ')+
+#   xlab("Column effects on S1 (cS1)")+
+#   facet_wrap(.~Modifier)
 
 p2_1<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results) %>%
   ggplot(aes(y = ColumnNames, x = S1Hat, xmin = .lower, xmax = .upper,color = Type)) +
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
   ylab(' ')+
-  xlab("Column effects on S1 (cS1)")
+  xlab("Column effects on S1m (cS1m)")
 
 p2_2<-bind_rows(ACN_Neutral_results,ACN_Acids_results, ACN_Basic_results) %>%
   ggplot(aes(y = ColumnNames, x = S1Hat, xmin = .lower, xmax = .upper,color = Type)) +
@@ -1499,6 +1499,7 @@ p5<-Results %>%
 ```
 
 ```{r figcolumn-effects-all}
+
 p=grid.arrange(p1+ theme(legend.position='none'), 
                p3+theme(axis.text.y=element_blank()), 
                p4+ theme(legend.position='none'),
@@ -1508,8 +1509,8 @@ p=grid.arrange(p1+ theme(legend.position='none'),
                ncol=2)
 
 ggsave(paste0("figures\\param\\", "column-effects-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\param\\", "column-effects-all", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\param\\", "column-effects-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "column-effects-all", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
@@ -3079,7 +3080,7 @@ p3 <- ggplot()+
       geom_density(data = wpCond,aes(x=value, colour=variable, fill=variable),linetype = "solid") +
       geom_density(data = wpPred,aes(x=value, y = ..density..*100, colour=variable, fill=variable), linetype = "solid", alpha=0.1) +
         scale_y_continuous(sec.axis = sec_axis(~./100)) +
-     labs(title="uncertainty chromatogram",
+     labs(title="uncertainty chromatogram (individual and population)",
           x ="Retention time, min",
           y = "pdf",
           colour="Analyte")+
@@ -3464,19 +3465,21 @@ p<-draws_df_subset %>%
   ungroup() %>%
   group_by(p,m,c,r,fi) %>%
   summarise(mlogkPred=median(logkPred)) %>%
-  ggplot(aes(x = fi, y = mlogkPred, color = as.factor(c), fill = as.factor(r), linetype = as.factor(m))) +
+  ggplot(aes(x = fi, y = mlogkPred, size = as.factor(c), color = as.factor(c), fill = as.factor(r), linetype = as.factor(m))) +
   geom_line() +
   facet_grid(r~p,labeller = labeller(r=diss2.labs, p=logP.labs))+
   labs(color= " ", linetype= " ", y="typical logk",x="\u03C6")+
   scale_fill_discrete(labels= c("B", "N", "A")) +
   scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
   scale_linetype_manual(labels= c("MeOH", "ACN"), values = c("solid","dashed")) +
+  scale_size_manual(values = c("1"=1,"2"=0.5, "3"=0.5, "4"=0.5, "5"=0.5))+
   theme(
         legend.position="bottom",
         legend.box = "vertical",
         strip.text.x = element_text(size = 8),
         strip.text.y = element_text(size = 8))+
-  coord_cartesian(xlim=c(0,1),ylim=c(-2,4))
+  coord_cartesian(xlim=c(0,1),ylim=c(-2,4))+
+  guides(size="none")
 
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
@@ -3495,12 +3498,13 @@ toc<-draws_df_subset %>%
   group_by(p,m,c,r,fi) %>%
   summarise(mlogkPred=median(logkPred)) %>%
   subset(r==2 & p==3) %>%
-  ggplot(aes(x = fi, y = mlogkPred, color = as.factor(c), fill = as.factor(r), linetype = as.factor(m))) +
+  ggplot(aes(x = fi, y = mlogkPred, size = as.factor(c), color = as.factor(c), fill = as.factor(r), linetype = as.factor(m))) +
   geom_line() +
   labs(color= " ", linetype= " ", y="typical logk",x="\u03C6",title = "logP = 3, neutral, 25\u00b0C")+
   scale_fill_discrete(labels= c("B", "N", "A")) +
   scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
   scale_linetype_manual(labels= c("MeOH", "ACN"), values = c("solid","dashed")) +
+  scale_size_manual(values = c("1"=1,"2"=0.5, "3"=0.5, "4"=0.5, "5"=0.5))+
   theme(plot.title=element_text(size=8),
         axis.title = element_text(size = 8),
         axis.text.x = element_text(size = 6),
@@ -3510,7 +3514,9 @@ toc<-draws_df_subset %>%
         strip.text.y = element_text(size = 6),
         legend.key.height =  unit(0.4, 'cm'),
         legend.title= element_blank())+
-  coord_cartesian(xlim=c(0,1),ylim=c(-2,4))
+  coord_cartesian(xlim=c(0,1),ylim=c(-2,4))+
+  guides(size="none")
+
 
 ggsave(paste0("figures\\toc\\TOC", ".png"), plot=toc, width = 8.47, height = 4.76, units = "cm")
 ggsave(paste0("figures\\toc\\TOC", ".svg"), plot=toc, width = 8.47, height = 4.76, units = "cm")
@@ -3898,8 +3904,8 @@ wpCond= rbind(wpCond,wpCond1)
 wpCond$Column=as.factor(wpCond$Column)
 
 p <- ggplot(data = wpCond)+
-     geom_density(aes(x=value, colour=variable)) +
-     labs(title="uncertainty chromatogram (individual predictions)",
+     geom_density(aes(x=value, colour=variable, fill=variable),alpha=0.1) +
+     labs(title="uncertainty chromatogram (all data)",
           x ="Retention time, min",
           y = "pdf",
           colour="Analyte"
@@ -3907,9 +3913,11 @@ p <- ggplot(data = wpCond)+
      xlim(c(0,80))+
      facet_wrap(.~Column, nrow=3,scales = "free")+
      theme(legend.position = c(1, 0),
-        legend.justification = c(1, 0))
+        legend.justification = c(1, 0))+
+  guides(fill = "none")
 
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 print(p)
@@ -4510,17 +4518,20 @@ wpCond= rbind(wpCond,wpCond1)
 wpCond$Column=as.factor(wpCond$Column)
 
 p <- ggplot(data = wpCond)+
-     geom_density(aes(x=value, colour=variable)) +
-     labs(title="uncertainty chromatogram (Limited data predictions)",
+     geom_density(aes(x=value, colour=variable, fill=variable),alpha=0.1) +
+     labs(title="uncertainty chromatogram (limited data predictions)",
           x ="Retention time, min",
           y = "pdf",
           colour="Analyte")+
      xlim(c(0,80))+
      facet_wrap(.~Column, nrow=3,scales = "free")+
      theme(legend.position = c(1, 0),
-        legend.justification = c(1, 0))
+        legend.justification = c(1, 0))+
+  guides(fill = "none")
+
 
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 print(p)
