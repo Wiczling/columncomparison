@@ -19,7 +19,7 @@ knitr::opts_chunk$set(cache=TRUE, message=FALSE, error=FALSE, warning=FALSE, com
 
 # Introduction
 
-In this work we applied the previously developed Bayesian multilevel framework [@kamedulska_toward_2022, @kamedulska_statistical_2022, @wiczling_application_2021, @kubik_analysis_2018] to characterize chromatographic gradient retention time datasets collected using a multicomponent mixtures of analytes, five stationary phases, and a wide range of chromatographic conditions (pH, organic modifier, temperature, gradient program). Such datasets carry much information about chromatographic retention that, if extracted, can provide useful predictive information, i.e. a detailed multidimensional characterization of chromatographic stationary phases and ability to predict retention (along with uncertainty) based on various number of preliminary experiments (e.g. to predict retention time for a set of analytes given no, or several measurements collected using a different stationary phase).
+In this work we applied the previously developed Bayesian multilevel framework [@kamedulska_toward_2022,] [@kamedulska_statistical_2022,] [@wiczling_application_2021,] [@kubik_analysis_2018] to characterize chromatographic gradient retention time datasets collected using a multicomponent mixtures of analytes, five stationary phases, and a wide range of chromatographic conditions (pH, organic modifier, temperature, gradient program). Such datasets carry much information about chromatographic retention that, if extracted, can provide useful predictive information, i.e. a detailed multidimensional characterization of chromatographic stationary phases and ability to predict retention (along with uncertainty) based on various number of preliminary experiments (e.g. to predict retention time for a set of analytes given no, or several measurements collected using a different stationary phase).
 
 In this case study, we compared five RP-HPLC stationary phases (XBridge Shield RP18, XTerra MS C18, XBridge Phenyl, XBridge C8, Xterra MS C8) based on LC-MS/TOF data.
 
@@ -51,7 +51,7 @@ set.seed(10271998)
 
 # Data
 
-Data can be accessed via github (data folder) or osf.io repositories [@kubik_XBridgeC18_2022, @kubik_XterraC18_2022, @kubik_XTerraC8_2022, @kubik_XBridgePhenyl_2022, @kubik_XBridgeC8_2022].
+Data can be accessed via github (data folder) or osf.io repositories [@kubik_XBridgeC18_2022,] [@kubik_XterraC18_2022,] [@kubik_XTerraC8_2022,] [@kubik_XBridgePhenyl_2022,] [@kubik_XBridgeC8_2022].
 
 ## Prepare the data
 
@@ -157,7 +157,7 @@ functional_groups <- functional_groups[,idx_included]
 rm(idx_included)
 ```
 
-4.  finally, we select onlt analytes with \<=2 dissociation steps.
+4.  finally, we select only analytes with \<=2 dissociation steps.
 
 ```{r cleaning4}
 maxR <- 2         
@@ -293,7 +293,7 @@ $$
 t_{Robs,z} \sim student_t(\nu, t_{R,z} ,\sigma_{col[z],i[z]})
 $$
 
-where z denotes z-th observation and student_t denotes the Student's t-distribution with the mean given by the predicted retention time $\small t_{R,z}$, scale $\small \sigma_{i,col}$ (analyte and column-specific), and normality parameter $\small \nu$ (set to 3).
+where z denotes z-th observation and student_t denotes the Student's t-distribution with the mean given by the predicted retention time $\small t_{R,z}$, scale $\small \sigma_{col,i}$ (analyte and column-specific), and normality parameter $\small \nu$ (set to 3).
 
 Gradient retention time $\small t_{R,z}$ was calculated utilizing the well-known integral equation:
 
@@ -301,7 +301,7 @@ $$
 \int_0^{t_{R,z}-t_{0,z}-t_e}\frac{dt}{t_{0,z}\cdot ki_z(t) }=1,
 $$
 
-where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an ith-analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
+where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and chromatographic conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an i-th analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
 
 $$
 ki_z(t)=\frac{k_{z,i[z],1}(t)+\sum_{r=1}^{R[i[z]]} k_{z,i[z],r+1}(t) \cdot 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i]} pKa_{z,i[z],r}(t)} }{1+\sum_{r=1}^R 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i[z]]} pKa_{z,i[z],r}(t) } }
@@ -316,9 +316,9 @@ $$
 \end{aligned}
 $$
 
-where $\small logkw_{col,i,r}$ represents logarithm of retention factors extrapolated to 0% of organic modifier content for column $\small col$, $\small i$-th analyte and $\small r$-th analyte form; $\small S1_{i,m,col,r}$ and $\small S2_m$ are the slopes in the Neue equation for column $\small c$, modifier $\small m$, $\small i$-th analyte and $\small r$-th analyte form. In this parametrization of the Neue equation, $\small S1$ reflects the difference between logarithm of retention factors corresponding to water (0% of organic modifier content) and MeOH or ACN (100% of organic modifier content) as eluents. $\small dlogkT_{col,i}$ denotes the change in $\small logkw$ due to the increase in temperature by $\small 10^oC$. $\small apH_{col,m,i,r}$ denotes the pH effects on $\small logkw$;
+where $\small logkw_{col,i,r}$ represents logarithm of retention factors extrapolated to 0% of organic modifier content for column $\small col$, $\small i$-th analyte and $\small r$-th analyte form; $\small S1_{i,m,col,r}$ and $\small S2_m$ are the slopes in the Neue equation for column $\small col$, modifier $\small m$, $\small i$-th analyte and $\small r$-th analyte form. In this parametrization of the Neue equation, $\small S1$ reflects the difference between logarithm of retention factors corresponding to water (0% of organic modifier content) and MeOH or ACN (100% of organic modifier content) as eluents. $\small dlogkT_{col,i}$ denotes the change in $\small logkw$ due to the increase in temperature by $\small 10^oC$. $\small apH_{col,m,i,r}$ denotes the pH effects on $\small logkw$ for ionized forms of analyte.
 
-Further a linear relationship between $\small pKa$ values and the organic modifier content was assumed:
+Further we assume a linear relationship between $\small pKa$ values and the organic modifier content:
 
 $$
 pKa_{z,i,r}(t)=pKaw_{i,r}+\alpha_{m[z],i,r}\cdot\varphi_z(t)
@@ -332,7 +332,7 @@ $$
 pH_z(t)=pHo_z+\alpha 1_z\cdot \varphi_z(t)+\alpha2_z\cdot {\varphi_z(t)}^2
 $$
 
-First, individual values of $\small logkw$, $\small S1$ are defined for the neutral form of an analyte in MeOH for the Xbridge Sheld RP18 column (denoted as $\small logkwN_i$ and $\small S1mN_i$). The effect of ACN was described as ($\small dS1N_i$), the effect of column ($\small c=1..4$) was described by $\small clogkwN_{c,i}$, $\small cS1mN_{c,i}$, and $\small cdS1N_{c,i}$). The individual parameters for the neutral forms were described using the following equations:
+The individual values of $\small logkw$, $\small S1$ were first defined for the neutral form of an analyte in MeOH for the Xbridge Sheld RP18 column (denoted as $\small logkwN_i$ and $\small S1mN_i$). The effect of ACN was described as ($\small dS1N_i$), thus S1 in ACN equals $\small S1aN_i = S1mN_i +dS1N_i$, the effect of column ($\small c=1..4$) was described by $\small clogkwN_{c,i}$, $\small cS1mN_{c,i}$, and $\small cdS1N_{c,i}$). The individual parameters for the neutral forms were described using the following equations:
 
 $$
 \begin{aligned}
@@ -375,7 +375,7 @@ diag(c\omega) \cdot \begin{bmatrix}
 \end{aligned}
 $$
 
-were MVN denotes the multivariate normal distribution; $\small \hat{logkw}$, $\small \hat{S1m}$, $\small \hat{dS1}$ are the mean values of individual chromatographic parameters that correspond to a typical neutral analyte with $\small logP$ =2.2 at $\small 25^oC$ on Xbridge Shield RP18 stationary phase. $\small \beta s$ are regression coefficients between the individual chromatographic parameters and the $\small logP_i$. $\small \omega$ denotes the standard deviation for between analyte variability (BAV). $\small \hat{dlogkT}$ denotes the effect of temperature for a typical analyte and $\small \omega_T$ the standard deviation for between analyte variability for temperature effects. Similar set of equations was used for column effects. Here c denoted the column effect (4 differences with respect to he reference column).
+were MVN denotes the multivariate normal distribution; $\small \hat{logkw}$, $\small \hat{S1m}$, $\small \hat{dS1}$ are the mean values of individual chromatographic parameters that correspond to a typical neutral analyte with $\small logP$ =2.2 at $\small 25^oC$ for Xbridge Shield RP18 stationary phase. $\small \beta s$ are regression coefficients between the individual chromatographic parameters and the $\small logP_i$. $\small \omega$ denotes the standard deviation for between analyte variability (BAV). $\small \hat{dlogkT}$ denotes the effect of temperature for a typical analyte and $\small \omega_T$ the standard deviation for between analyte variability for temperature effects. Similar set of equations was used for column effects. Here c denoted the column effect (4 differences with respect to the reference Xbridge Shield RP18 column).
 
 The difference in retention between the ionized form of an analyte and the neutral form of an analyte was separately estimated for acids and bases for $\small logkw$, $\small S1m$, $\small dS1$ parameters. Similar set of equations was used for column effects.
 
@@ -409,11 +409,11 @@ $$
 \end{aligned}
 $$
 
-Further, we created the matrices containing the value of parameters for i-th analyte, col-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the model code displayed later.
+Further, we created the matrices containing the value of $\small logkw$,$\small S1$,$\small S2$,$\small pKaw$, and $\small alpha$ for i-th analyte, col-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the stan code.
 
 $$
 \begin{aligned}
-& logkw_{col,i,r}= f(logkwN_i,clogkwN_{c,i},dlogkwA_{a},cdlogkwA_{c,a}, dlogkwB_{b}, cdlogkwB_{c.b},...) \\
+& logkw_{col,i,r}= f(logkwN_i,clogkwN_{c,i},dlogkwA_{a},cdlogkwA_{c,a}, dlogkwB_{b}, cdlogkwB_{c,b},...) \\
 & S1_{m,col,i,r}  = f(S1mN_i,cS1mN_{c,i}, dS1mA_a, cdS1mA_{c,a}, S1mB_b, cdS1mB_{c,b}, ...\\
 & dS1N_i, cdS1N_{c,i}, ddS1A_a, cddS1A_{c,a}, ddS1B_b, cddS1B_{c,b},...) \\
 & apH_{m,col,i,r} = f(\hat{apH_1},\hat{capH_{c,1}},\hat{apH_2},\hat{capH_{c,2}},...) \\
@@ -423,11 +423,11 @@ $$
 \end{aligned}
 $$
 
-Residual error model assumes different parameters for each column and analyte:
+Three dots represent additional arguments. Residual error model assumes different parameters for each column and analyte:
 
 $$
 \begin{aligned}
-& log(\sigma_{col,i}) = f(log\sigma_i, clog\sigma_{c,i}) \\
+& log(\sigma_{col,i}) = f(log\sigma_i, clog\sigma_{c,i},...) \\
 & log\sigma_i  \sim N(log(m\sigma),s\sigma) \\
 & clog\sigma_{c,i} \sim N(clogm\sigma_c,cs\sigma_c) \text{ for c=1...4},
 \end{aligned}
@@ -476,6 +476,7 @@ Name = c('$\\hat{logkw}$',
          '$capH_{c,1}$',
          '$capH_{c,2}$',
          '$c\\omega_{c,1}$',
+         '$c\\rho$',
          '$c\\omega_{c,2}$',
          '$c\\omega_{c,3}$',
          '$c\\kappa_{c,1}$',
@@ -513,7 +514,7 @@ Namecode = c('logkwHat',
          'omega[1]',
          'omega[2]',
          'omega[3]',
-         'rho[2,1]',
+         'rho',
          'omegaT',
          'kappa[1]',
          'kappa[2]',
@@ -533,6 +534,7 @@ Namecode = c('logkwHat',
          'capH[c,1]',
          'capH[c,2]',
          'comega[c,1]',
+         'crho',
          'comega[c,2]',
          'comega[c,3]',
          'ckappa[c,1]',
@@ -590,6 +592,7 @@ Description = c('typical logkw [Neutral]',
                 'effect of column c on apH [Acids]',
                 'effect of column c on apH [Bases]',
                 'sd of BAV for clogkw [Neutral]',
+                'corr beetwen clogkw [Neutral]',
                 'sd of BAV for cS1 [Neutral]',
                 'sd of BAV for cdS1 [Neutral]',
                 'sd of BAV for cdlogkw [Acids and Bases]',
@@ -636,7 +639,7 @@ Priors = c('N(2.2,2)',
          'N+(0, 0.25)',
          'N(0, 1)',
          'N(0, 0.5)',
-         'N(0, 0.5)',
+         'N(0, 0.25)',
          'N(0, 0.25)',
          'N(0, 0.25)',
          'N(0, 0.0625)',
@@ -649,6 +652,7 @@ Priors = c('N(2.2,2)',
          'N(0, 0.05)',
          'N(0, 0.05)',
          'N+(0, 1)',
+         'LKJ(2)',
          'N+(0, 1)',
          'N+(0, 1)',
          'N+(0, 0.125)',
@@ -666,8 +670,8 @@ Priors = c('N(2.2,2)',
          'N+(0, 0.125)',
          'N+(0,1)',
          'N(0,1)',
-         'N+(0,125)',
-         'N+(0,125)')
+         'N+(0,0.125)',
+         'N+(0,0.125)')
 
 table_of_parameters = data.frame(Name,Namecode,Description,Priors)
 
@@ -677,10 +681,10 @@ kableExtra::kbl(caption = "Desciption of model paramters", escape = FALSE, longt
 kableExtra::kable_classic(full_width = F, html_font = "Cambria") %>%
 kableExtra::kable_styling(latex_options = c("repeat_header")) %>%
  kableExtra::pack_rows("XBridge Shield RP18 parameters", 1, 22) %>%
- kableExtra::pack_rows("between column differences", 23, 43) %>%
- kableExtra::pack_rows("S2", 44, 45) %>%
- kableExtra::pack_rows("pKa", 46, 52) %>%
- kableExtra::pack_rows("Residuals", 53, 56) %>%
+ kableExtra::pack_rows("between column differences", 23, 44) %>%
+ kableExtra::pack_rows("S2", 45, 46) %>%
+ kableExtra::pack_rows("pKa", 47, 53) %>%
+ kableExtra::pack_rows("Residuals", 54, 57) %>%
  unclass() %>%
  cat()
  
@@ -688,7 +692,7 @@ kableExtra::kable_styling(latex_options = c("repeat_header")) %>%
 
 ## Stan
 
-Multilevel modeling was performed in [Stan software](https://mc-stan.org/) linked with R/ [cmdstanr](https://mc-stan.org/cmdstanr/). For the inference we used the follwoing settings: number of iterations = 500, warmup = 1000, and number of Markov chains = 8. The reduce_sum function, which was selected to accelerate the calculations, works by parallelizing the execution of a single Stan chain across multiple cores. Convergence diagnostics were checked using Gelman−Rubin statistics and trace plots.
+Multilevel modeling was performed in [Stan software](https://mc-stan.org/) linked with R/ [cmdstanr](https://mc-stan.org/cmdstanr/). For the inference we used 500 iterations, 1000 warmup iterations, and 8 Markov chains. The reduce_sum function was selected to accelerate the calculations. It works by parallelizing the execution of a single Stan chain across multiple cores. Convergence diagnostics were checked using Gelman−Rubin statistics and trace plots.
 
 ### Initialize variables and parameters
 
@@ -719,7 +723,6 @@ datastruct <- with(data,
                        run_estimation=1))
 
 # initialize the values for each variable in each chain:
-
 init <- function(){
   list(   logkwHat  = rnorm(1,2.2,2),
           S1mHat    = rnorm(1,4,1),
@@ -802,7 +805,7 @@ writeLines(readLines("stan/hplc-gra-fivecolumns.stan"))
 
 ### Fitting the model
 
-Compile the model:
+We compiled the model using cmdstanr:
 
 ```{r stancompile, eval = FALSE}
 mod1 <- cmdstan_model("stan/hplc-gra-fivecolumns.stan", 
@@ -813,7 +816,7 @@ modode <- cmdstan_model("stan/hplc-gra-fivecolumns.stan",
                       stanc_options = list("O1"))
 ```
 
-The optimization was used for initial testing:
+We used optimization for initial testing:
 
 ```{r stanoptimize, eval = FALSE}
 fit_ode <- modode$optimize(
@@ -842,7 +845,7 @@ For local computations one can use cmdstanr:
 # )
 ```
 
-We performed computations at the Academic Computer Center in Gdańsk, [Tryton Cluster](https://docs.task.gda.pl/kdm/zasoby-sprzetowe/tryton/). In this case:
+We performed out computations at the Academic Computer Center in Gdańsk, [Tryton Cluster](https://docs.task.gda.pl/kdm/zasoby-sprzetowe/tryton/). In this case:
 
 1.  we dumped the necessary data to .json format
 
@@ -881,6 +884,7 @@ wait
 ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hmc engine=nuts max_depth=10 stepsize=0.01 adapt delta=0.9 data file=$PWD/standata.json init=$PWD/init-${SLURM_ARRAY_TASK_ID}.json  num_threads=${SLURM_NTASKS} output file=$PWD/output_${SLURM_ARRAY_TASK_ID}.csv 
 </pre>
 ```
+
 3.  After calculations, we loaded the output files using cmdstanr. The files are accessible through [stan output files](https://cloud.gumed.edu.pl/s/MbHmekcg79w4ot4 "Stan output files").
 
 ```{r stanload}
@@ -896,7 +900,7 @@ fit <- cmdstanr::as_cmdstan_fit(c(
                                 ))
 ```
 
-4.  finally we checked the diagnostics of Monte Carlo inferences based on the Stan documentation described here .
+4.  finally we checked the diagnostics of Monte Carlo inferences based on the Stan documentation described herein [diagnose](https://mc-stan.org/docs/cmdstan-guide/diagnose.html)
 
 ```{r standiagnose, eval = FALSE}
  #fit$cmdstan_diagnose()
@@ -936,7 +940,9 @@ The diagnostics are reasonable given model complexity. Output copied here to sav
 
 ## Summary of model parameters (table):
 
-```{r tbl-summary}
+The [stansummary](https://mc-stan.org/docs/cmdstan-guide/stansummary.html) function was used to report summary and diagnostic statistics over model parameters. 
+
+```{r tblsummary}
 # fit$print(max_rows=200) # for first 200 parameters
 
 fit$print(c("logkwHat","S1mHat","dS1Hat",
@@ -964,7 +970,7 @@ fit$print(c("clogkwHat","cS1mHat","cdS1Hat",
 
 The summary can also be extracted for individual parameters. Here presented for analyte 9 (`r dataNames$Name[9]`)
 
-```{r tbl-isummary}
+```{r tblisummary}
 # which(unique(data$METID)==9) - 3rd compound in stan
 fit$print(c("logkwx[3,1,1]", "logkwx[3,1,2]", "logkwx[3,1,3]",
             "logkwx[3,2,1]", "logkwx[3,2,2]", "logkwx[3,2,3]",
@@ -1004,7 +1010,7 @@ fit$print(c("logkwx[3,1,1]", "logkwx[3,1,2]", "logkwx[3,1,3]",
 
 ## Trace plots
 
-Several trace plots are shown.
+Trace plots are time series plots of Markov chains. Here we show standard trace plots for several parameters
 
 ```{r traceplots, include=TRUE}
 bayesplot::mcmc_trace(fit$draws(c("logkwHat","S1mHat","dS1Hat","clogkwHat","cS1mHat","cdS1Hat"))) 
@@ -1014,7 +1020,7 @@ bayesplot::mcmc_trace(fit$draws(c("logkwHat","S1mHat","dS1Hat","clogkwHat","cS1m
 
 First plot presents parameter specific for XBridge Shield RP18 column and parameters common for all the columns:
 
-```{r fig-summary, include=TRUE}
+```{r figsummary, include=TRUE}
 
 p1<-bayesplot::mcmc_intervals(fit$draws(c("logkwHat","S1mHat","dS1Hat","dlogkwHat",
                                   "dlogkTHat", "dS1mHat","ddS1Hat","logS2mHat","dlogS2Hat","beta",
@@ -1031,7 +1037,7 @@ print(p2)
 
 ```
 
-Column effects relative to XBridge Shield RP18 column:
+The plots below provide a summary of column effects (relative to XBridge Shield RP18 column):
 
 ```{r columneffects1, include=TRUE}
 p1<-bayesplot::mcmc_intervals(fit$draws(c("clogkwHat[1]","cS1mHat[1]","cdS1Hat[1]",
@@ -1179,9 +1185,9 @@ ggsave(paste0("figures\\param\\", "columneffects2", ".pdf"), plot=p, width = 20,
 
 ```
 
-Parameters characterizing columns:
+Below we combine separate plot into the one graphic to characterizing column effects:
 
-```{r fig-clogkw}
+```{r figclogkw}
 draws_df_subset <- fit$draws(format = "df", variable = c("clogkwHat","cdlogkwHat"))
 
 Neutral_results <-draws_df_subset %>%
@@ -1236,11 +1242,11 @@ p1<-bind_rows(Neutral_results, Acids_results, Basic_results) %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
    ylab(' ') +
-   xlab("Typical clogkw")
+   xlab("Column effects on logkw (clogkw)")
 
 ```
 
-```{r fig-cS1}
+```{r figcS1}
 draws_df_subset <- fit$draws(format = "df", variable = c("S1mHat","cS1mHat","dS1mHat","cdS1mHat",
                                                          "dS1Hat","cdS1Hat","ddS1Hat","cddS1Hat"))
 
@@ -1299,7 +1305,7 @@ MeOH_Basic_results  <-draws_df_subset %>%
 ACN_Neutral_results <-draws_df_subset %>%
   slice_sample(n=1000) %>%
   tidybayes::spread_draws(cS1mHat[c],cdS1Hat[c]) %>%
-  mutate(xS1aHat=cS1mHat+cdS1Hat)%>%
+  mutate(xS1aHat=cdS1Hat)%>%
   mutate_if(is.character,as.factor) %>% 
   mutate(ColumnNames=recode(c,
                                 '1' = 'XTerra MS C18',
@@ -1317,7 +1323,7 @@ ACN_Acids_results <-draws_df_subset %>%
   filter(r==1) %>%
   ungroup() %>%
   select(-r) %>%
-  mutate(xS1aHat= cS1mHat +cdS1mHat +cdS1Hat + cddS1Hat)%>%
+  mutate(xS1aHat=cdS1Hat + cddS1Hat)%>%
   mutate_if(is.character,as.factor) %>% 
   mutate(ColumnNames=recode(c,
                                 '1' = 'XTerra MS C18',
@@ -1335,7 +1341,7 @@ ACN_Basic_results  <-draws_df_subset %>%
   filter(r==2) %>%
   ungroup() %>%
   select(-r) %>%
-  mutate(xS1aHat= cS1mHat+cdS1mHat+cdS1Hat + cddS1Hat)%>%
+  mutate(xS1aHat= cdS1Hat + cddS1Hat)%>%
   mutate_if(is.character,as.factor) %>% 
   mutate(ColumnNames=recode(c,
                                 '1' = 'XTerra MS C18',
@@ -1353,11 +1359,26 @@ p2<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results,
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
   ylab(' ')+
-  xlab("Typical cS1")+
+  xlab("Column effects on S1 (cS1)")+
   facet_wrap(.~Modifier)
+
+p2_1<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results) %>%
+  ggplot(aes(y = ColumnNames, x = S1Hat, xmin = .lower, xmax = .upper,color = Type)) +
+   tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
+  scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
+  ylab(' ')+
+  xlab("Column effects on S1 (cS1)")
+
+p2_2<-bind_rows(ACN_Neutral_results,ACN_Acids_results, ACN_Basic_results) %>%
+  ggplot(aes(y = ColumnNames, x = S1Hat, xmin = .lower, xmax = .upper,color = Type)) +
+   tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
+  scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
+  ylab(' ')+
+  xlab("Column effects on dS1 (cdS1)")
+
 ```
 
-```{r fig-cbeta}
+```{r figcbeta}
 draws_df_subset <- fit$draws(format = "df", variable = c("beta","cbeta"))
 
 logkw_results <-draws_df_subset %>%
@@ -1400,10 +1421,10 @@ p3<-bind_rows(logkw_results, S1_results) %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) + 
   scale_color_manual(labels = c("clogkw", "cS1"), values = c("black", "gray"))+
   ylab(' ')+
-  xlab("log P effect (c\u03b2)")
+  xlab("Column effects on \u03b2 (c\u03b2)")
 ```
 
-```{r fig-cpH}
+```{r figcpH}
 draws_df_subset <- fit$draws(format = "df", variable = c("apH","capH"))
 
 Acids_results <-draws_df_subset %>%
@@ -1446,11 +1467,11 @@ p4<-bind_rows(Acids_results, Bases_results) %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B"), values = c("#F8766D", "#619CFF"))+
   ylab(' ')+
-   xlab("pH effects (capH)")
+   xlab("Column effects on apH (capH)")
 
 ```
 
-```{r fig-ctemp}
+```{r figctemp}
 draws_df_subset <- fit$draws(format = "df", variable = c("dlogkTHat","cdlogkTHat"))
 
 Results <-draws_df_subset %>%
@@ -1473,25 +1494,28 @@ p5<-Results %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) + 
   scale_color_manual(labels = c("clogkw"), values = c("black"))+
   ylab(' ')+
-  xlab("Temp. effects (cdlogkT)")
+  xlab("Column effects on dlogkT (cdlogkT)")
 
 ```
 
-```{r fig-column-effects-all}
+```{r figcolumn-effects-all}
 p=grid.arrange(p1+ theme(legend.position='none'), 
                p3+theme(axis.text.y=element_blank()), 
                p4+ theme(legend.position='none'),
                p5+theme(axis.text.y=element_blank()), 
-               p2, ncol=2, widths = c(1,1), layout_matrix = rbind(c(1, 2),c(3, 4), c(5, 5)))
+               p2_1 + theme(legend.position='none'),
+               p2_2 +theme(axis.text.y=element_blank()),
+               ncol=2)
 
 ggsave(paste0("figures\\param\\", "column-effects-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "column-effects-all", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\param\\", "column-effects-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
-Parameters characterizing columns:
+Below we combine separate plot into the one graphic to characterizing parameters characterizing particular columns:
 
-```{r fig-logkw}
+```{r figlogkw}
 draws_df_subset <- fit$draws(format = "df", variable = c("logkwHat","clogkwHat","dlogkwHat","cdlogkwHat"))
 
 Neutral_results <-draws_df_subset %>%
@@ -1574,7 +1598,7 @@ p1<-bind_rows(Neutral_results, Acids_results, Basic_results) %>%
    xlab("Typical logkw")
 ```
 
-```{r fig-S1}
+```{r figS1}
 draws_df_subset <- fit$draws(format = "df", variable = c("S1mHat","cS1mHat","dS1mHat","cdS1mHat",
                                                          "dS1Hat","cdS1Hat","ddS1Hat","cddS1Hat"))
 MeOH_Neutral_results <-draws_df_subset %>%
@@ -1739,7 +1763,7 @@ p2<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results,
 
 ```
 
-```{r fig-beta}
+```{r figbeta}
 draws_df_subset <- fit$draws(format = "df", variable = c("beta","cbeta"))
 
 logkw_results <-draws_df_subset %>%
@@ -1800,7 +1824,7 @@ p3<-bind_rows(logkw_results, S1_results) %>%
 
 ```
 
-```{r fig-pH}
+```{r figpH}
 draws_df_subset <- fit$draws(format = "df", variable = c("apH","capH"))
 
 Acids_results <-draws_df_subset %>%
@@ -1861,7 +1885,7 @@ p4<-bind_rows(Acids_results, Bases_results) %>%
 
 ```
 
-```{r fig-temp}
+```{r figtemp}
 draws_df_subset <- fit$draws(format = "df", variable = c("dlogkTHat","cdlogkTHat"))
 
 Results <-draws_df_subset %>%
@@ -1903,14 +1927,15 @@ p=grid.arrange(p1+ theme(legend.position='none'),
                p2, ncol=2, widths = c(1,1), layout_matrix = rbind(c(1, 2),c(3, 4), c(5, 5)))
 
 ggsave(paste0("figures\\param\\", "column-parameters-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "column-parameters-all", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\param\\", "column-parameters-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
 
-Standard deviations:
+Similarly we display standard deviations and correlations of BAV characterizing column effects.
 
 ```{r sd-column-effects-all}
-draws_df_subset <- fit$draws(format = "df", variable = c("comega","ckappa","crho"))
+draws_df_subset <- fit$draws(format = "df", variable = c("comega","ckappa","comegaT","crho"))
 
 comega_results <-draws_df_subset %>%
   slice_sample(n = 1000) %>%
@@ -1961,8 +1986,6 @@ p1<-bind_rows(comega_results, ckappa_results) %>%
   ylab(' ')+
   xlab("standard deviations")
 
-print(p1)
-
 crho_results <-draws_df_subset %>%
   slice_sample(n = 1000) %>%
   tidybayes::spread_draws(crho[c,r]) %>%
@@ -1993,11 +2016,34 @@ p2<-ggplot(crho_results,aes(y = as.factor(namelong), x = param, xmin = .lower, x
   scale_y_discrete(position = "right")
 
 
-p=grid.arrange(p1, 
-               p2, ncol=1)
+comegaT_results <-draws_df_subset %>%
+  slice_sample(n = 1000) %>%
+  tidybayes::spread_draws(comegaT[c]) %>%
+  ungroup() %>%
+  mutate(ColumnNames=recode(c,
+                                '1' = 'XTerra MS C18',
+                                '2' = 'XBridge Phenyl',
+                                '3' = 'XBridge C8',
+                                '4' = 'Xterra MS C8'))%>%
 
-ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".png"), plot=p, width = 20, height = 10, units = "cm")
-ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".pdf"), plot=p, width = 20, height = 10, units = "cm")
+  mutate_if(is.character,as.factor) %>%
+  group_by(ColumnNames)%>%
+  tidybayes::median_qi(param = comegaT)%>% 
+  mutate(Parameter="comegaT")
+
+p3<-ggplot(comegaT_results,aes(y = as.factor(ColumnNames), x = param, xmin = .lower, xmax = .upper), color="black") +
+  tidybayes::geom_pointinterval(position = position_dodge(width = .3)) + 
+  ylab(' ')+
+  xlab(expression(paste("c",omega,"T")))+
+  theme(legend.position='none')+
+  scale_x_continuous(limits =c(0,0.02), breaks=c(0,0.01,0.02))
+
+p=grid.arrange(p1, p3, p2, 
+               widths = c(0.3,0.7), layout_matrix = rbind(c(1, 1),c(2, 3)))
+
+ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".png"), plot=p, width = 20, height = 15, units = "cm")
+ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".svg"), plot=p, width = 20, height = 15, units = "cm")
+ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".pdf"), plot=p, width = 20, height = 15, units = "cm")
 
 ```
 
@@ -2760,7 +2806,7 @@ print(p3)
 
 ### Effect of functional groups (exploratory)
 
-The following ETA plots present the relationship between individual eta values for logkwN and number of functional groups. This part is exploratory. Graphs are shown if there are at least 10 functional groups present in the dataset.
+The following plots present the relationship between individual eta values for logkwN and number of functional groups. This part is exploratory. Graphs are shown if there are at least 10 functional groups present in the dataset.
 
 ```{r functionalgroupseffects}
 param1 <- apply(draws_etas_df[,which(colnames(draws_etas_df) %in% grep("^etalogkwN", names(draws_etas_df), value = TRUE))], MARGIN = 2, FUN = mean)
@@ -2798,7 +2844,7 @@ p1<-data_to_plot_fungr %>% tidyr::gather("name", "count", 1:5)  %>%
 }
 ```
 
-# Comparison of observed and model predicted retention times
+## Comparison of observed and model predicted retention times
 
 The individual and population model predictions were simulated using a more dense design. The individual predictions are based on population-level parameters, predictors, and all of the observed retention time measurements. The population predictions are based on population-level parameters and predictors.
 
@@ -2891,7 +2937,7 @@ datasim$trPred_h=tr_sim_Pred$`95%`
 
 ```
 
-## Individual predictions:
+### Individual predictions:
 
 ```{r individualpred}
 analyte_ID_sample <- c(9,17,33,58,140,180)
@@ -2924,7 +2970,7 @@ print(p)
 
 ```
 
-## Population predictions:
+### Population predictions:
 
 ```{r populationrped}
 analyte_ID_sample <- c(9,17,33,58,140,180)
@@ -2953,9 +2999,9 @@ print(p)
 
 ```
 
-# Uncertainity chromatogram
+### Uncertainity chromatogram
 
-Below is the example of an uncertainty chromatogram expected for tg = 90 min, pH = 4.9, Temp = $25^oC$ in MeOH. The individual and population predictions are shown.
+Below is the example of an uncertainty chromatogram expected for tg = 90 min, pH = 8.9, Temp = $25^oC$ in ACN. The individual and population predictions are shown.
 
 ```{r epred-gq, eval = FALSE}
 
@@ -2986,9 +3032,9 @@ wpPred= data.frame()
 for (i in 1:5) {
 idx <- which(datasim$METID %in% analyte_ID_sample &
                datasim$tg==90 & # c(30, 90, 270)
-               datasim$pH== 4 &   # c(1:9)
+               datasim$pH== 7 &   # c(1:9)
                datasim$Column==i &  # c(1, 2)
-               datasim$Mod2==1 & # c(1, 2)
+               datasim$Mod2==2 & # c(1, 2)
                datasim$Temp==25) # c(25, 35)
 
 data_to_plot <- draws_epred_df[,which(colnames(draws_epred_df) %in% paste0("trHatCond[",idx,"]"))]
@@ -3009,10 +3055,9 @@ wpPred$Column=as.factor(wpPred$Column)
 p1 <- ggplot(data = wpCond)+
      geom_density(aes(x=value, colour=variable)) +
      labs(title="uncertainty chromatogram (individual predictions)",
-          x ="Retention Time, min",
+          x ="Retention time, min",
           y = "pdf",
           colour="Analyte")+
-
      xlim(c(0,80))+
      facet_wrap(.~Column, nrow=3,scales = "free")+
      theme(legend.position = c(1, 0),
@@ -3022,7 +3067,7 @@ p1 <- ggplot(data = wpCond)+
 p2 <- ggplot(data = wpPred)+
      geom_density(aes(x=value, colour=variable)) +
      labs(title="uncertainty chromatogram (population predicitons)",
-          x ="Retention Time, min",
+          x ="Retention time, min",
           y = "pdf",
           colour="Analyte")+
      xlim(c(0,80))+
@@ -3030,12 +3075,30 @@ p2 <- ggplot(data = wpPred)+
      theme(legend.position = c(1, 0),
         legend.justification = c(1, 0))
 
+p3 <- ggplot()+
+      geom_density(data = wpCond,aes(x=value, colour=variable, fill=variable),linetype = "solid") +
+      geom_density(data = wpPred,aes(x=value, y = ..density..*100, colour=variable, fill=variable), linetype = "solid", alpha=0.1) +
+        scale_y_continuous(sec.axis = sec_axis(~./100)) +
+     labs(title="uncertainty chromatogram",
+          x ="Retention time, min",
+          y = "pdf",
+          colour="Analyte")+
+     xlim(c(0,80))+
+     facet_wrap(.~Column, nrow=3,scales = "free")+
+     theme(legend.position = c(1, 0),
+        legend.justification = c(1, 0))+
+  guides(fill = "none")
+
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.individual", ".png"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.population", ".png"), plot=p2, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.individual", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.population", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
-print(p1)
-print(p2)
+
+ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".svg"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
+
+print(p3)
 ```
 
 ## Isocratic predictions (population predictions)
@@ -3292,9 +3355,9 @@ print(p)
 
 ```
 
-# Effect of logP
+## Effect of logP
 
-The following plot show the effect of log P on isocratic retention times (population predictions) for typical neutral, basic and acidic analyte. The uncertainties are large. They are not shown to improve visibility.
+The following plot show the effect of log P on isocratic retention times (population predictions) for typical neutral (N), basic (B) and acidic (A) analyte. The uncertainties are large and not shown to improve visibility.
 
 ```{r logPgq, eval = FALSE}
 
@@ -3320,7 +3383,21 @@ draws_logP_df <- as_draws_df(x$generated_quantities)
 logPsim = c(0,1.5,3,4.5,6)
 col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")
 names(col.labs) <- c('1','2','3','4','5')
+diss2.labs <- c("Basic","Neutral","Acidic")
+names(diss2.labs) <- c(1,2,3)
+logP.labs <- c("logP=0","logP=3","logP=6")
+names(logP.labs) <- c(1,3,5)
 mydata <- list()
+
+savetheme <- theme(
+        legend.position="bottom",
+        legend.box = "vertical",
+        axis.text=element_text(size=10),
+        axis.text.x = element_text(size = 8),
+        axis.text.y = element_text(size = 8),
+        legend.text = element_text(size=10),
+        strip.text.x = element_text(size = 10),
+        strip.text.y = element_text(size = 10))
 
 for(i in 1:3){
 
@@ -3387,25 +3464,60 @@ p<-draws_df_subset %>%
   ungroup() %>%
   group_by(p,m,c,r,fi) %>%
   summarise(mlogkPred=median(logkPred)) %>%
-  ggplot(aes(x = fi, y = mlogkPred, color = as.factor(r), fill = as.factor(r), linetype = as.factor(p))) +
+  ggplot(aes(x = fi, y = mlogkPred, color = as.factor(c), fill = as.factor(r), linetype = as.factor(m))) +
   geom_line() +
-  facet_grid(c~m,labeller = labeller(c=col.labs, m=mod.labs))+
-  labs(color= "Type", linetype= "logP", y="typical logk",x="\u03C6")+
+  facet_grid(r~p,labeller = labeller(r=diss2.labs, p=logP.labs))+
+  labs(color= " ", linetype= " ", y="typical logk",x="\u03C6")+
   scale_fill_discrete(labels= c("B", "N", "A")) +
-  scale_color_discrete(labels= c("B", "N", "A"))+
-  scale_color_manual(labels = c("B", "N","A"), values = c("#619CFF", "black","#F8766D"))+
-  scale_linetype_manual(labels= c("0", "3", "6"), values = c("dotted","solid", "dashed")) +
-  theme(strip.text.x = element_text(size = 6),strip.text.y = element_text(size = 6))+
+  scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
+  scale_linetype_manual(labels= c("MeOH", "ACN"), values = c("solid","dashed")) +
+  theme(
+        legend.position="bottom",
+        legend.box = "vertical",
+        strip.text.x = element_text(size = 8),
+        strip.text.y = element_text(size = 8))+
   coord_cartesian(xlim=c(0,1),ylim=c(-2,4))
 
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\logPeffects\\logPjoined", ".svg"), plot=p+savetheme, width = 20, height = 20, units = "cm")
+
 
 print(p)
 
+# for toc
+toc<-draws_df_subset %>%
+  slice_sample(n=500) %>%
+  tidybayes::spread_draws(logkwxPred[p, c, r], S1xPred[p, m, c, r], S2xPred[m, ]) %>%
+  tidyr::expand_grid(fi = seq(0,1,0.1)) %>%
+  mutate(logkPred = logkwxPred-S1xPred*(1+S2xPred)*fi/(1+S2xPred*fi)) %>%
+  ungroup() %>%
+  group_by(p,m,c,r,fi) %>%
+  summarise(mlogkPred=median(logkPred)) %>%
+  subset(r==2 & p==3) %>%
+  ggplot(aes(x = fi, y = mlogkPred, color = as.factor(c), fill = as.factor(r), linetype = as.factor(m))) +
+  geom_line() +
+  labs(color= " ", linetype= " ", y="typical logk",x="\u03C6",title = "logP = 3, neutral, 25\u00b0C")+
+  scale_fill_discrete(labels= c("B", "N", "A")) +
+  scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
+  scale_linetype_manual(labels= c("MeOH", "ACN"), values = c("solid","dashed")) +
+  theme(plot.title=element_text(size=8),
+        axis.title = element_text(size = 8),
+        axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        legend.text = element_text(size=6),
+        strip.text.x = element_text(size = 6),
+        strip.text.y = element_text(size = 6),
+        legend.key.height =  unit(0.4, 'cm'),
+        legend.title= element_blank())+
+  coord_cartesian(xlim=c(0,1),ylim=c(-2,4))
+
+ggsave(paste0("figures\\toc\\TOC", ".png"), plot=toc, width = 8.47, height = 4.76, units = "cm")
+ggsave(paste0("figures\\toc\\TOC", ".svg"), plot=toc, width = 8.47, height = 4.76, units = "cm")
+
 ```
 
-# Goodness of fit plots
+## Goodness of fit plots
 
 Several goodness of fit plots were used to describe how well the model fits our set of observations.
 
@@ -3443,7 +3555,7 @@ data$restrCond = restrCond
 data$restrPred = restrPred
 ```
 
-Residuals:
+Individual and population residuals:
 
 ```{r plot-residuals}
 p1 <- ggplot()+
@@ -3452,10 +3564,20 @@ p1 <- ggplot()+
       labs(x ="pH", y = "Individual residuals, min", color = "Gradient time, min", shape = 'Column')+
       ylim(-10,10)
 
-ggsave(paste0("figures\\concordanceplots\\", "residuals", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\concordanceplots\\", "residuals", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+p2 <- ggplot()+
+      geom_jitter(data=data, aes(x = pHs, y = restrPred, color = as.factor(tg), shape=as.factor(ColumnName)),width = 0.1, height = 0)+
+      facet_grid(ColumnName~Mod2+Temp, labeller = labeller(Temp=temp.labs,Mod2=mod.labs))+
+      labs(x ="pH", y = "Population residuals, min", color = "Gradient time, min", shape = 'Column')
+
+ggsave(paste0("figures\\concordanceplots\\", "individualresiduals", ".png"), plot=p1, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", "individualresiduals", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
+
+ggsave(paste0("figures\\concordanceplots\\", "populationresiduals", ".png"), plot=p2, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", "populationresiduals", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
+
 
 print(p1)
+print(p2)
 ```
 
 Observed vs. population and individual predictions:
@@ -3464,7 +3586,7 @@ Observed vs. population and individual predictions:
 p1 <- ggplot()+
       geom_point(data=data, aes(x = trCond, y = RT, color = as.factor(tg), shape=as.factor(ColumnName)))+
       facet_grid(ColumnName~Mod2+Temp, labeller = labeller(Temp=temp.labs,Mod2=mod.labs))+
-      labs(y ="Observed Retention Time, min",
+      labs(y ="Observed retention time, min",
            x = "Individual predicted retention time, min",
            color = "tg, min",
            shape = 'Column')+
@@ -3493,7 +3615,7 @@ print(p2)
 
 ```
 
-# Predictions and decision making. Case Study 1
+# Predictions and decision making. Case study 1
 
 Here we want to show applicability of the model to predicting the best chromatogram using all the available data.
 
@@ -3513,18 +3635,19 @@ fit_red1<- cmdstanr::as_cmdstan_fit(c(
 
 ## Utility maps
 
-Let's find the best chromatogram that maximize utility using the set of experiments used to build the model.
-
-The utility function is based on lowest retention time, highest retention time and the difference of retention times between the critical pair of analytes. This utility is zero if at least one of the analyte has retention higher that 40, less than 2 min or the difference in retention time is less than 2. Otherwise, it favors shorter runs. (.) denotes design variables.
+For that purpose, we will use decision theory. We start by specifying a notion of utility to each outcome (uncertainty chromatogram). The Bayesian-based optimal decision is the one that maximizes expected utility. Our utility function is calcualted based on the lowest retention time across analytes ($\small mintr$), the highest retention time across analytes $\small maxtr$, and the difference in retention times between the critical pair of analytes ($\small res$). This utility is zero if at least one of the analytes has retention higher than 40, less than 2 min, or the difference in retention times is less than 2. Otherwise, it favors shorter runs. (.) denotes design variables.
 
 $$
 U(.)= I((mintr(.)>2) \ \& \ (res(.)>2)) \cdot (40-maxtr(.)) \cdot I(maxtr(.)<40)
 $$
 
 $$
- I(x) = 1 \ if \ condition \ x  \ is \ true \\
+\begin{aligned}
+ I(x) = 1 \ if \ condition \ x  \ is \ true, \\
  I(x) = 0 \ if \ condition \ x  \ is \ false
+\end{aligned}
 $$
+To find the maximum we use a grid search over a wide range of chromatographic conditions:
 
 ```{r casestudy1-preparedatasim}
 upH <- datasim %>%
@@ -3600,6 +3723,8 @@ x<- cmdstanr::read_cmdstan_csv(c(
 draws_sim_red_df <- as_draws_df(x$generated_quantities)
 #draws_sim_red_df <- fit_sim_red$draws(format = "df")
 ```
+
+The results are presented as a utility map for each of the column. The maximum is displayed below as  a table taking into consideration mobile phase pH<7.
 
 ```{r casestudy1-utylitymaps-alldata}
 foo<-datasim_red[!duplicated(datasim_red$expid),]
@@ -3685,29 +3810,31 @@ print(p15)
 
 cat("1. The best for XBridge Shield RP18:")
  foo1<-foo[foo$Column==1 & foo$pHo<7,];
- foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
+ kable(foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
 
-cat(" The best choice for XTerra MS C18:")
+cat("2. The best choice for XTerra MS C18:")
  foo2<-foo[foo$Column==2& foo$pHo<7,];
- foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
+ kable(foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
 
-cat(" The best choice for XBridge Phenyl:")
+cat("3. The best choice for XBridge Phenyl:")
  foo3<-foo[foo$Column==3& foo$pHo<7,];
- foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
+ kable(foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
 
-cat(" The best choice for XBridge C8:")
+cat("4. The best choice for XBridge C8:")
  foo4<-foo[foo$Column==4& foo$pHo<7,];
- foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
+ kable(foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
 
-cat(" The best choice for Xterra MS C8:")
+cat("5. The best choice for Xterra MS C8:")
  foo5<-foo[foo$Column==5& foo$pHo<7,];
- foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
+ kable(foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
 
 ```
 
+The highest utility can be expected for Xterra MS C8. 
+
 ### Uncertainity chromatogram
 
-Let's visualize chromatograms with the highest expected utility
+Here, we visualize chromatograms for each column with the highest expected utility given the experimental data.
 
 ```{r casestudy1-uncertainity-chrom}
 analyte_ID_sample <-c(9,17,33,58,140,180)
@@ -3729,10 +3856,10 @@ if (i==3){
 
  idx <- which(datasim_red$METID %in% analyte_ID_sample &
                datasim_red$tg == 60 & # c(30, 90, 270)
-               datasim_red$pHid == 6 &   # c(1:9)
-               datasim_red$fio == 0.1 &   # ...
+               datasim_red$pHid == 12 &   # c(1:9)
+               datasim_red$fio == 0.15 &   # ...
                datasim_red$Column == i &  # c(1, 2)
-               datasim_red$Mod2 == 2 & # c(1, 2)
+               datasim_red$Mod2 == 1 & # c(1, 2)
                datasim_red$Temp == 25) # c(25, 35)
 
 }
@@ -3788,9 +3915,9 @@ ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".pdf"), plo
 print(p)
 ```
 
-# Predictions and decision making. Case 2
+# Predictions and decision making. Case study 2
 
-The proposed model can be used for decision making having access to limiet data. Here we want to ilustrate this by predicting XTerra MS C18, XBridge Phenyl, XBridge C8, Xterra MS C8 retention times based on XBridge Shield RP18 data.
+The proposed model can be used for decision making having access to limted data. Here we want to illustrate this by predicting XTerra MS C18, XBridge Phenyl, XBridge C8, Xterra MS C8 retention times based on XBridge Shield RP18 data. We start by restimaing the model using limited data for our 6 analytes.
 
 ```{r casestudy2-standata}
 analyte_ID_sample = c(9,17,33,58,140,180)
@@ -4070,101 +4197,9 @@ print(pi)
 
 ```
 
-## Decision making
-
-The same utility function was used:
-
-```{r casestudy2-utylitymaps}
-
-foo<-datasim_red[!duplicated(datasim_red$expid),]
-
-x<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mindifftr", names(draws_sim_red_df), value = TRUE))]
-y<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^maxtr", names(draws_sim_red_df), value = TRUE))]
-z<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mintr", names(draws_sim_red_df), value = TRUE))]
-
-u=x;
-
-for (i in 1:ncol(x)){u[,i] <- as.numeric(x[,i]>2 & z[,i] > 2) * (40-y[,i]) * as.numeric(y[,i]<40)}
-u <- apply(u, MARGIN = 2, FUN = mean)
-u<-as.data.frame(u)
-
-foo$EUtility=u$u
-x <- apply(x, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
-x<-as.data.frame(t(x))
-
-foo$mindifftr_l=x$`5%`
-foo$mindifftr_m=x$`50%`
-foo$mindifftr_h=x$`95%`
-
-y <- apply(y, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
-
-y<-as.data.frame(t(y))
-foo$maxtr_l=y$`5%`
-foo$maxtr_m=y$`50%`
-foo$maxtr_h=y$`95%`
-
-p1 <- ggplot()+
-     geom_line(data=foo, aes(x = pHs, y = EUtility, color = as.factor(tg)))+
-     xlim(2,11)+
-     facet_grid(ColumnName~Mod2+Temp, labeller = labeller(Temp=temp.labs,Mod2=mod.labs))+
-     labs(x ="pH",
-          y = "Expected Utility",
-          color = "tg, min")
-
-p2 <- ggplot()+
-     geom_line(data=foo, aes(x = pHs, y = mindifftr_m, color = as.factor(tg)))+
-     geom_ribbon(data=foo, aes(x = pHs, ymin = mindifftr_l, ymax = mindifftr_h, fill = as.factor(tg)), alpha = 0.25)+
-     xlim(2,11)+
-     facet_grid(ColumnName~Mod2+Temp, labeller = labeller(Temp=temp.labs,Mod2=mod.labs))+
-     labs(x ="pH",
-          y = "Resolution (difference), min",
-          color = "tg, min",
-          fill = "tg, min")
-
-p3 <- ggplot()+
-     geom_line(data=foo, aes(x = pHs, y = maxtr_m, color = as.factor(tg)))+
-  geom_ribbon(data=foo, aes(x = pHs, ymin = maxtr_l, ymax = maxtr_h, fill = as.factor(tg)), alpha = 0.25)+
-     xlim(2,11)+
-     facet_grid(ColumnName~Mod2+Temp, labeller = labeller(Temp=temp.labs,Mod2=mod.labs))+
-     labs(x ="pH",
-          y = "Maximal tR, min",
-          color = "tg, min",
-          fill = "tg, min")
-
-
-ggsave(paste0("figures\\casestudy2\\decision\\", "expectedutility", ".png"), plot=p1, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\decision\\",  "resolution", ".png"), plot=p2, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\decision\\",  "maxtr", ".png"), plot=p3, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\decision\\", "expectedutility", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\decision\\",  "resolution", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\decision\\",  "maxtr", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
-
-print(p1)
-print(p2)
-print(p3)
-
-cat("1. The best choice for XBridge Shield RP18")
- foo1<-foo[foo$Column==1,];
- foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pH','pHo','Temp','ColumnName','EUtility')]
-cat("2. The best choice for XTerra MS C18")
- foo2<-foo[foo$Column==2,];
- foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pH','pHo','Temp','ColumnName','EUtility')]
-cat("3. The best choice for XBridge Phenyl")
- foo3<-foo[foo$Column==3,];
- foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pH','pHo','Temp','ColumnName','EUtility')]
-cat("4. The best choice for XBridge C8")
- foo4<-foo[foo$Column==4,];
- foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pH','pHo','Temp','ColumnName','EUtility')]
-cat("5. The best choice for Xterra MS C8")
- foo5<-foo[foo$Column==5,];
- foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pH','pHo','Temp','ColumnName','EUtility')]
-
- 
-```
-
 ### Uncertainity chromatogram
 
-Below is the example of a chromatogram (along with uncertainty) expected for tg = 90 min, pH = 8.9, Temp = 25oC in ACN.
+Below is the example of a chromatogram (along with uncertainty) expected for tg = 90 min, pH = 8.9, Temp = $25^oC$ in ACN.
 
 ```{r  casestudy2-uncertainity-chrom}
 analyte_ID_sample <-c(9,17,33,58,140,180)
@@ -4192,17 +4227,19 @@ wpCond= rbind(wpCond,wpCond1)
 
 wpCond$Column=as.factor(wpCond$Column)
 p <- ggplot(data = wpCond)+
-     geom_density(aes(x=value, colour=variable)) +
+     geom_density(aes(x=value, colour=variable, fill=variable),alpha=0.1) +
      labs(title="uncertainty chromatogram (limited data preditions)",
-          x ="Retention Time, min",
+          x ="Retention time, min",
           y = "pdf",
           colour="Analyte")+
      xlim(c(0,80))+
      facet_wrap(.~Column, nrow=3,scales = "free")+
      theme(legend.position = c(1, 0),
-     legend.justification = c(1, 0))
+     legend.justification = c(1, 0)) +
+  guides(fill = "none")
 
 ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 print(p)
@@ -4286,7 +4323,7 @@ draws_sim_red_df <- as_draws_df(x$generated_quantities)
 
 ```
 
-The best chromatogram can be sought based on utility map:
+The results are presented as a utility map for each of the column. The maximum is displayed below as a table taking into consideration mobile phase pH<7.
 
 ```{r casestudy2-utylitymaps-danse}
 foo<-datasim_red[!duplicated(datasim_red$expid),]
@@ -4374,26 +4411,26 @@ print(p14)
 print(p15)
 
  cat("1. The best for XBridge Shield RP18:")
- foo1<-foo[foo$Column==1,];
- foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
+ foo1<-foo[foo$Column==1 & foo$pHo<7,];
+ kable(foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
  cat("2.  The best choice for XTerra MS C18:")
- foo2<-foo[foo$Column==2,];
- foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
+ foo2<-foo[foo$Column==2 & foo$pHo<7,];
+ kable(foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
  cat("3.  The best choice for XBridge Phenyl:")
- foo3<-foo[foo$Column==3,];
- foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
+ foo3<-foo[foo$Column==3 & foo$pHo<7,];
+ kable(foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
  cat("4.  The best choice for XBridge C8:")
- foo4<-foo[foo$Column==4,];
- foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
+ foo4<-foo[foo$Column==4 & foo$pHo<7, ];
+ kable(foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
  cat("5.  The best choice for Xterra MS C8:")
- foo5<-foo[foo$Column==5,];
- foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')]
-
+ foo5<-foo[foo$Column==5 & foo$pHo<7,];
+ kable(foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
+   
 ```
 
 ### Uncertainity chromatogram
 
-Let's visualize chromatograms with the highest expected utility given the experimental data.
+Here, we visualize chromatograms for each column with the highest expected utility given the experimental data. The XBridge Shield RP18 data adds predictive value if compared to population predictions, however, the uncertainties are still high to unequivocally choose the best column and chromatographic conditions. Still some additional experiments are required.
 
 ```{r casestudy2-chromatogram-dense}
 analyte_ID_sample <-c(9,17,33,58,140,180)
@@ -4403,7 +4440,7 @@ col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge 
 datasim_red$fio = as.factor(datasim_red$fio)
 
 wpCond= data.frame()
-
+ 
 for (i in 1:5) {
 
 idx <- which(datasim_red$METID %in% analyte_ID_sample &
@@ -4429,7 +4466,7 @@ if (i==2){
 if (i==3){
 
  idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 120 & # c(30, 90, 270)
+               datasim_red$tg == 100 & # c(30, 90, 270)
                datasim_red$pHid == 5 &   # c(1:9)
                datasim_red$fio == 0.1 &   # ...
                datasim_red$Column == i &  # c(1, 2)
@@ -4441,8 +4478,8 @@ if (i==3){
 if (i==4){
 
  idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 100 & # c(30, 90, 270)
-               datasim_red$pHid == 5 &   # c(1:9)
+               datasim_red$tg == 80& # c(30, 90, 270)
+               datasim_red$pHid == 6 &   # c(1:9)
                datasim_red$fio == 0.05 &   # ...
                datasim_red$Column == i &  # c(1, 2)
                datasim_red$Mod2 == 2 & # c(1, 2)
@@ -4474,8 +4511,8 @@ wpCond$Column=as.factor(wpCond$Column)
 
 p <- ggplot(data = wpCond)+
      geom_density(aes(x=value, colour=variable)) +
-     labs(title="uncertainty chromatogram (individual predictions)",
-          x ="Retention Time, min",
+     labs(title="uncertainty chromatogram (Limited data predictions)",
+          x ="Retention time, min",
           y = "pdf",
           colour="Analyte")+
      xlim(c(0,80))+
@@ -4491,7 +4528,7 @@ print(p)
 
 # Conclusions
 
-The large gradient retention time data and multilevel modeling allow to characterize separation of RP HPLC stationary phases.
+This work demonstrates the application of a Bayesian multilevel model to compare various stationary phases using large datasets of retention time collected for a wide range of chromatographic conditions.
 
 # References {.unnumbered}
 
