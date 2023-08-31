@@ -301,7 +301,7 @@ $$
 \int_0^{t_{R,z}-t_{0,z}-t_e}\frac{dt}{t_{0,z}\cdot ki_z(t) }=1,
 $$
 
-where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an i-th analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
+where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and chromatographic conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an i-th analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
 
 $$
 ki_z(t)=\frac{k_{z,i[z],1}(t)+\sum_{r=1}^{R[i[z]]} k_{z,i[z],r+1}(t) \cdot 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i]} pKa_{z,i[z],r}(t)} }{1+\sum_{r=1}^R 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i[z]]} pKa_{z,i[z],r}(t) } }
@@ -409,7 +409,7 @@ $$
 \end{aligned}
 $$
 
-Further, we created the matrices containing the value of $\small logkw$,$\small S1$,$\small S2$,$\small pKaw$, and $\small alpha$ for i-th analyte, col-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the model code.
+Further, we created the matrices containing the value of $\small logkw$,$\small S1$,$\small S2$,$\small pKaw$, and $\small alpha$ for i-th analyte, col-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the stan code.
 
 $$
 \begin{aligned}
@@ -1242,7 +1242,7 @@ p1<-bind_rows(Neutral_results, Acids_results, Basic_results) %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
    ylab(' ') +
-   xlab("Typical clogkw")
+   xlab("Column effects on logkw (clogkw)")
 
 ```
 
@@ -1305,7 +1305,7 @@ MeOH_Basic_results  <-draws_df_subset %>%
 ACN_Neutral_results <-draws_df_subset %>%
   slice_sample(n=1000) %>%
   tidybayes::spread_draws(cS1mHat[c],cdS1Hat[c]) %>%
-  mutate(xS1aHat=cS1mHat+cdS1Hat)%>%
+  mutate(xS1aHat=cdS1Hat)%>%
   mutate_if(is.character,as.factor) %>% 
   mutate(ColumnNames=recode(c,
                                 '1' = 'XTerra MS C18',
@@ -1323,7 +1323,7 @@ ACN_Acids_results <-draws_df_subset %>%
   filter(r==1) %>%
   ungroup() %>%
   select(-r) %>%
-  mutate(xS1aHat= cS1mHat +cdS1mHat +cdS1Hat + cddS1Hat)%>%
+  mutate(xS1aHat=cdS1Hat + cddS1Hat)%>%
   mutate_if(is.character,as.factor) %>% 
   mutate(ColumnNames=recode(c,
                                 '1' = 'XTerra MS C18',
@@ -1341,7 +1341,7 @@ ACN_Basic_results  <-draws_df_subset %>%
   filter(r==2) %>%
   ungroup() %>%
   select(-r) %>%
-  mutate(xS1aHat= cS1mHat+cdS1mHat+cdS1Hat + cddS1Hat)%>%
+  mutate(xS1aHat= cdS1Hat + cddS1Hat)%>%
   mutate_if(is.character,as.factor) %>% 
   mutate(ColumnNames=recode(c,
                                 '1' = 'XTerra MS C18',
@@ -1359,8 +1359,23 @@ p2<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results,
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
   ylab(' ')+
-  xlab("Typical cS1")+
+  xlab("Column effects on S1 (cS1)")+
   facet_wrap(.~Modifier)
+
+p2_1<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results) %>%
+  ggplot(aes(y = ColumnNames, x = S1Hat, xmin = .lower, xmax = .upper,color = Type)) +
+   tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
+  scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
+  ylab(' ')+
+  xlab("Column effects on S1 (cS1)")
+
+p2_2<-bind_rows(ACN_Neutral_results,ACN_Acids_results, ACN_Basic_results) %>%
+  ggplot(aes(y = ColumnNames, x = S1Hat, xmin = .lower, xmax = .upper,color = Type)) +
+   tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
+  scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
+  ylab(' ')+
+  xlab("Column effects on dS1 (cdS1)")
+
 ```
 
 ```{r figcbeta}
@@ -1406,7 +1421,7 @@ p3<-bind_rows(logkw_results, S1_results) %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) + 
   scale_color_manual(labels = c("clogkw", "cS1"), values = c("black", "gray"))+
   ylab(' ')+
-  xlab("log P effect (c\u03b2)")
+  xlab("Column effects on \u03b2 (c\u03b2)")
 ```
 
 ```{r figcpH}
@@ -1452,7 +1467,7 @@ p4<-bind_rows(Acids_results, Bases_results) %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B"), values = c("#F8766D", "#619CFF"))+
   ylab(' ')+
-   xlab("pH effects (capH)")
+   xlab("Column effects on apH (capH)")
 
 ```
 
@@ -1479,7 +1494,7 @@ p5<-Results %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) + 
   scale_color_manual(labels = c("clogkw"), values = c("black"))+
   ylab(' ')+
-  xlab("Temp. effects (cdlogkT)")
+  xlab("Column effects on dlogkT (cdlogkT)")
 
 ```
 
@@ -1488,9 +1503,12 @@ p=grid.arrange(p1+ theme(legend.position='none'),
                p3+theme(axis.text.y=element_blank()), 
                p4+ theme(legend.position='none'),
                p5+theme(axis.text.y=element_blank()), 
-               p2, ncol=2, widths = c(1,1), layout_matrix = rbind(c(1, 2),c(3, 4), c(5, 5)))
+               p2_1 + theme(legend.position='none'),
+               p2_2 +theme(axis.text.y=element_blank()),
+               ncol=2)
 
 ggsave(paste0("figures\\param\\", "column-effects-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "column-effects-all", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\param\\", "column-effects-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
@@ -1909,6 +1927,7 @@ p=grid.arrange(p1+ theme(legend.position='none'),
                p2, ncol=2, widths = c(1,1), layout_matrix = rbind(c(1, 2),c(3, 4), c(5, 5)))
 
 ggsave(paste0("figures\\param\\", "column-parameters-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\param\\", "column-parameters-all", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\param\\", "column-parameters-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 ```
@@ -2023,6 +2042,7 @@ p=grid.arrange(p1, p3, p2,
                widths = c(0.3,0.7), layout_matrix = rbind(c(1, 1),c(2, 3)))
 
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".png"), plot=p, width = 20, height = 15, units = "cm")
+ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".svg"), plot=p, width = 20, height = 15, units = "cm")
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".pdf"), plot=p, width = 20, height = 15, units = "cm")
 
 ```
@@ -3075,6 +3095,7 @@ ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.individua
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.population", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
 
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".png"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".svg"), plot=p3, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
 
 print(p3)
@@ -4218,6 +4239,7 @@ p <- ggplot(data = wpCond)+
   guides(fill = "none")
 
 ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 print(p)

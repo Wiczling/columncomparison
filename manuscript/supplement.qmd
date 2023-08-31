@@ -1,6 +1,6 @@
 ---
 title: |
-  | Supporting Information for
+  | Supporting Information for:
   | Comparison of chromatographic stationary phases using Bayesian-based multilevel modeling
 author: "Paweł Wiczling, Agnieszka Kamedulska"
 adress: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
@@ -40,7 +40,7 @@ $$
 \int_0^{t_{R,z}-t_{0,z}-t_e}\frac{dt}{t_{0,z}\cdot ki_z(t) }=1,
 $$
 
-where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an i-th analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
+where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and chromatographic conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an i-th analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
 
 $$
 ki_z(t)=\frac{k_{z,i[z],1}(t)+\sum_{r=1}^{R[i[z]]} k_{z,i[z],r+1}(t) \cdot 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i]} pKa_{z,i[z],r}(t)} }{1+\sum_{r=1}^R 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i[z]]} pKa_{z,i[z],r}(t) } }
@@ -150,7 +150,7 @@ $$
 \end{aligned}
 $$
 
-Further, we created the matrices containing the value of $\small logkw$,$\small S1$,$\small S2$,$\small pKaw$, and $\small alpha$ for i-th analyte, col-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the model code.
+Further, we created the matrices containing the value of $\small logkw$,$\small S1$,$\small S2$,$\small pKaw$, and $\small alpha$ for i-th analyte, col-th column, m-th modifier an r-th dissociation step based on the value of neutral form and effects of column, organic modifier, and dissociation. This transformation was denoted as f(.). The exact procedure can be found in the stan code.
 
 $$
 \begin{aligned}
