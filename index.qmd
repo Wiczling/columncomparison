@@ -1511,10 +1511,10 @@ p=grid.arrange(p1+ theme(legend.position='none'),
 ggsave(paste0("figures\\param\\", "column-effects-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\param\\", "column-effects-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
-ragg::agg_png(paste0("figures\\param\\", "column-effects-all-figures", ".png"), 
-              width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.42291)
-grid.arrange(p)
-dev.off()
+
+ggsave(paste0("figures\\param\\", "column-effects-all-manuscript", ".png"),
+       p,
+       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.5))
 ```
 
 Below we combine separate plot into the one graphic to characterizing parameters characterizing particular columns:
@@ -1933,10 +1933,10 @@ p=grid.arrange(p1+ theme(legend.position='none'),
 ggsave(paste0("figures\\param\\", "column-parameters-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\param\\", "column-parameters-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
-ragg::agg_png(paste0("figures\\param\\", "column-parameters-all-figures", ".png"), 
-              width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.42291)
-grid.arrange(p)
-dev.off()
+
+ggsave(paste0("figures\\param\\", "column-parameters-all-manuscript", ".png"),
+       p,
+       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.5))
 
 ```
 
@@ -2052,10 +2052,9 @@ p=grid.arrange(p1, p3, p2,
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".png"), plot=p, width = 20, height = 15, units = "cm")
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".pdf"), plot=p, width = 20, height = 15, units = "cm")
 
-ragg::agg_png(paste0("figures\\param\\", "sd-column-effects-all-paper", ".png"), 
-              width = 8.4582, height = 6.34365, units = "cm", res = 300, scaling=0.42291)
-grid.arrange(p)
-dev.off()
+ggsave(paste0("figures\\param\\", "sd-column-effects-all-manuscript", ".png"),
+       p,
+       device = ragg::agg_png(width = 8.4582, height = 6.34365, units = "cm", res = 300, scaling=0.5))
 
 ```
 
@@ -3106,26 +3105,17 @@ ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.populatio
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.individual", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.population", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
 
-
-savetheme <- theme(
-        plot.title = element_text(size=6),
-        axis.text=element_text(size=6),
-        axis.title=element_text(size=6),
-        axis.text.x = element_text(size = 4),
-        axis.text.y = element_text(size = 4),
-        legend.text = element_text(size=5),
-        legend.title= element_text(size=6),
-        strip.text.x = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")),
-        strip.text.y = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")), 
-        legend.key.size = unit(0.25, 'cm'))
-
-
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".png"), plot=p3, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".tiff"), plot=p3+savetheme, width = 8.4582, height = 8.4582, units = "cm", dpi=300)
 
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
 
 print(p3)
+
+ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined-manuscript", ".png"),
+       p3,
+       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.5))
+
+
 ```
 
 ## Isocratic predictions (population predictions)
@@ -3507,28 +3497,14 @@ p<-draws_df_subset %>%
   coord_cartesian(xlim=c(0,1),ylim=c(-2,4))+
   guides(size="none")
 
-savetheme <- theme(
-        plot.title = element_text(size=6),
-        axis.text=element_text(size=6),
-        axis.title=element_text(size=6),
-        axis.text.x = element_text(size = 4),
-        axis.text.y = element_text(size = 4),
-        legend.text = element_text(size=5),
-        legend.title= element_text(size=6),
-        strip.text.x = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")),
-        strip.text.y = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")), 
-        legend.key.size = unit(0.25, 'cm'))
-
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\logPeffects\\logPjoined", ".tiff"), plot=p+savetheme, width = 8.4582 , height = 8.4582 , units = "cm",dpi=300)
-
-ragg::agg_png(paste0("figures\\logPeffects\\logPjoined-figures", ".png"), 
-              width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.42291)
-print(p)
-dev.off()
 
 print(p)
+
+ggsave(paste0("figures\\logPeffects\\logPjoined-manuscript", ".png"),
+       p,
+       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.5))
 
 # for toc
 toc<-draws_df_subset %>%
@@ -3564,7 +3540,6 @@ ggsave(paste0("figures\\toc\\TOC", ".png"), plot=toc, width = 8.47, height = 4.7
 ggsave(paste0("figures\\toc\\TOC", ".svg"), plot=toc, width = 8.47, height = 4.76, units = "cm")
 
 ```
-
 ## Goodness of fit plots
 
 Several goodness of fit plots were used to describe how well the model fits our set of observations.
@@ -3941,23 +3916,15 @@ p <- ggplot(data = wpCond)+
            legend.justification = c(1, 0))+
   guides(fill = "none")
   
-
-savetheme <- theme(
-        plot.title = element_text(size=6),
-        axis.text=element_text(size=6),
-        axis.title=element_text(size=6),
-        axis.text.x = element_text(size = 4),
-        axis.text.y = element_text(size = 4),
-        legend.text = element_text(size=5),
-        legend.title= element_text(size=6),
-        strip.text.x = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")),
-        strip.text.y = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")), 
-        legend.key.size = unit(0.25, 'cm'))
-
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".tiff"), plot=p+savetheme, width = 8.4582, height = 8.4582, units = "cm", dpi=300)
+
 print(p)
+
+ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram-manuscript", ".png"),
+       p,
+       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.5))
+
 ```
 
 # Predictions and decision making. Case study 2
@@ -4282,11 +4249,15 @@ p <- ggplot(data = wpCond)+
      legend.justification = c(1, 0)) +
   guides(fill = "none")
 
-ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".svg"), plot=p, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\decision\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\concordanceplots\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\concordanceplots\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
 print(p)
+
+ggsave(paste0("figures\\casestudy2\\concordanceplots\\",  "chromatogram-manuscript", ".png"),
+       p,
+       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.5))
+
 ```
 
 ## Utility maps
@@ -4539,12 +4510,14 @@ p <- ggplot(data = wpCond)+
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
 
-ragg::agg_png(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram-figures", ".png"), 
-              width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.42291)
-grid.arrange(p)
-dev.off()
 
 print(p)
+
+ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram-manuscript", ".png"),
+       p,
+       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.5))
+
+
 ```
 
 # Conclusions
