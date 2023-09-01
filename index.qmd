@@ -1510,8 +1510,11 @@ p=grid.arrange(p1+ theme(legend.position='none'),
 
 ggsave(paste0("figures\\param\\", "column-effects-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\param\\", "column-effects-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\param\\", "column-effects-all", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 
+ragg::agg_png(paste0("figures\\param\\", "column-effects-all-figures", ".png"), 
+              width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.42291)
+grid.arrange(p)
+dev.off()
 ```
 
 Below we combine separate plot into the one graphic to characterizing parameters characterizing particular columns:
@@ -1928,8 +1931,12 @@ p=grid.arrange(p1+ theme(legend.position='none'),
                p2, ncol=2, widths = c(1,1), layout_matrix = rbind(c(1, 2),c(3, 4), c(5, 5)))
 
 ggsave(paste0("figures\\param\\", "column-parameters-all", ".png"), plot=p, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\param\\", "column-parameters-all", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\param\\", "column-parameters-all", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
+ragg::agg_png(paste0("figures\\param\\", "column-parameters-all-figures", ".png"), 
+              width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.42291)
+grid.arrange(p)
+dev.off()
 
 ```
 
@@ -2043,8 +2050,12 @@ p=grid.arrange(p1, p3, p2,
                widths = c(0.3,0.7), layout_matrix = rbind(c(1, 1),c(2, 3)))
 
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".png"), plot=p, width = 20, height = 15, units = "cm")
-ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".svg"), plot=p, width = 20, height = 15, units = "cm")
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".pdf"), plot=p, width = 20, height = 15, units = "cm")
+
+ragg::agg_png(paste0("figures\\param\\", "sd-column-effects-all-paper", ".png"), 
+              width = 8.4582, height = 6.34365, units = "cm", res = 300, scaling=0.42291)
+grid.arrange(p)
+dev.off()
 
 ```
 
@@ -3077,8 +3088,8 @@ p2 <- ggplot(data = wpPred)+
         legend.justification = c(1, 0))
 
 p3 <- ggplot()+
-      geom_density(data = wpCond,aes(x=value, colour=variable, fill=variable),linetype = "solid") +
-      geom_density(data = wpPred,aes(x=value, y = ..density..*100, colour=variable, fill=variable), linetype = "solid", alpha=0.1) +
+      geom_density(data = wpCond,aes(x=value, colour=variable, fill=variable),linetype = "solid", lwd=0.25) +
+      geom_density(data = wpPred,aes(x=value, y = ..density..*100, colour=variable, fill=variable), linetype = "solid",      lwd=0.25,  alpha=0.1) +
         scale_y_continuous(sec.axis = sec_axis(~./100)) +
      labs(title="uncertainty chromatogram (individual and population)",
           x ="Retention time, min",
@@ -3095,8 +3106,23 @@ ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.populatio
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.individual", ".pdf"), plot=p1, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.population", ".pdf"), plot=p2, width = 20, height = 20, units = "cm")
 
+
+savetheme <- theme(
+        plot.title = element_text(size=6),
+        axis.text=element_text(size=6),
+        axis.title=element_text(size=6),
+        axis.text.x = element_text(size = 4),
+        axis.text.y = element_text(size = 4),
+        legend.text = element_text(size=5),
+        legend.title= element_text(size=6),
+        strip.text.x = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")),
+        strip.text.y = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")), 
+        legend.key.size = unit(0.25, 'cm'))
+
+
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".png"), plot=p3, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".svg"), plot=p3, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".tiff"), plot=p3+savetheme, width = 8.4582, height = 8.4582, units = "cm", dpi=300)
+
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined", ".pdf"), plot=p3, width = 20, height = 20, units = "cm")
 
 print(p3)
@@ -3481,10 +3507,26 @@ p<-draws_df_subset %>%
   coord_cartesian(xlim=c(0,1),ylim=c(-2,4))+
   guides(size="none")
 
+savetheme <- theme(
+        plot.title = element_text(size=6),
+        axis.text=element_text(size=6),
+        axis.title=element_text(size=6),
+        axis.text.x = element_text(size = 4),
+        axis.text.y = element_text(size = 4),
+        legend.text = element_text(size=5),
+        legend.title= element_text(size=6),
+        strip.text.x = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")),
+        strip.text.y = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")), 
+        legend.key.size = unit(0.25, 'cm'))
+
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\logPeffects\\logPjoined", ".svg"), plot=p+savetheme, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\logPeffects\\logPjoined", ".tiff"), plot=p+savetheme, width = 8.4582 , height = 8.4582 , units = "cm",dpi=300)
 
+ragg::agg_png(paste0("figures\\logPeffects\\logPjoined-figures", ".png"), 
+              width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.42291)
+print(p)
+dev.off()
 
 print(p)
 
@@ -3733,7 +3775,7 @@ draws_sim_red_df <- as_draws_df(x$generated_quantities)
 The results are presented as a utility map for each of the column. The maximum is displayed below as  a table taking into consideration mobile phase pH<7.
 
 ```{r casestudy1-utylitymaps-alldata}
-foo<-datasim_red[!duplicated(datasim_red$expid),]
+Uresults<-datasim_red[!duplicated(datasim_red$expid),]
 x<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mindifftr", names(draws_sim_red_df), value = TRUE))]
 y<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^maxtr", names(draws_sim_red_df), value = TRUE))]
 z<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mintr", names(draws_sim_red_df), value = TRUE))]
@@ -3745,53 +3787,53 @@ for (i in 1:ncol(x)){u[,i] <- as.numeric(x[,i]>2 & z[,i] > 2) * (40-y[,i]) * as.
 pr <- apply(u, MARGIN = 2, FUN = mean)
 pr<-as.data.frame(pr)
 
-foo$EUtility=pr$pr
+Uresults$EUtility=pr$pr
 
 x <- apply(x, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
 x<-as.data.frame(t(x))
 
-foo$mindifftr_l=x$`5%`
-foo$mindifftr_m=x$`50%`
-foo$mindifftr_h=x$`95%`
+Uresults$mindifftr_l=x$`5%`
+Uresults$mindifftr_m=x$`50%`
+Uresults$mindifftr_h=x$`95%`
 
 y <- apply(y, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
 
 y<-as.data.frame(t(y))
 
-foo$maxtr_l=y$`5%`
-foo$maxtr_m=y$`50%`
-foo$maxtr_h=y$`95%`
+Uresults$maxtr_l=y$`5%`
+Uresults$maxtr_m=y$`50%`
+Uresults$maxtr_h=y$`95%`
 
 p11 <- ggplot()+
-     geom_contour_filled(data=subset(foo,Column==1), aes(x = pHs, y=tg, z = EUtility))+
+     geom_contour_filled(data=subset(Uresults,Column==1), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
 
 p12 <- ggplot()+
-     geom_contour_filled(data=subset(foo,Column==2), aes(x = pHs, y=tg, z = EUtility))+
+     geom_contour_filled(data=subset(Uresults,Column==2), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
 
 p13 <- ggplot()+
-     geom_contour_filled(data=subset(foo,Column==3), aes(x = pHs, y=tg, z = EUtility))+
+     geom_contour_filled(data=subset(Uresults,Column==3), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
 
 p14 <- ggplot()+
-     geom_contour_filled(data=subset(foo,Column==4), aes(x = pHs, y=tg, z = EUtility))+
+     geom_contour_filled(data=subset(Uresults,Column==4), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
 
 p15 <- ggplot()+
-     geom_contour_filled(data=subset(foo,Column==5), aes(x = pHs, y=tg, z = EUtility))+
+     geom_contour_filled(data=subset(Uresults,Column==5), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
@@ -3814,25 +3856,32 @@ print(p13)
 print(p14)
 print(p15)
 
+Uresults$pHo <-round(Uresults$pHo,1)
+
 cat("1. The best for XBridge Shield RP18:")
- foo1<-foo[foo$Column==1 & foo$pHo<7,];
- kable(foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
+ Uresults1<-Uresults[Uresults$Column==1 & Uresults$pHo<7,];
+ Uresults1<-Uresults1[which(Uresults1$EUtility==max(Uresults1$EUtility)),]
+ kable(Uresults1[,c('ColumnName','tg', 'fio','fik','Mod','pHo','Temp','EUtility')])
 
 cat("2. The best choice for XTerra MS C18:")
- foo2<-foo[foo$Column==2& foo$pHo<7,];
- kable(foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
+ Uresults2<-Uresults[Uresults$Column==2& Uresults$pHo<7,];
+ Uresults2<-Uresults2[which(Uresults2$EUtility==max(Uresults2$EUtility)),]
+ kable(Uresults2[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 cat("3. The best choice for XBridge Phenyl:")
- foo3<-foo[foo$Column==3& foo$pHo<7,];
- kable(foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
+ Uresults3<-Uresults[Uresults$Column==3& Uresults$pHo<7,];
+ Uresults3<-Uresults3[which(Uresults3$EUtility==max(Uresults3$EUtility)),]
+ kable(Uresults3[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 cat("4. The best choice for XBridge C8:")
- foo4<-foo[foo$Column==4& foo$pHo<7,];
- kable(foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
+ Uresults4<-Uresults[Uresults$Column==4& Uresults$pHo<7,];
+ Uresults4<-Uresults4[which(Uresults4$EUtility==max(Uresults4$EUtility)),]
+ kable(Uresults4[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 cat("5. The best choice for Xterra MS C8:")
- foo5<-foo[foo$Column==5& foo$pHo<7,];
- kable(foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
+ Uresults5<-Uresults[Uresults$Column==5& Uresults$pHo<7,];
+ Uresults5<-Uresults5[which(Uresults5$EUtility==max(Uresults5$EUtility)),]
+ kable(Uresults5[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 ```
 
@@ -3844,82 +3893,70 @@ Here, we visualize chromatograms for each column with the highest expected utili
 
 ```{r casestudy1-uncertainity-chrom}
 analyte_ID_sample <-c(9,17,33,58,140,180)
-col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")
+
 datasim_red$fio = as.factor(datasim_red$fio)
 
 wpCond= data.frame()
 
 for (i in 1:5) {
-idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 60 & # c(30, 90, 270)
-               datasim_red$pHid == 10 &   # c(1:9)
-               datasim_red$fio == 0.05 &   # ...
-               datasim_red$Column == i &  # c(1, 2)
-               datasim_red$Mod2 == 2 & # c(1, 2)
-               datasim_red$Temp == 25) # c(25, 35)
-
-if (i==3){
+Uresultsi <- Uresults1
+if (i==2){Uresultsi <- Uresults2}
+if (i==3){Uresultsi <- Uresults3}
+if (i==4){Uresultsi <- Uresults4}
+if (i==5) {Uresultsi <- Uresults5}
 
  idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 60 & # c(30, 90, 270)
-               datasim_red$pHid == 12 &   # c(1:9)
-               datasim_red$fio == 0.15 &   # ...
-               datasim_red$Column == i &  # c(1, 2)
-               datasim_red$Mod2 == 1 & # c(1, 2)
-               datasim_red$Temp == 25) # c(25, 35)
-
-}
-
-if (i==4){
-
- idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 80 & # c(30, 90, 270)
-               datasim_red$pHid == 5 &   # c(1:9)
-               datasim_red$fio == 0.05 &   # ...
-               datasim_red$Column == i &  # c(1, 2)
-               datasim_red$Mod2 == 2 & # c(1, 2)
-               datasim_red$Temp == 25) # c(25, 35)
-
-}
-
-if (i==5){
-
- idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 80 & # c(30, 90, 270)
-               datasim_red$pHid == 5 &   # c(1:9)
-               datasim_red$fio == 0.1 &   # ...
-               datasim_red$Column == i &  # c(1, 2)
-               datasim_red$Mod2 == 2 & # c(1, 2)
-               datasim_red$Temp == 25) # c(25, 35)
-}
-
+               datasim_red$tg == Uresultsi$tg & # c(30, 90, 270)
+               datasim_red$pHid == Uresultsi$pHid &   # c(1:9)
+               datasim_red$fio == Uresultsi$fio &   # ...
+               datasim_red$Column == Uresultsi$Column &  # c(1, 2)
+               datasim_red$Mod2 == Uresultsi$Mod2 & # c(1, 2)
+               datasim_red$Temp == Uresultsi$Temp) # c(25, 35)
+ 
 data_to_plot <- draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% paste0("trHatCond[",idx,"]"))]
 
 colnames(data_to_plot) <- paste(dataNames$Name[analyte_ID_sample])
 wpCond1 <- melt(data_to_plot)
-wpCond1$Column <- unname(col.labs[i])
+wpCond1$Column <- paste0(Uresultsi$ColumnName,
+                         ', ', Uresultsi$Mod,
+                         ', T= ', Uresultsi$Temp, ',', " \n ",
+                         ' fio= ', Uresultsi$fio,
+                         ', tg= ', Uresultsi$tg,
+                         ', pHo= ', round(Uresultsi$pHo,1))
 wpCond= rbind(wpCond,wpCond1)
 }
 
 wpCond$Column=as.factor(wpCond$Column)
 
 p <- ggplot(data = wpCond)+
-     geom_density(aes(x=value, colour=variable, fill=variable),alpha=0.1) +
+     geom_density(aes(x=value, colour=variable, fill=variable),alpha=0.1, lwd=0.25) +
      labs(title="uncertainty chromatogram (all data)",
           x ="Retention time, min",
           y = "pdf",
           colour="Analyte"
           )+
-     xlim(c(0,80))+
+     xlim(c(0,40))+
      facet_wrap(.~Column, nrow=3,scales = "free")+
      theme(legend.position = c(1, 0),
-        legend.justification = c(1, 0))+
+           legend.justification = c(1, 0))+
   guides(fill = "none")
+  
+
+savetheme <- theme(
+        plot.title = element_text(size=6),
+        axis.text=element_text(size=6),
+        axis.title=element_text(size=6),
+        axis.text.x = element_text(size = 4),
+        axis.text.y = element_text(size = 4),
+        legend.text = element_text(size=5),
+        legend.title= element_text(size=6),
+        strip.text.x = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")),
+        strip.text.y = element_text(size = 4, margin = margin(.05, 0, .05, 0, "cm")), 
+        legend.key.size = unit(0.25, 'cm'))
 
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
-
+ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram", ".tiff"), plot=p+savetheme, width = 8.4582, height = 8.4582, units = "cm", dpi=300)
 print(p)
 ```
 
@@ -4211,7 +4248,6 @@ Below is the example of a chromatogram (along with uncertainty) expected for tg 
 
 ```{r  casestudy2-uncertainity-chrom}
 analyte_ID_sample <-c(9,17,33,58,140,180)
-
 col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")
 
 wpCond= data.frame()
@@ -4229,7 +4265,7 @@ data_to_plot <- draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% paste0("
 colnames(data_to_plot) <- paste(dataNames$Name[analyte_ID_sample])
 
 wpCond1 <- melt(data_to_plot)
-wpCond1$Column <- unname(col.labs[i])
+wpCond1$Column <- col.labs[i]
 wpCond= rbind(wpCond,wpCond1)
 }
 
@@ -4334,7 +4370,7 @@ draws_sim_red_df <- as_draws_df(x$generated_quantities)
 The results are presented as a utility map for each of the column. The maximum is displayed below as a table taking into consideration mobile phase pH<7.
 
 ```{r casestudy2-utylitymaps-danse}
-foo<-datasim_red[!duplicated(datasim_red$expid),]
+Uresults<-datasim_red[!duplicated(datasim_red$expid),]
 
 x<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mindifftr", names(draws_sim_red_df), value = TRUE))]
 y<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^maxtr", names(draws_sim_red_df), value = TRUE))]
@@ -4348,54 +4384,54 @@ pr <- apply(u, MARGIN = 2, FUN = mean)
 
 pr<-as.data.frame(pr)
 
-foo$EUtility=pr$pr
+Uresults$EUtility=pr$pr
 
 x <- apply(x, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
 
 x<-as.data.frame(t(x))
 
-foo$mindifftr_l=x$`5%`
-foo$mindifftr_m=x$`50%`
-foo$mindifftr_h=x$`95%`
+Uresults$mindifftr_l=x$`5%`
+Uresults$mindifftr_m=x$`50%`
+Uresults$mindifftr_h=x$`95%`
 
 y <- apply(y, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
 
 y<-as.data.frame(t(y))
 
-foo$maxtr_l=y$`5%`
-foo$maxtr_m=y$`50%`
-foo$maxtr_h=y$`95%`
+Uresults$maxtr_l=y$`5%`
+Uresults$maxtr_m=y$`50%`
+Uresults$maxtr_h=y$`95%`
 
 p11 <- ggplot()+
-     geom_contour_filled(data=subset(foo,Column==1), aes(x = pHs, y=tg, z = EUtility))+
+     geom_contour_filled(data=subset(Uresults,Column==1), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
 
 p12 <- ggplot()+
-     geom_contour_filled(data=subset(foo,Column==2), aes(x = pHs, y=tg, z = EUtility))+
+     geom_contour_filled(data=subset(Uresults,Column==2), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
 
 p13 <- ggplot()+
-     geom_contour_filled(data=subset(foo,Column==3), aes(x = pHs, y=tg, z = EUtility))+
+     geom_contour_filled(data=subset(Uresults,Column==3), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
 
 p14 <- ggplot()+
-     geom_contour_filled(data=subset(foo,Column==4), aes(x = pHs, y=tg, z = EUtility))+
+     geom_contour_filled(data=subset(Uresults,Column==4), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
           fill = "Expected Utility")
 
 p15 <- ggplot()+
-     geom_contour_filled(data=subset(foo,Column==5), aes(x = pHs, y=tg, z = EUtility))+
+     geom_contour_filled(data=subset(Uresults,Column==5), aes(x = pHs, y=tg, z = EUtility))+
      facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
      labs(x ="pH",
           y = "tg, min",
@@ -4418,21 +4454,31 @@ print(p13)
 print(p14)
 print(p15)
 
- cat("1. The best for XBridge Shield RP18:")
- foo1<-foo[foo$Column==1 & foo$pHo<7,];
- kable(foo1[which(foo1$EUtility==max(foo1$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
- cat("2.  The best choice for XTerra MS C18:")
- foo2<-foo[foo$Column==2 & foo$pHo<7,];
- kable(foo2[which(foo2$EUtility==max(foo2$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
- cat("3.  The best choice for XBridge Phenyl:")
- foo3<-foo[foo$Column==3 & foo$pHo<7,];
- kable(foo3[which(foo3$EUtility==max(foo3$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
- cat("4.  The best choice for XBridge C8:")
- foo4<-foo[foo$Column==4 & foo$pHo<7, ];
- kable(foo4[which(foo4$EUtility==max(foo4$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
- cat("5.  The best choice for Xterra MS C8:")
- foo5<-foo[foo$Column==5 & foo$pHo<7,];
- kable(foo5[which(foo5$EUtility==max(foo5$EUtility)),c('tg','fio', 'fik','Mod', 'pHid','pHo','Temp','ColumnName','EUtility')])
+Uresults$pHo <-round(Uresults$pHo,1)
+cat("1. The best for XBridge Shield RP18:")
+ Uresults1<-Uresults[Uresults$Column==1 & Uresults$pHo<7,];
+ Uresults1<-Uresults1[which(Uresults1$EUtility==max(Uresults1$EUtility)),]
+ kable(Uresults1[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
+
+cat("2. The best choice for XTerra MS C18:")
+ Uresults2<-Uresults[Uresults$Column==2& Uresults$pHo<7,];
+ Uresults2<-Uresults2[which(Uresults2$EUtility==max(Uresults2$EUtility)),]
+ kable(Uresults2[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
+
+cat("3. The best choice for XBridge Phenyl:")
+ Uresults3<-Uresults[Uresults$Column==3& Uresults$pHo<7,];
+ Uresults3<-Uresults3[which(Uresults3$EUtility==max(Uresults3$EUtility)),]
+ kable(Uresults3[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
+
+cat("4. The best choice for XBridge C8:")
+ Uresults4<-Uresults[Uresults$Column==4& Uresults$pHo<7,];
+ Uresults4<-Uresults4[which(Uresults4$EUtility==max(Uresults4$EUtility)),]
+ kable(Uresults4[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
+
+cat("5. The best choice for Xterra MS C8:")
+ Uresults5<-Uresults[Uresults$Column==5& Uresults$pHo<7,];
+ Uresults5<-Uresults5[which(Uresults5$EUtility==max(Uresults5$EUtility)),]
+ kable(Uresults5[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
    
 ```
 
@@ -4443,74 +4489,35 @@ Here, we visualize chromatograms for each column with the highest expected utili
 ```{r casestudy2-chromatogram-dense}
 analyte_ID_sample <-c(9,17,33,58,140,180)
 
-col.labs <- c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")
-
 datasim_red$fio = as.factor(datasim_red$fio)
 
 wpCond= data.frame()
  
 for (i in 1:5) {
 
-idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 60 & # c(30, 90, 270)
-               datasim_red$pHid == 10 &   # c(1:9)
-               datasim_red$fio == 0.05 &   # ...
-               datasim_red$Column == i &  # c(1, 2)
-               datasim_red$Mod2 == 2 & # c(1, 2)
-               datasim_red$Temp == 25) # c(25, 35)
-
-if (i==2){
+Uresultsi <- Uresults1
+if (i==2){Uresultsi <- Uresults2}
+if (i==3){Uresultsi <- Uresults3}
+if (i==4){Uresultsi <- Uresults4}
+if (i==5) {Uresultsi <- Uresults5}
 
  idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 80 & # c(30, 90, 270)
-               datasim_red$pHid == 5 &   # c(1:9)
-               datasim_red$fio == 0.1 &   # ...
-               datasim_red$Column == i &  # c(1, 2)
-               datasim_red$Mod2 == 2 & # c(1, 2)
-               datasim_red$Temp == 25) # c(25, 35)
-
-}
-
-if (i==3){
-
- idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 100 & # c(30, 90, 270)
-               datasim_red$pHid == 5 &   # c(1:9)
-               datasim_red$fio == 0.1 &   # ...
-               datasim_red$Column == i &  # c(1, 2)
-               datasim_red$Mod2 == 2 & # c(1, 2)
-               datasim_red$Temp == 25) # c(25, 35)
-
-}
-
-if (i==4){
-
- idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 80& # c(30, 90, 270)
-               datasim_red$pHid == 6 &   # c(1:9)
-               datasim_red$fio == 0.05 &   # ...
-               datasim_red$Column == i &  # c(1, 2)
-               datasim_red$Mod2 == 2 & # c(1, 2)
-               datasim_red$Temp == 25) # c(25, 35)
-
-}
-
-if (i==5){
-
- idx <- which(datasim_red$METID %in% analyte_ID_sample &
-               datasim_red$tg == 100 & # c(30, 90, 270)
-               datasim_red$pHid == 6 &   # c(1:9)
-               datasim_red$fio == 0.1 &   # ...
-               datasim_red$Column == i &  # c(1, 2)
-               datasim_red$Mod2 == 2 & # c(1, 2)
-               datasim_red$Temp == 25) # c(25, 35)
-
-}
+               datasim_red$tg == Uresultsi$tg & # c(30, 90, 270)
+               datasim_red$pHid == Uresultsi$pHid &   # c(1:9)
+               datasim_red$fio == Uresultsi$fio &   # ...
+               datasim_red$Column == Uresultsi$Column &  # c(1, 2)
+               datasim_red$Mod2 == Uresultsi$Mod2 & # c(1, 2)
+               datasim_red$Temp == Uresultsi$Temp) # c(25, 35)
 
  data_to_plot <- draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% paste0("trHatCond[",idx,"]"))]
  colnames(data_to_plot) <- paste(dataNames$Name[analyte_ID_sample])
  wpCond1 <- melt(data_to_plot)
-wpCond1$Column <- unname(col.labs[i])
+wpCond1$Column <- paste0(Uresultsi$ColumnName,
+                         ', ', Uresultsi$Mod,
+                         ', T= ', Uresultsi$Temp, ',', " \n ",
+                         ' fio= ', Uresultsi$fio,
+                         ', tg= ', Uresultsi$tg,
+                         ', pHo= ', round(Uresultsi$pHo,1))
 wpCond= rbind(wpCond,wpCond1)
 
 }
@@ -4518,21 +4525,24 @@ wpCond= rbind(wpCond,wpCond1)
 wpCond$Column=as.factor(wpCond$Column)
 
 p <- ggplot(data = wpCond)+
-     geom_density(aes(x=value, colour=variable, fill=variable),alpha=0.1) +
+     geom_density(aes(x=value, colour=variable, fill=variable), alpha=0.1, lwd=0.25) +
      labs(title="uncertainty chromatogram (limited data predictions)",
           x ="Retention time, min",
           y = "pdf",
           colour="Analyte")+
-     xlim(c(0,80))+
+     xlim(c(0,40))+
      facet_wrap(.~Column, nrow=3,scales = "free")+
      theme(legend.position = c(1, 0),
         legend.justification = c(1, 0))+
   guides(fill = "none")
 
-
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
-ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".svg"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
+ragg::agg_png(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram-figures", ".png"), 
+              width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.42291)
+grid.arrange(p)
+dev.off()
 
 print(p)
 ```
