@@ -3833,31 +3833,22 @@ print(p15)
 
 Uresults$pHo <-round(Uresults$pHo,1)
 
-cat("1. The best for XBridge Shield RP18:")
  Uresults1<-Uresults[Uresults$Column==1,];
  Uresults1<-Uresults1[which(Uresults1$EUtility==max(Uresults1$EUtility)),]
- kable(Uresults1[,c('ColumnName','tg', 'fio','fik','Mod','pHo','Temp','EUtility')])
 
-cat("2. The best choice for XTerra MS C18:")
  Uresults2<-Uresults[Uresults$Column==2,];
  Uresults2<-Uresults2[which(Uresults2$EUtility==max(Uresults2$EUtility)),]
- kable(Uresults2[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
-cat("3. The best choice for XBridge Phenyl:")
  Uresults3<-Uresults[Uresults$Column==3,];
  Uresults3<-Uresults3[which(Uresults3$EUtility==max(Uresults3$EUtility)),]
- kable(Uresults3[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
-cat("4. The best choice for XBridge C8:")
  Uresults4<-Uresults[Uresults$Column==4,];
  Uresults4<-Uresults4[which(Uresults4$EUtility==max(Uresults4$EUtility)),]
- kable(Uresults4[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
-cat("5. The best choice for Xterra MS C8:")
  Uresults5<-Uresults[Uresults$Column==5,];
  Uresults5<-Uresults5[which(Uresults5$EUtility==max(Uresults5$EUtility)),]
- kable(Uresults5[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
+kable(rbind(Uresults1,Uresults2,Uresults3,Uresults4,Uresults5)[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 ```
 
 The highest utility can be expected for Xterra MS C8. 
@@ -4426,31 +4417,17 @@ print(p14)
 print(p15)
 
 Uresults$pHo <-round(Uresults$pHo,1)
-cat("1. The best for XBridge Shield RP18:")
  Uresults1<-Uresults[Uresults$Column==1,];
  Uresults1<-Uresults1[which(Uresults1$EUtility==max(Uresults1$EUtility)),]
- kable(Uresults1[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
-
-cat("2. The best choice for XTerra MS C18:")
  Uresults2<-Uresults[Uresults$Column==2,];
  Uresults2<-Uresults2[which(Uresults2$EUtility==max(Uresults2$EUtility)),]
- kable(Uresults2[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
-
-cat("3. The best choice for XBridge Phenyl:")
  Uresults3<-Uresults[Uresults$Column==3,];
  Uresults3<-Uresults3[which(Uresults3$EUtility==max(Uresults3$EUtility)),]
- kable(Uresults3[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
-
-cat("4. The best choice for XBridge C8:")
  Uresults4<-Uresults[Uresults$Column==4,];
  Uresults4<-Uresults4[which(Uresults4$EUtility==max(Uresults4$EUtility)),]
- kable(Uresults4[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
-
-cat("5. The best choice for Xterra MS C8:")
  Uresults5<-Uresults[Uresults$Column==5,];
  Uresults5<-Uresults5[which(Uresults5$EUtility==max(Uresults5$EUtility)),]
- kable(Uresults5[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
-   
+ kable(rbind(Uresults1,Uresults2,Uresults3,Uresults4,Uresults5)[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 ```
 
 ### Uncertainity chromatogram
