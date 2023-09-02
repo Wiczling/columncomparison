@@ -3747,7 +3747,7 @@ draws_sim_red_df <- as_draws_df(x$generated_quantities)
 #draws_sim_red_df <- fit_sim_red$draws(format = "df")
 ```
 
-The results are presented as a utility map for each of the column. The maximum is displayed below as  a table taking into consideration mobile phase pH<7.
+The results are presented as a utility map for each of the column. The maximum is displayed below as a table
 
 ```{r casestudy1-utylitymaps-alldata}
 Uresults<-datasim_red[!duplicated(datasim_red$expid),]
@@ -3834,27 +3834,27 @@ print(p15)
 Uresults$pHo <-round(Uresults$pHo,1)
 
 cat("1. The best for XBridge Shield RP18:")
- Uresults1<-Uresults[Uresults$Column==1 & Uresults$pHo<7,];
+ Uresults1<-Uresults[Uresults$Column==1,];
  Uresults1<-Uresults1[which(Uresults1$EUtility==max(Uresults1$EUtility)),]
  kable(Uresults1[,c('ColumnName','tg', 'fio','fik','Mod','pHo','Temp','EUtility')])
 
 cat("2. The best choice for XTerra MS C18:")
- Uresults2<-Uresults[Uresults$Column==2& Uresults$pHo<7,];
+ Uresults2<-Uresults[Uresults$Column==2,];
  Uresults2<-Uresults2[which(Uresults2$EUtility==max(Uresults2$EUtility)),]
  kable(Uresults2[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 cat("3. The best choice for XBridge Phenyl:")
- Uresults3<-Uresults[Uresults$Column==3& Uresults$pHo<7,];
+ Uresults3<-Uresults[Uresults$Column==3,];
  Uresults3<-Uresults3[which(Uresults3$EUtility==max(Uresults3$EUtility)),]
  kable(Uresults3[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 cat("4. The best choice for XBridge C8:")
- Uresults4<-Uresults[Uresults$Column==4& Uresults$pHo<7,];
+ Uresults4<-Uresults[Uresults$Column==4,];
  Uresults4<-Uresults4[which(Uresults4$EUtility==max(Uresults4$EUtility)),]
  kable(Uresults4[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 cat("5. The best choice for Xterra MS C8:")
- Uresults5<-Uresults[Uresults$Column==5& Uresults$pHo<7,];
+ Uresults5<-Uresults[Uresults$Column==5,];
  Uresults5<-Uresults5[which(Uresults5$EUtility==max(Uresults5$EUtility)),]
  kable(Uresults5[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
@@ -3894,7 +3894,7 @@ colnames(data_to_plot) <- paste(dataNames$Name[analyte_ID_sample])
 wpCond1 <- melt(data_to_plot)
 wpCond1$Column <- paste0(Uresultsi$ColumnName,
                          ', ', Uresultsi$Mod,
-                         ', T= ', Uresultsi$Temp, ',', " \n ",
+                         ', Temp= ', Uresultsi$Temp, ',', " \n ",
                          ' fio= ', Uresultsi$fio,
                          ', tg= ', Uresultsi$tg,
                          ', pHo= ', round(Uresultsi$pHo,1))
@@ -4338,7 +4338,7 @@ draws_sim_red_df <- as_draws_df(x$generated_quantities)
 
 ```
 
-The results are presented as a utility map for each of the column. The maximum is displayed below as a table taking into consideration mobile phase pH<7.
+The results are presented as a utility map for each of the column. The maximum is displayed below as a table:
 
 ```{r casestudy2-utylitymaps-danse}
 Uresults<-datasim_red[!duplicated(datasim_red$expid),]
@@ -4427,27 +4427,27 @@ print(p15)
 
 Uresults$pHo <-round(Uresults$pHo,1)
 cat("1. The best for XBridge Shield RP18:")
- Uresults1<-Uresults[Uresults$Column==1 & Uresults$pHo<7,];
+ Uresults1<-Uresults[Uresults$Column==1,];
  Uresults1<-Uresults1[which(Uresults1$EUtility==max(Uresults1$EUtility)),]
  kable(Uresults1[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 cat("2. The best choice for XTerra MS C18:")
- Uresults2<-Uresults[Uresults$Column==2& Uresults$pHo<7,];
+ Uresults2<-Uresults[Uresults$Column==2,];
  Uresults2<-Uresults2[which(Uresults2$EUtility==max(Uresults2$EUtility)),]
  kable(Uresults2[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 cat("3. The best choice for XBridge Phenyl:")
- Uresults3<-Uresults[Uresults$Column==3& Uresults$pHo<7,];
+ Uresults3<-Uresults[Uresults$Column==3,];
  Uresults3<-Uresults3[which(Uresults3$EUtility==max(Uresults3$EUtility)),]
  kable(Uresults3[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 cat("4. The best choice for XBridge C8:")
- Uresults4<-Uresults[Uresults$Column==4& Uresults$pHo<7,];
+ Uresults4<-Uresults[Uresults$Column==4,];
  Uresults4<-Uresults4[which(Uresults4$EUtility==max(Uresults4$EUtility)),]
  kable(Uresults4[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
 
 cat("5. The best choice for Xterra MS C8:")
- Uresults5<-Uresults[Uresults$Column==5& Uresults$pHo<7,];
+ Uresults5<-Uresults[Uresults$Column==5,];
  Uresults5<-Uresults5[which(Uresults5$EUtility==max(Uresults5$EUtility)),]
  kable(Uresults5[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
    
@@ -4485,7 +4485,7 @@ if (i==5) {Uresultsi <- Uresults5}
  wpCond1 <- melt(data_to_plot)
 wpCond1$Column <- paste0(Uresultsi$ColumnName,
                          ', ', Uresultsi$Mod,
-                         ', T= ', Uresultsi$Temp, ',', " \n ",
+                         ', Temp= ', Uresultsi$Temp, ',', " \n ",
                          ' fio= ', Uresultsi$fio,
                          ', tg= ', Uresultsi$tg,
                          ', pHo= ', round(Uresultsi$pHo,1))
@@ -4508,18 +4508,14 @@ p <- ggplot(data = wpCond)+
   guides(fill = "none")
 
  
-
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
-
 
 print(p)
 
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram-manuscript", ".png"),
        p,
        device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.522))
-
-
 ```
 
 # Conclusions

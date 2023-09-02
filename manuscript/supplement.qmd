@@ -635,6 +635,42 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 ![](../figures/izoparam/isopred/Tolbutamide.population.pdf)
 
 {{< pagebreak >}}
+
+# Figure S9. Utility maps based on individual predicitons
+
+Utility map for each column:
+
+![](../figures/casestudy1/utilitymap/utilitymap1.pdf)
+{{< pagebreak >}}
+
+![](../figures/casestudy1/utilitymap/utilitymap2.pdf)
+{{< pagebreak >}}
+
+![](../figures/casestudy1/utilitymap/utilitymap3.pdf)
+{{< pagebreak >}}
+
+![](../figures/casestudy1/utilitymap/utilitymap4.pdf)
+{{< pagebreak >}}
+
+![](../figures/casestudy1/utilitymap/utilitymap5.pdf)
+
+{{< pagebreak >}}
+
+# Figure S10. Utility maps based on limited data predicitons
+
+Utility map for each column:
+
+![](../figures/casestudy2/utilitymap/utilitymap1.pdf)
+{{< pagebreak >}}
+![](../figures/casestudy2/utilitymap/utilitymap2.pdf)
+{{< paebreak >}}
+![](../figures/casestudy2/utilitymap/utilitymap3.pdf)
+{{< pagebreak >}}
+![](../figures/casestudy2/utilitymap/utilitymap4.pdf)
+{{< pagebreak >}}
+![](../figures/casestudy2/utilitymap/utilitymap5.pdf)
+{{< pagebreak >}}
+
 # Licenses {.unnumbered}
 
 -   Code & copy; 2023, Paweł Wiczling, licensed under BSD-3.

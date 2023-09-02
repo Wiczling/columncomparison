@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Paweł Wiczling, Agnieszka Kamedulska">
-<meta name="dcterms.date" content="2023-09-01">
+<meta name="dcterms.date" content="2023-09-02">
 
 <title>Comparison of chromatographic stationary phases using Bayesian-based multilevel modeling</title>
 <style>
@@ -200,7 +200,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 1, 2023</p>
+      <p class="date">September 2, 2023</p>
     </div>
   </div>
   
@@ -5962,8 +5962,8 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a><span class="co">#draws_sim_red_df &lt;- fit_sim_red$draws(format = "df")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>The results are presented as a utility map for each of the column. The maximum is displayed below as a table taking into consideration mobile phase pH&lt;7.</p>
-<div class="cell" data-hash="index_cache/html/casestudy1-utylitymaps-alldata_0ef01f2619b1a88f8e89e87f8798747b">
+<p>The results are presented as a utility map for each of the column. The maximum is displayed below as a table</p>
+<div class="cell" data-hash="index_cache/html/casestudy1-utylitymaps-alldata_4d5c2dfcd10c4632d74d0d237f79ae9e">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>Uresults<span class="ot">&lt;-</span>datasim_red[<span class="sc">!</span><span class="fu">duplicated</span>(datasim_red<span class="sc">$</span>expid),]</span>
@@ -6085,7 +6085,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">1</span>,];</span>
 <span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults1[<span class="fu">which</span>(Uresults1<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults1<span class="sc">$</span>EUtility)),]</span>
 <span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults1[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>,<span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -6106,13 +6106,13 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">XBridge Shield RP18</td>
-<td style="text-align: right;">60</td>
-<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">0.15</td>
 <td style="text-align: right;">0.8</td>
-<td style="text-align: left;">ACN</td>
-<td style="text-align: right;">5.5</td>
+<td style="text-align: left;">MeOH</td>
+<td style="text-align: right;">10</td>
 <td style="text-align: right;">25</td>
-<td style="text-align: right;">11.36659</td>
+<td style="text-align: right;">13.1532</td>
 </tr>
 </tbody>
 </table>
@@ -6128,7 +6128,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">2</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">2</span>,];</span>
 <span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults2[<span class="fu">which</span>(Uresults2<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults2<span class="sc">$</span>EUtility)),]</span>
 <span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults2[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -6171,7 +6171,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">3</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">3</span>,];</span>
 <span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults3[<span class="fu">which</span>(Uresults3<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults3<span class="sc">$</span>EUtility)),]</span>
 <span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults3[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -6192,13 +6192,13 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">XBridge Phenyl</td>
-<td style="text-align: right;">40</td>
-<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.1</td>
 <td style="text-align: right;">0.8</td>
-<td style="text-align: left;">MeOH</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: left;">ACN</td>
+<td style="text-align: right;">10.5</td>
 <td style="text-align: right;">25</td>
-<td style="text-align: right;">4.079473</td>
+<td style="text-align: right;">8.202073</td>
 </tr>
 </tbody>
 </table>
@@ -6214,7 +6214,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">4</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">4</span>,];</span>
 <span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults4[<span class="fu">which</span>(Uresults4<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults4<span class="sc">$</span>EUtility)),]</span>
 <span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults4[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -6257,7 +6257,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">5</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">5</span>,];</span>
 <span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults5[<span class="fu">which</span>(Uresults5<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults5<span class="sc">$</span>EUtility)),]</span>
 <span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults5[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -6296,7 +6296,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <section id="uncertainity-chromatogram-1" class="level3">
 <h3 class="anchored" data-anchor-id="uncertainity-chromatogram-1">Uncertainity chromatogram</h3>
 <p>Here, we visualize chromatograms for each column with the highest expected utility given the experimental data.</p>
-<div class="cell" data-hash="index_cache/html/casestudy1-uncertainity-chrom_d690640ecbf202c561cd08b2941287a3">
+<div class="cell" data-hash="index_cache/html/casestudy1-uncertainity-chrom_941c53ebfb42ca7553ab43a6ed46f119">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>analyte_ID_sample <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">17</span>,<span class="dv">33</span>,<span class="dv">58</span>,<span class="dv">140</span>,<span class="dv">180</span>)</span>
@@ -6326,7 +6326,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <span id="cb120-25"><a href="#cb120-25" aria-hidden="true" tabindex="-1"></a>wpCond1 <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_to_plot)</span>
 <span id="cb120-26"><a href="#cb120-26" aria-hidden="true" tabindex="-1"></a>wpCond1<span class="sc">$</span>Column <span class="ot">&lt;-</span> <span class="fu">paste0</span>(Uresultsi<span class="sc">$</span>ColumnName,</span>
 <span id="cb120-27"><a href="#cb120-27" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', '</span>, Uresultsi<span class="sc">$</span>Mod,</span>
-<span id="cb120-28"><a href="#cb120-28" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', T= '</span>, Uresultsi<span class="sc">$</span>Temp, <span class="st">','</span>, <span class="st">" </span><span class="sc">\n</span><span class="st"> "</span>,</span>
+<span id="cb120-28"><a href="#cb120-28" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', Temp= '</span>, Uresultsi<span class="sc">$</span>Temp, <span class="st">','</span>, <span class="st">" </span><span class="sc">\n</span><span class="st"> "</span>,</span>
 <span id="cb120-29"><a href="#cb120-29" aria-hidden="true" tabindex="-1"></a>                         <span class="st">' fio= '</span>, Uresultsi<span class="sc">$</span>fio,</span>
 <span id="cb120-30"><a href="#cb120-30" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', tg= '</span>, Uresultsi<span class="sc">$</span>tg,</span>
 <span id="cb120-31"><a href="#cb120-31" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', pHo= '</span>, <span class="fu">round</span>(Uresultsi<span class="sc">$</span>pHo,<span class="dv">1</span>))</span>
@@ -6847,8 +6847,8 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <span id="cb135-6"><a href="#cb135-6" aria-hidden="true" tabindex="-1"></a><span class="co">#draws_sim_red_df &lt;- fit_sim_red$draws(format = "df")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>The results are presented as a utility map for each of the column. The maximum is displayed below as a table taking into consideration mobile phase pH&lt;7.</p>
-<div class="cell" data-hash="index_cache/html/casestudy2-utylitymaps-danse_3906011a4c0b7602a9a46a071e42ce9d">
+<p>The results are presented as a utility map for each of the column. The maximum is displayed below as a table:</p>
+<div class="cell" data-hash="index_cache/html/casestudy2-utylitymaps-danse_1faad989f814f45ce53797e60564f639">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>Uresults<span class="ot">&lt;-</span>datasim_red[<span class="sc">!</span><span class="fu">duplicated</span>(datasim_red<span class="sc">$</span>expid),]</span>
@@ -6972,7 +6972,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">1</span>,];</span>
 <span id="cb143-2"><a href="#cb143-2" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults1[<span class="fu">which</span>(Uresults1<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults1<span class="sc">$</span>EUtility)),]</span>
 <span id="cb143-3"><a href="#cb143-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults1[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -7015,7 +7015,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">2</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">2</span>,];</span>
 <span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults2[<span class="fu">which</span>(Uresults2<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults2<span class="sc">$</span>EUtility)),]</span>
 <span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults2[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -7058,7 +7058,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">3</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">3</span>,];</span>
 <span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults3[<span class="fu">which</span>(Uresults3<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults3<span class="sc">$</span>EUtility)),]</span>
 <span id="cb149-3"><a href="#cb149-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults3[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -7101,7 +7101,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">4</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">4</span>,];</span>
 <span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults4[<span class="fu">which</span>(Uresults4<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults4<span class="sc">$</span>EUtility)),]</span>
 <span id="cb152-3"><a href="#cb152-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults4[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -7144,7 +7144,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">5</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">5</span>,];</span>
 <span id="cb155-2"><a href="#cb155-2" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults5[<span class="fu">which</span>(Uresults5<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults5<span class="sc">$</span>EUtility)),]</span>
 <span id="cb155-3"><a href="#cb155-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults5[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -7182,7 +7182,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <section id="uncertainity-chromatogram-3" class="level3">
 <h3 class="anchored" data-anchor-id="uncertainity-chromatogram-3">Uncertainity chromatogram</h3>
 <p>Here, we visualize chromatograms for each column with the highest expected utility given the experimental data. The XBridge Shield RP18 data adds predictive value if compared to population predictions, however, the uncertainties are still high to unequivocally choose the best column and chromatographic conditions. Still some additional experiments are required.</p>
-<div class="cell" data-hash="index_cache/html/casestudy2-chromatogram-dense_37a1076f578b63763b8cf7cf6b2eba04">
+<div class="cell" data-hash="index_cache/html/casestudy2-chromatogram-dense_11f0ad1a02b7eb8478dadd3be0e1c002">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>analyte_ID_sample <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">17</span>,<span class="dv">33</span>,<span class="dv">58</span>,<span class="dv">140</span>,<span class="dv">180</span>)</span>
@@ -7212,7 +7212,7 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <span id="cb156-25"><a href="#cb156-25" aria-hidden="true" tabindex="-1"></a> wpCond1 <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_to_plot)</span>
 <span id="cb156-26"><a href="#cb156-26" aria-hidden="true" tabindex="-1"></a>wpCond1<span class="sc">$</span>Column <span class="ot">&lt;-</span> <span class="fu">paste0</span>(Uresultsi<span class="sc">$</span>ColumnName,</span>
 <span id="cb156-27"><a href="#cb156-27" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', '</span>, Uresultsi<span class="sc">$</span>Mod,</span>
-<span id="cb156-28"><a href="#cb156-28" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', T= '</span>, Uresultsi<span class="sc">$</span>Temp, <span class="st">','</span>, <span class="st">" </span><span class="sc">\n</span><span class="st"> "</span>,</span>
+<span id="cb156-28"><a href="#cb156-28" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', Temp= '</span>, Uresultsi<span class="sc">$</span>Temp, <span class="st">','</span>, <span class="st">" </span><span class="sc">\n</span><span class="st"> "</span>,</span>
 <span id="cb156-29"><a href="#cb156-29" aria-hidden="true" tabindex="-1"></a>                         <span class="st">' fio= '</span>, Uresultsi<span class="sc">$</span>fio,</span>
 <span id="cb156-30"><a href="#cb156-30" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', tg= '</span>, Uresultsi<span class="sc">$</span>tg,</span>
 <span id="cb156-31"><a href="#cb156-31" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', pHo= '</span>, <span class="fu">round</span>(Uresultsi<span class="sc">$</span>pHo,<span class="dv">1</span>))</span>
@@ -7235,12 +7235,10 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 <span id="cb156-48"><a href="#cb156-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)</span>
 <span id="cb156-49"><a href="#cb156-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb156-50"><a href="#cb156-50" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb156-51"><a href="#cb156-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb156-52"><a href="#cb156-52" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">utilitymap</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"chromatogram"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
-<span id="cb156-53"><a href="#cb156-53" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">utilitymap</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"chromatogram"</span>, <span class="st">".pdf"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
-<span id="cb156-54"><a href="#cb156-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb156-55"><a href="#cb156-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb156-56"><a href="#cb156-56" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb156-51"><a href="#cb156-51" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">utilitymap</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"chromatogram"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb156-52"><a href="#cb156-52" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">utilitymap</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"chromatogram"</span>, <span class="st">".pdf"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb156-53"><a href="#cb156-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb156-54"><a href="#cb156-54" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/casestudy2-chromatogram-dense-1.png" class="img-fluid" style="width:95.0%"></p>
@@ -11393,7 +11391,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb160-3747"><a href="#cb160-3747" aria-hidden="true" tabindex="-1"></a><span class="co">#draws_sim_red_df &lt;- fit_sim_red$draws(format = "df")</span></span>
 <span id="cb160-3748"><a href="#cb160-3748" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb160-3749"><a href="#cb160-3749" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-3750"><a href="#cb160-3750" aria-hidden="true" tabindex="-1"></a>The results are presented as a utility map for each of the column. The maximum is displayed below as  a table taking into consideration mobile phase pH&lt;7.</span>
+<span id="cb160-3750"><a href="#cb160-3750" aria-hidden="true" tabindex="-1"></a>The results are presented as a utility map for each of the column. The maximum is displayed below as a table</span>
 <span id="cb160-3751"><a href="#cb160-3751" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-3752"><a href="#cb160-3752" aria-hidden="true" tabindex="-1"></a><span class="in">```{r casestudy1-utylitymaps-alldata}</span></span>
 <span id="cb160-3753"><a href="#cb160-3753" aria-hidden="true" tabindex="-1"></a>Uresults<span class="ot">&lt;-</span>datasim_red[<span class="sc">!</span><span class="fu">duplicated</span>(datasim_red<span class="sc">$</span>expid),]</span>
@@ -11480,27 +11478,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb160-3834"><a href="#cb160-3834" aria-hidden="true" tabindex="-1"></a>Uresults<span class="sc">$</span>pHo <span class="ot">&lt;-</span><span class="fu">round</span>(Uresults<span class="sc">$</span>pHo,<span class="dv">1</span>)</span>
 <span id="cb160-3835"><a href="#cb160-3835" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-3836"><a href="#cb160-3836" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"1. The best for XBridge Shield RP18:"</span>)</span>
-<span id="cb160-3837"><a href="#cb160-3837" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<span id="cb160-3837"><a href="#cb160-3837" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">1</span>,];</span>
 <span id="cb160-3838"><a href="#cb160-3838" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults1[<span class="fu">which</span>(Uresults1<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults1<span class="sc">$</span>EUtility)),]</span>
 <span id="cb160-3839"><a href="#cb160-3839" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults1[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>,<span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span>
 <span id="cb160-3840"><a href="#cb160-3840" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-3841"><a href="#cb160-3841" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"2. The best choice for XTerra MS C18:"</span>)</span>
-<span id="cb160-3842"><a href="#cb160-3842" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">2</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<span id="cb160-3842"><a href="#cb160-3842" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">2</span>,];</span>
 <span id="cb160-3843"><a href="#cb160-3843" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults2[<span class="fu">which</span>(Uresults2<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults2<span class="sc">$</span>EUtility)),]</span>
 <span id="cb160-3844"><a href="#cb160-3844" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults2[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span>
 <span id="cb160-3845"><a href="#cb160-3845" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-3846"><a href="#cb160-3846" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"3. The best choice for XBridge Phenyl:"</span>)</span>
-<span id="cb160-3847"><a href="#cb160-3847" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">3</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<span id="cb160-3847"><a href="#cb160-3847" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">3</span>,];</span>
 <span id="cb160-3848"><a href="#cb160-3848" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults3[<span class="fu">which</span>(Uresults3<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults3<span class="sc">$</span>EUtility)),]</span>
 <span id="cb160-3849"><a href="#cb160-3849" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults3[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span>
 <span id="cb160-3850"><a href="#cb160-3850" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-3851"><a href="#cb160-3851" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"4. The best choice for XBridge C8:"</span>)</span>
-<span id="cb160-3852"><a href="#cb160-3852" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">4</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<span id="cb160-3852"><a href="#cb160-3852" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">4</span>,];</span>
 <span id="cb160-3853"><a href="#cb160-3853" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults4[<span class="fu">which</span>(Uresults4<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults4<span class="sc">$</span>EUtility)),]</span>
 <span id="cb160-3854"><a href="#cb160-3854" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults4[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span>
 <span id="cb160-3855"><a href="#cb160-3855" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-3856"><a href="#cb160-3856" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"5. The best choice for Xterra MS C8:"</span>)</span>
-<span id="cb160-3857"><a href="#cb160-3857" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">5</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<span id="cb160-3857"><a href="#cb160-3857" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">5</span>,];</span>
 <span id="cb160-3858"><a href="#cb160-3858" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults5[<span class="fu">which</span>(Uresults5<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults5<span class="sc">$</span>EUtility)),]</span>
 <span id="cb160-3859"><a href="#cb160-3859" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults5[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span>
 <span id="cb160-3860"><a href="#cb160-3860" aria-hidden="true" tabindex="-1"></a></span>
@@ -11540,7 +11538,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb160-3894"><a href="#cb160-3894" aria-hidden="true" tabindex="-1"></a>wpCond1 <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_to_plot)</span>
 <span id="cb160-3895"><a href="#cb160-3895" aria-hidden="true" tabindex="-1"></a>wpCond1<span class="sc">$</span>Column <span class="ot">&lt;-</span> <span class="fu">paste0</span>(Uresultsi<span class="sc">$</span>ColumnName,</span>
 <span id="cb160-3896"><a href="#cb160-3896" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', '</span>, Uresultsi<span class="sc">$</span>Mod,</span>
-<span id="cb160-3897"><a href="#cb160-3897" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', T= '</span>, Uresultsi<span class="sc">$</span>Temp, <span class="st">','</span>, <span class="st">" </span><span class="sc">\n</span><span class="st"> "</span>,</span>
+<span id="cb160-3897"><a href="#cb160-3897" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', Temp= '</span>, Uresultsi<span class="sc">$</span>Temp, <span class="st">','</span>, <span class="st">" </span><span class="sc">\n</span><span class="st"> "</span>,</span>
 <span id="cb160-3898"><a href="#cb160-3898" aria-hidden="true" tabindex="-1"></a>                         <span class="st">' fio= '</span>, Uresultsi<span class="sc">$</span>fio,</span>
 <span id="cb160-3899"><a href="#cb160-3899" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', tg= '</span>, Uresultsi<span class="sc">$</span>tg,</span>
 <span id="cb160-3900"><a href="#cb160-3900" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', pHo= '</span>, <span class="fu">round</span>(Uresultsi<span class="sc">$</span>pHo,<span class="dv">1</span>))</span>
@@ -11984,7 +11982,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb160-4338"><a href="#cb160-4338" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-4339"><a href="#cb160-4339" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb160-4340"><a href="#cb160-4340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4341"><a href="#cb160-4341" aria-hidden="true" tabindex="-1"></a>The results are presented as a utility map for each of the column. The maximum is displayed below as a table taking into consideration mobile phase pH&lt;7.</span>
+<span id="cb160-4341"><a href="#cb160-4341" aria-hidden="true" tabindex="-1"></a>The results are presented as a utility map for each of the column. The maximum is displayed below as a table:</span>
 <span id="cb160-4342"><a href="#cb160-4342" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-4343"><a href="#cb160-4343" aria-hidden="true" tabindex="-1"></a><span class="in">```{r casestudy2-utylitymaps-danse}</span></span>
 <span id="cb160-4344"><a href="#cb160-4344" aria-hidden="true" tabindex="-1"></a>Uresults<span class="ot">&lt;-</span>datasim_red[<span class="sc">!</span><span class="fu">duplicated</span>(datasim_red<span class="sc">$</span>expid),]</span>
@@ -12073,27 +12071,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb160-4427"><a href="#cb160-4427" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-4428"><a href="#cb160-4428" aria-hidden="true" tabindex="-1"></a>Uresults<span class="sc">$</span>pHo <span class="ot">&lt;-</span><span class="fu">round</span>(Uresults<span class="sc">$</span>pHo,<span class="dv">1</span>)</span>
 <span id="cb160-4429"><a href="#cb160-4429" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"1. The best for XBridge Shield RP18:"</span>)</span>
-<span id="cb160-4430"><a href="#cb160-4430" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<span id="cb160-4430"><a href="#cb160-4430" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">1</span>,];</span>
 <span id="cb160-4431"><a href="#cb160-4431" aria-hidden="true" tabindex="-1"></a> Uresults1<span class="ot">&lt;-</span>Uresults1[<span class="fu">which</span>(Uresults1<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults1<span class="sc">$</span>EUtility)),]</span>
 <span id="cb160-4432"><a href="#cb160-4432" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults1[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span>
 <span id="cb160-4433"><a href="#cb160-4433" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-4434"><a href="#cb160-4434" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"2. The best choice for XTerra MS C18:"</span>)</span>
-<span id="cb160-4435"><a href="#cb160-4435" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">2</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<span id="cb160-4435"><a href="#cb160-4435" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">2</span>,];</span>
 <span id="cb160-4436"><a href="#cb160-4436" aria-hidden="true" tabindex="-1"></a> Uresults2<span class="ot">&lt;-</span>Uresults2[<span class="fu">which</span>(Uresults2<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults2<span class="sc">$</span>EUtility)),]</span>
 <span id="cb160-4437"><a href="#cb160-4437" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults2[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span>
 <span id="cb160-4438"><a href="#cb160-4438" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-4439"><a href="#cb160-4439" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"3. The best choice for XBridge Phenyl:"</span>)</span>
-<span id="cb160-4440"><a href="#cb160-4440" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">3</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<span id="cb160-4440"><a href="#cb160-4440" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">3</span>,];</span>
 <span id="cb160-4441"><a href="#cb160-4441" aria-hidden="true" tabindex="-1"></a> Uresults3<span class="ot">&lt;-</span>Uresults3[<span class="fu">which</span>(Uresults3<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults3<span class="sc">$</span>EUtility)),]</span>
 <span id="cb160-4442"><a href="#cb160-4442" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults3[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span>
 <span id="cb160-4443"><a href="#cb160-4443" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-4444"><a href="#cb160-4444" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"4. The best choice for XBridge C8:"</span>)</span>
-<span id="cb160-4445"><a href="#cb160-4445" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">4</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<span id="cb160-4445"><a href="#cb160-4445" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">4</span>,];</span>
 <span id="cb160-4446"><a href="#cb160-4446" aria-hidden="true" tabindex="-1"></a> Uresults4<span class="ot">&lt;-</span>Uresults4[<span class="fu">which</span>(Uresults4<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults4<span class="sc">$</span>EUtility)),]</span>
 <span id="cb160-4447"><a href="#cb160-4447" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults4[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span>
 <span id="cb160-4448"><a href="#cb160-4448" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-4449"><a href="#cb160-4449" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"5. The best choice for Xterra MS C8:"</span>)</span>
-<span id="cb160-4450"><a href="#cb160-4450" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">5</span><span class="sc">&amp;</span> Uresults<span class="sc">$</span>pHo<span class="sc">&lt;</span><span class="dv">7</span>,];</span>
+<span id="cb160-4450"><a href="#cb160-4450" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults[Uresults<span class="sc">$</span>Column<span class="sc">==</span><span class="dv">5</span>,];</span>
 <span id="cb160-4451"><a href="#cb160-4451" aria-hidden="true" tabindex="-1"></a> Uresults5<span class="ot">&lt;-</span>Uresults5[<span class="fu">which</span>(Uresults5<span class="sc">$</span>EUtility<span class="sc">==</span><span class="fu">max</span>(Uresults5<span class="sc">$</span>EUtility)),]</span>
 <span id="cb160-4452"><a href="#cb160-4452" aria-hidden="true" tabindex="-1"></a> <span class="fu">kable</span>(Uresults5[,<span class="fu">c</span>(<span class="st">'ColumnName'</span>,<span class="st">'tg'</span>, <span class="st">'fio'</span>, <span class="st">'fik'</span>,<span class="st">'Mod'</span>,<span class="st">'pHo'</span>,<span class="st">'Temp'</span>,<span class="st">'EUtility'</span>)])</span>
 <span id="cb160-4453"><a href="#cb160-4453" aria-hidden="true" tabindex="-1"></a>   </span>
@@ -12131,7 +12129,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb160-4485"><a href="#cb160-4485" aria-hidden="true" tabindex="-1"></a> wpCond1 <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_to_plot)</span>
 <span id="cb160-4486"><a href="#cb160-4486" aria-hidden="true" tabindex="-1"></a>wpCond1<span class="sc">$</span>Column <span class="ot">&lt;-</span> <span class="fu">paste0</span>(Uresultsi<span class="sc">$</span>ColumnName,</span>
 <span id="cb160-4487"><a href="#cb160-4487" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', '</span>, Uresultsi<span class="sc">$</span>Mod,</span>
-<span id="cb160-4488"><a href="#cb160-4488" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', T= '</span>, Uresultsi<span class="sc">$</span>Temp, <span class="st">','</span>, <span class="st">" </span><span class="sc">\n</span><span class="st"> "</span>,</span>
+<span id="cb160-4488"><a href="#cb160-4488" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', Temp= '</span>, Uresultsi<span class="sc">$</span>Temp, <span class="st">','</span>, <span class="st">" </span><span class="sc">\n</span><span class="st"> "</span>,</span>
 <span id="cb160-4489"><a href="#cb160-4489" aria-hidden="true" tabindex="-1"></a>                         <span class="st">' fio= '</span>, Uresultsi<span class="sc">$</span>fio,</span>
 <span id="cb160-4490"><a href="#cb160-4490" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', tg= '</span>, Uresultsi<span class="sc">$</span>tg,</span>
 <span id="cb160-4491"><a href="#cb160-4491" aria-hidden="true" tabindex="-1"></a>                         <span class="st">', pHo= '</span>, <span class="fu">round</span>(Uresultsi<span class="sc">$</span>pHo,<span class="dv">1</span>))</span>
@@ -12154,39 +12152,35 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb160-4508"><a href="#cb160-4508" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)</span>
 <span id="cb160-4509"><a href="#cb160-4509" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb160-4510"><a href="#cb160-4510" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb160-4511"><a href="#cb160-4511" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4512"><a href="#cb160-4512" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">utilitymap</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"chromatogram"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
-<span id="cb160-4513"><a href="#cb160-4513" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">utilitymap</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"chromatogram"</span>, <span class="st">".pdf"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
-<span id="cb160-4514"><a href="#cb160-4514" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-4511"><a href="#cb160-4511" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">utilitymap</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"chromatogram"</span>, <span class="st">".png"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb160-4512"><a href="#cb160-4512" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">utilitymap</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"chromatogram"</span>, <span class="st">".pdf"</span>), <span class="at">plot=</span>p, <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">20</span>, <span class="at">units =</span> <span class="st">"cm"</span>)</span>
+<span id="cb160-4513"><a href="#cb160-4513" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-4514"><a href="#cb160-4514" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
 <span id="cb160-4515"><a href="#cb160-4515" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4516"><a href="#cb160-4516" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
-<span id="cb160-4517"><a href="#cb160-4517" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4518"><a href="#cb160-4518" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">utilitymap</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"chromatogram-manuscript"</span>, <span class="st">".png"</span>),</span>
-<span id="cb160-4519"><a href="#cb160-4519" aria-hidden="true" tabindex="-1"></a>       p,</span>
-<span id="cb160-4520"><a href="#cb160-4520" aria-hidden="true" tabindex="-1"></a>       <span class="at">device =</span> ragg<span class="sc">::</span><span class="fu">agg_png</span>(<span class="at">width =</span> <span class="fl">8.4582</span>, <span class="at">height =</span> <span class="fl">8.4582</span>, <span class="at">units =</span> <span class="st">"cm"</span>, <span class="at">res =</span> <span class="dv">300</span>, <span class="at">scaling=</span><span class="fl">0.522</span>))</span>
-<span id="cb160-4521"><a href="#cb160-4521" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-4516"><a href="#cb160-4516" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="st">"figures</span><span class="sc">\\</span><span class="st">casestudy2</span><span class="sc">\\</span><span class="st">utilitymap</span><span class="sc">\\</span><span class="st">"</span>,  <span class="st">"chromatogram-manuscript"</span>, <span class="st">".png"</span>),</span>
+<span id="cb160-4517"><a href="#cb160-4517" aria-hidden="true" tabindex="-1"></a>       p,</span>
+<span id="cb160-4518"><a href="#cb160-4518" aria-hidden="true" tabindex="-1"></a>       <span class="at">device =</span> ragg<span class="sc">::</span><span class="fu">agg_png</span>(<span class="at">width =</span> <span class="fl">8.4582</span>, <span class="at">height =</span> <span class="fl">8.4582</span>, <span class="at">units =</span> <span class="st">"cm"</span>, <span class="at">res =</span> <span class="dv">300</span>, <span class="at">scaling=</span><span class="fl">0.522</span>))</span>
+<span id="cb160-4519"><a href="#cb160-4519" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb160-4520"><a href="#cb160-4520" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-4521"><a href="#cb160-4521" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusions</span></span>
 <span id="cb160-4522"><a href="#cb160-4522" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4523"><a href="#cb160-4523" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb160-4523"><a href="#cb160-4523" aria-hidden="true" tabindex="-1"></a>This work demonstrates the application of a Bayesian multilevel model to compare various stationary phases using large datasets of retention time collected for a wide range of chromatographic conditions.</span>
 <span id="cb160-4524"><a href="#cb160-4524" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4525"><a href="#cb160-4525" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusions</span></span>
+<span id="cb160-4525"><a href="#cb160-4525" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
 <span id="cb160-4526"><a href="#cb160-4526" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4527"><a href="#cb160-4527" aria-hidden="true" tabindex="-1"></a>This work demonstrates the application of a Bayesian multilevel model to compare various stationary phases using large datasets of retention time collected for a wide range of chromatographic conditions.</span>
-<span id="cb160-4528"><a href="#cb160-4528" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4529"><a href="#cb160-4529" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
-<span id="cb160-4530"><a href="#cb160-4530" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4531"><a href="#cb160-4531" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb160-4532"><a href="#cb160-4532" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb160-4533"><a href="#cb160-4533" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4534"><a href="#cb160-4534" aria-hidden="true" tabindex="-1"></a><span class="fu"># Licenses {.unnumbered}</span></span>
-<span id="cb160-4535"><a href="#cb160-4535" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4536"><a href="#cb160-4536" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Code &amp; copy; 2023, Paweł Wiczling, licensed under BSD-3.</span>
-<span id="cb160-4537"><a href="#cb160-4537" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Text &amp; copy; 2023, Paweł Wiczling, licensed under CC-BY-NC 4.0.</span>
-<span id="cb160-4538"><a href="#cb160-4538" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4539"><a href="#cb160-4539" aria-hidden="true" tabindex="-1"></a><span class="fu"># Original Computing Environment {.unnumbered}</span></span>
-<span id="cb160-4540"><a href="#cb160-4540" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb160-4541"><a href="#cb160-4541" aria-hidden="true" tabindex="-1"></a><span class="in">```{r sessionInfo}</span></span>
-<span id="cb160-4542"><a href="#cb160-4542" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb160-4543"><a href="#cb160-4543" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb160-4527"><a href="#cb160-4527" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb160-4528"><a href="#cb160-4528" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb160-4529"><a href="#cb160-4529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-4530"><a href="#cb160-4530" aria-hidden="true" tabindex="-1"></a><span class="fu"># Licenses {.unnumbered}</span></span>
+<span id="cb160-4531"><a href="#cb160-4531" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-4532"><a href="#cb160-4532" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Code &amp; copy; 2023, Paweł Wiczling, licensed under BSD-3.</span>
+<span id="cb160-4533"><a href="#cb160-4533" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Text &amp; copy; 2023, Paweł Wiczling, licensed under CC-BY-NC 4.0.</span>
+<span id="cb160-4534"><a href="#cb160-4534" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-4535"><a href="#cb160-4535" aria-hidden="true" tabindex="-1"></a><span class="fu"># Original Computing Environment {.unnumbered}</span></span>
+<span id="cb160-4536"><a href="#cb160-4536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-4537"><a href="#cb160-4537" aria-hidden="true" tabindex="-1"></a><span class="in">```{r sessionInfo}</span></span>
+<span id="cb160-4538"><a href="#cb160-4538" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb160-4539"><a href="#cb160-4539" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
