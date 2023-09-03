@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Paweł Wiczling, Agnieszka Kamedulska">
-<meta name="dcterms.date" content="2023-09-02">
+<meta name="dcterms.date" content="2023-09-03">
 
 <title>Comparison of chromatographic stationary phases using Bayesian-based multilevel modeling</title>
 <style>
@@ -200,7 +200,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 2, 2023</p>
+      <p class="date">September 3, 2023</p>
     </div>
   </div>
   
@@ -635,7 +635,7 @@ diag(c\omega) \cdot \begin{bmatrix}
 \end{aligned}
 \]</span></p>
 <p>The detailed description of parameters and used priors is provided in the following table (BAV denotes between analyte variability):</p>
-<div class="cell" data-hash="index_cache/html/table_05d52f24e84d05f25d3da371b786f650">
+<div class="cell" data-hash="index_cache/html/table_1eb86c2f2ebff21de69b795ed782e49f">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># to properly render in quarto: https://github.com/quarto-dev/quarto-cli/issues/3340</span></span>
@@ -643,56 +643,56 @@ diag(c\omega) \cdot \begin{bmatrix}
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>Name <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'$</span><span class="sc">\\</span><span class="st">hat{logkw}$'</span>,</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{S1m}$'</span>,</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dS1}$'</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">beta_1$'</span>,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">beta_2$'</span>,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogkw_1}$'</span>,</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogkw_2}$'</span>,</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dS1m_1}$'</span>,</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dS1m_2}$'</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{ddS1_1}$'</span>,</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{ddS1_2}$'</span>,</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{apH_1}$'</span>,</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{apH_2}$'</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">beta_{logkw}$'</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">beta_{S1m}$'</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogkw_A}$'</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogkw_B}$'</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dS1m_A}$'</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dS1m_B}$'</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{ddS1_A}$'</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{ddS1_B}$'</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{apH_A}$'</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{apH_B}$'</span>,</span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogkT}$'</span>,</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_1$'</span>,</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_2$'</span>,</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_3$'</span>,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_{logkw}$'</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_{S1m}$'</span>,</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_{dS1}$'</span>,</span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">rho$'</span>,</span>
 <span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_T$'</span>,</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_1$'</span>,</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_2$'</span>,</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_3$'</span>,</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_{dlogkw}$'</span>,</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_{dS1m}$'</span>,</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_{ddS1}$'</span>,</span>
 <span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{clogkw_c}$'</span>,</span>
 <span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cS1m_c}$'</span>,</span>
 <span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdS1_c}$'</span>,</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">beta_{c,1}$'</span>,</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">beta_{c,2}$'</span>,</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdlogkw_{c,1}}$'</span>,</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdlogkw_{c,2}}$'</span>,</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdS1m_{c,1}}$'</span>,</span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdS1m_{c,2}}$'</span>,</span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cddS1_{c,1}}$'</span>,</span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cddS1_{c,2}}$'</span>,</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">beta_{c,logkw}$'</span>,</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">beta_{c,dS1m}$'</span>,</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdlogkw_{c,A}}$'</span>,</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdlogkw_{c,B}}$'</span>,</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdS1m_{c,A}}$'</span>,</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdS1m_{c,B}}$'</span>,</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cddS1_{c,A}}$'</span>,</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cddS1_{c,B}}$'</span>,</span>
 <span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdlogkT_c}$'</span>,</span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$capH_{c,1}$'</span>,</span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$capH_{c,2}$'</span>,</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,1}$'</span>,</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$capH_{c,A}$'</span>,</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$capH_{c,B}$'</span>,</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,logkw}$'</span>,</span>
 <span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">rho$'</span>,</span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,2}$'</span>,</span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,3}$'</span>,</span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,1}$'</span>,</span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,2}$'</span>,</span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,3}$'</span>,</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,S1m}$'</span>,</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,dS1}$'</span>,</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,dlogkw}$'</span>,</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,dS1m}$'</span>,</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,ddS1}$'</span>,</span>
 <span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{T,c}$'</span>,</span>
 <span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{logS2m}$'</span>,</span>
 <span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogS2}$'</span>,</span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">alpha m_1}$'</span>,</span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">alpha m_2}$'</span>,</span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{d</span><span class="sc">\\</span><span class="st">alpha_1}$'</span>,</span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{d</span><span class="sc">\\</span><span class="st">alpha_2}$'</span>,</span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_1$'</span>,</span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_2$'</span>,</span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_3$'</span>,</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">alpha m_A}$'</span>,</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">alpha m_B}$'</span>,</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{d</span><span class="sc">\\</span><span class="st">alpha_A}$'</span>,</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{d</span><span class="sc">\\</span><span class="st">alpha_B}$'</span>,</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_{pKa}$'</span>,</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_{alpham}$'</span>,</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_{dalpha}$'</span>,</span>
 <span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$m</span><span class="sc">\\</span><span class="st">sigma$'</span>,</span>
 <span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$s</span><span class="sc">\\</span><span class="st">sigma$'</span>,</span>
 <span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$clogmsigma_c$'</span>,</span>
@@ -960,7 +960,7 @@ N(1, 1)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\beta_1\)</span>
+<span class="math inline">\(\beta_{logkw}\)</span>
 </td>
 <td style="text-align:left;">
 beta[1]
@@ -974,7 +974,7 @@ N(1, 0.125)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\beta_2\)</span>
+<span class="math inline">\(\beta_{S1m}\)</span>
 </td>
 <td style="text-align:left;">
 beta[2]
@@ -988,7 +988,7 @@ N(0.5, 0.5)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{dlogkw_1}\)</span>
+<span class="math inline">\(\hat{dlogkw_A}\)</span>
 </td>
 <td style="text-align:left;">
 dlogkwHat[1]
@@ -1002,7 +1002,7 @@ N(-1, 0.125)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{dlogkw_2}\)</span>
+<span class="math inline">\(\hat{dlogkw_B}\)</span>
 </td>
 <td style="text-align:left;">
 dlogkwHat[2]
@@ -1016,7 +1016,7 @@ N(-1, 0.125)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{dS1m_1}\)</span>
+<span class="math inline">\(\hat{dS1m_A}\)</span>
 </td>
 <td style="text-align:left;">
 dS1mHat[1]
@@ -1030,7 +1030,7 @@ N(0, 0.5)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{dS1m_2}\)</span>
+<span class="math inline">\(\hat{dS1m_B}\)</span>
 </td>
 <td style="text-align:left;">
 dS1mHat[2]
@@ -1044,7 +1044,7 @@ N(0, 0.5)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{ddS1_1}\)</span>
+<span class="math inline">\(\hat{ddS1_A}\)</span>
 </td>
 <td style="text-align:left;">
 ddS1Hat[1]
@@ -1058,7 +1058,7 @@ N(0, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{ddS1_2}\)</span>
+<span class="math inline">\(\hat{ddS1_B}\)</span>
 </td>
 <td style="text-align:left;">
 ddS1Hat[2]
@@ -1072,7 +1072,7 @@ N(0, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{apH_1}\)</span>
+<span class="math inline">\(\hat{apH_A}\)</span>
 </td>
 <td style="text-align:left;">
 apH[1]
@@ -1086,7 +1086,7 @@ N(0, 0.1)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{apH_2}\)</span>
+<span class="math inline">\(\hat{apH_B}\)</span>
 </td>
 <td style="text-align:left;">
 apH[2]
@@ -1114,7 +1114,7 @@ N(-0.087, 0.022)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\omega_1\)</span>
+<span class="math inline">\(\omega_{logkw}\)</span>
 </td>
 <td style="text-align:left;">
 omega[1]
@@ -1128,7 +1128,7 @@ N+(0, 2)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\omega_2\)</span>
+<span class="math inline">\(\omega_{S1m}\)</span>
 </td>
 <td style="text-align:left;">
 omega[2]
@@ -1142,7 +1142,7 @@ N+(0, 2)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\omega_3\)</span>
+<span class="math inline">\(\omega_{dS1}\)</span>
 </td>
 <td style="text-align:left;">
 omega[3]
@@ -1184,7 +1184,7 @@ N+(0, 0.022)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\kappa_1\)</span>
+<span class="math inline">\(\kappa_{dlogkw}\)</span>
 </td>
 <td style="text-align:left;">
 kappa[1]
@@ -1198,7 +1198,7 @@ N+(0, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\kappa_2\)</span>
+<span class="math inline">\(\kappa_{dS1m}\)</span>
 </td>
 <td style="text-align:left;">
 kappa[2]
@@ -1212,7 +1212,7 @@ N+(0, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\kappa_3\)</span>
+<span class="math inline">\(\kappa_{ddS1}\)</span>
 </td>
 <td style="text-align:left;">
 kappa[3]
@@ -1273,7 +1273,7 @@ N(0, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(c\beta_{c,1}\)</span>
+<span class="math inline">\(c\beta_{c,logkw}\)</span>
 </td>
 <td style="text-align:left;">
 cbeta[c,1]
@@ -1287,7 +1287,7 @@ N(0, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(c\beta_{c,2}\)</span>
+<span class="math inline">\(c\beta_{c,dS1m}\)</span>
 </td>
 <td style="text-align:left;">
 cbeta[c,2]
@@ -1301,7 +1301,7 @@ N(0, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{cdlogkw_{c,1}}\)</span>
+<span class="math inline">\(\hat{cdlogkw_{c,A}}\)</span>
 </td>
 <td style="text-align:left;">
 cdlogkwHat[c,1]
@@ -1315,7 +1315,7 @@ N(0, 0.0625)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{cdlogkw_{c,2}}\)</span>
+<span class="math inline">\(\hat{cdlogkw_{c,B}}\)</span>
 </td>
 <td style="text-align:left;">
 cdlogkwHat[c,2]
@@ -1329,7 +1329,7 @@ N(0, 0.0625)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{cdS1m_{c,1}}\)</span>
+<span class="math inline">\(\hat{cdS1m_{c,A}}\)</span>
 </td>
 <td style="text-align:left;">
 cdS1mHat[c,1]
@@ -1343,7 +1343,7 @@ N(0, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{cdS1m_{c,2}}\)</span>
+<span class="math inline">\(\hat{cdS1m_{c,B}}\)</span>
 </td>
 <td style="text-align:left;">
 cdS1mHat[c,2]
@@ -1357,7 +1357,7 @@ N(0, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{cddS1_{c,1}}\)</span>
+<span class="math inline">\(\hat{cddS1_{c,A}}\)</span>
 </td>
 <td style="text-align:left;">
 cddS1Hat[c,1]
@@ -1371,7 +1371,7 @@ N(0, 0.125)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{cddS1_{c,2}}\)</span>
+<span class="math inline">\(\hat{cddS1_{c,B}}\)</span>
 </td>
 <td style="text-align:left;">
 cddS1Hat[c,2]
@@ -1399,7 +1399,7 @@ N(0, 0.011)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(capH_{c,1}\)</span>
+<span class="math inline">\(capH_{c,A}\)</span>
 </td>
 <td style="text-align:left;">
 capH[c,1]
@@ -1413,7 +1413,7 @@ N(0, 0.05)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(capH_{c,2}\)</span>
+<span class="math inline">\(capH_{c,B}\)</span>
 </td>
 <td style="text-align:left;">
 capH[c,2]
@@ -1427,7 +1427,7 @@ N(0, 0.05)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(c\omega_{c,1}\)</span>
+<span class="math inline">\(c\omega_{c,logkw}\)</span>
 </td>
 <td style="text-align:left;">
 comega[c,1]
@@ -1455,7 +1455,7 @@ LKJ(2)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(c\omega_{c,2}\)</span>
+<span class="math inline">\(c\omega_{c,S1m}\)</span>
 </td>
 <td style="text-align:left;">
 comega[c,2]
@@ -1469,7 +1469,7 @@ N+(0, 1)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(c\omega_{c,3}\)</span>
+<span class="math inline">\(c\omega_{c,dS1}\)</span>
 </td>
 <td style="text-align:left;">
 comega[c,3]
@@ -1483,7 +1483,7 @@ N+(0, 1)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(c\kappa_{c,1}\)</span>
+<span class="math inline">\(c\kappa_{c,dlogkw}\)</span>
 </td>
 <td style="text-align:left;">
 ckappa[c,1]
@@ -1497,7 +1497,7 @@ N+(0, 0.125)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(c\kappa_{c,2}\)</span>
+<span class="math inline">\(c\kappa_{c,dS1m}\)</span>
 </td>
 <td style="text-align:left;">
 ckappa[c,2]
@@ -1511,7 +1511,7 @@ N+(0, 0.125)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(c\kappa_{c,3}\)</span>
+<span class="math inline">\(c\kappa_{c,ddS1}\)</span>
 </td>
 <td style="text-align:left;">
 ckappa[c,3]
@@ -1577,7 +1577,7 @@ N(1, 0.125);
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{\alpha m_1}\)</span>
+<span class="math inline">\(\hat{\alpha m_A}\)</span>
 </td>
 <td style="text-align:left;">
 alphamHat[1]
@@ -1591,7 +1591,7 @@ N(2, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{\alpha m_2}\)</span>
+<span class="math inline">\(\hat{\alpha m_B}\)</span>
 </td>
 <td style="text-align:left;">
 alphamHat[2]
@@ -1605,7 +1605,7 @@ N(-1, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{d\alpha_1}\)</span>
+<span class="math inline">\(\hat{d\alpha_A}\)</span>
 </td>
 <td style="text-align:left;">
 dalphaHat[1]
@@ -1619,7 +1619,7 @@ N(0, 0.125)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\hat{d\alpha_2}\)</span>
+<span class="math inline">\(\hat{d\alpha_B}\)</span>
 </td>
 <td style="text-align:left;">
 dalphaHat[2]
@@ -1633,7 +1633,7 @@ N(0, 0.125)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\tau_1\)</span>
+<span class="math inline">\(\tau_{pKa}\)</span>
 </td>
 <td style="text-align:left;">
 tau[1]
@@ -1647,7 +1647,7 @@ N+(0, 0.25)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\tau_2\)</span>
+<span class="math inline">\(\tau_{alpham}\)</span>
 </td>
 <td style="text-align:left;">
 tau[2]
@@ -1661,7 +1661,7 @@ N+(0, 0.125)
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<span class="math inline">\(\tau_3\)</span>
+<span class="math inline">\(\tau_{dalpha}\)</span>
 </td>
 <td style="text-align:left;">
 tau[3]
@@ -7829,56 +7829,56 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-442"><a href="#cb132-442" aria-hidden="true" tabindex="-1"></a>Name <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'$</span><span class="sc">\\</span><span class="st">hat{logkw}$'</span>,</span>
 <span id="cb132-443"><a href="#cb132-443" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{S1m}$'</span>,</span>
 <span id="cb132-444"><a href="#cb132-444" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dS1}$'</span>,</span>
-<span id="cb132-445"><a href="#cb132-445" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">beta_1$'</span>,</span>
-<span id="cb132-446"><a href="#cb132-446" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">beta_2$'</span>,</span>
-<span id="cb132-447"><a href="#cb132-447" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogkw_1}$'</span>,</span>
-<span id="cb132-448"><a href="#cb132-448" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogkw_2}$'</span>,</span>
-<span id="cb132-449"><a href="#cb132-449" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dS1m_1}$'</span>,</span>
-<span id="cb132-450"><a href="#cb132-450" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dS1m_2}$'</span>,</span>
-<span id="cb132-451"><a href="#cb132-451" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{ddS1_1}$'</span>,</span>
-<span id="cb132-452"><a href="#cb132-452" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{ddS1_2}$'</span>,</span>
-<span id="cb132-453"><a href="#cb132-453" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{apH_1}$'</span>,</span>
-<span id="cb132-454"><a href="#cb132-454" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{apH_2}$'</span>,</span>
+<span id="cb132-445"><a href="#cb132-445" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">beta_{logkw}$'</span>,</span>
+<span id="cb132-446"><a href="#cb132-446" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">beta_{S1m}$'</span>,</span>
+<span id="cb132-447"><a href="#cb132-447" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogkw_A}$'</span>,</span>
+<span id="cb132-448"><a href="#cb132-448" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogkw_B}$'</span>,</span>
+<span id="cb132-449"><a href="#cb132-449" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dS1m_A}$'</span>,</span>
+<span id="cb132-450"><a href="#cb132-450" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dS1m_B}$'</span>,</span>
+<span id="cb132-451"><a href="#cb132-451" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{ddS1_A}$'</span>,</span>
+<span id="cb132-452"><a href="#cb132-452" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{ddS1_B}$'</span>,</span>
+<span id="cb132-453"><a href="#cb132-453" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{apH_A}$'</span>,</span>
+<span id="cb132-454"><a href="#cb132-454" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{apH_B}$'</span>,</span>
 <span id="cb132-455"><a href="#cb132-455" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogkT}$'</span>,</span>
-<span id="cb132-456"><a href="#cb132-456" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_1$'</span>,</span>
-<span id="cb132-457"><a href="#cb132-457" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_2$'</span>,</span>
-<span id="cb132-458"><a href="#cb132-458" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_3$'</span>,</span>
+<span id="cb132-456"><a href="#cb132-456" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_{logkw}$'</span>,</span>
+<span id="cb132-457"><a href="#cb132-457" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_{S1m}$'</span>,</span>
+<span id="cb132-458"><a href="#cb132-458" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_{dS1}$'</span>,</span>
 <span id="cb132-459"><a href="#cb132-459" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">rho$'</span>,</span>
 <span id="cb132-460"><a href="#cb132-460" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">omega_T$'</span>,</span>
-<span id="cb132-461"><a href="#cb132-461" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_1$'</span>,</span>
-<span id="cb132-462"><a href="#cb132-462" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_2$'</span>,</span>
-<span id="cb132-463"><a href="#cb132-463" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_3$'</span>,</span>
+<span id="cb132-461"><a href="#cb132-461" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_{dlogkw}$'</span>,</span>
+<span id="cb132-462"><a href="#cb132-462" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_{dS1m}$'</span>,</span>
+<span id="cb132-463"><a href="#cb132-463" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">kappa_{ddS1}$'</span>,</span>
 <span id="cb132-464"><a href="#cb132-464" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{clogkw_c}$'</span>,</span>
 <span id="cb132-465"><a href="#cb132-465" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cS1m_c}$'</span>,</span>
 <span id="cb132-466"><a href="#cb132-466" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdS1_c}$'</span>,</span>
-<span id="cb132-467"><a href="#cb132-467" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">beta_{c,1}$'</span>,</span>
-<span id="cb132-468"><a href="#cb132-468" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">beta_{c,2}$'</span>,</span>
-<span id="cb132-469"><a href="#cb132-469" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdlogkw_{c,1}}$'</span>,</span>
-<span id="cb132-470"><a href="#cb132-470" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdlogkw_{c,2}}$'</span>,</span>
-<span id="cb132-471"><a href="#cb132-471" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdS1m_{c,1}}$'</span>,</span>
-<span id="cb132-472"><a href="#cb132-472" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdS1m_{c,2}}$'</span>,</span>
-<span id="cb132-473"><a href="#cb132-473" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cddS1_{c,1}}$'</span>,</span>
-<span id="cb132-474"><a href="#cb132-474" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cddS1_{c,2}}$'</span>,</span>
+<span id="cb132-467"><a href="#cb132-467" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">beta_{c,logkw}$'</span>,</span>
+<span id="cb132-468"><a href="#cb132-468" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">beta_{c,dS1m}$'</span>,</span>
+<span id="cb132-469"><a href="#cb132-469" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdlogkw_{c,A}}$'</span>,</span>
+<span id="cb132-470"><a href="#cb132-470" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdlogkw_{c,B}}$'</span>,</span>
+<span id="cb132-471"><a href="#cb132-471" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdS1m_{c,A}}$'</span>,</span>
+<span id="cb132-472"><a href="#cb132-472" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdS1m_{c,B}}$'</span>,</span>
+<span id="cb132-473"><a href="#cb132-473" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cddS1_{c,A}}$'</span>,</span>
+<span id="cb132-474"><a href="#cb132-474" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cddS1_{c,B}}$'</span>,</span>
 <span id="cb132-475"><a href="#cb132-475" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{cdlogkT_c}$'</span>,</span>
-<span id="cb132-476"><a href="#cb132-476" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$capH_{c,1}$'</span>,</span>
-<span id="cb132-477"><a href="#cb132-477" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$capH_{c,2}$'</span>,</span>
-<span id="cb132-478"><a href="#cb132-478" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,1}$'</span>,</span>
+<span id="cb132-476"><a href="#cb132-476" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$capH_{c,A}$'</span>,</span>
+<span id="cb132-477"><a href="#cb132-477" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$capH_{c,B}$'</span>,</span>
+<span id="cb132-478"><a href="#cb132-478" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,logkw}$'</span>,</span>
 <span id="cb132-479"><a href="#cb132-479" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">rho$'</span>,</span>
-<span id="cb132-480"><a href="#cb132-480" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,2}$'</span>,</span>
-<span id="cb132-481"><a href="#cb132-481" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,3}$'</span>,</span>
-<span id="cb132-482"><a href="#cb132-482" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,1}$'</span>,</span>
-<span id="cb132-483"><a href="#cb132-483" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,2}$'</span>,</span>
-<span id="cb132-484"><a href="#cb132-484" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,3}$'</span>,</span>
+<span id="cb132-480"><a href="#cb132-480" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,S1m}$'</span>,</span>
+<span id="cb132-481"><a href="#cb132-481" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{c,dS1}$'</span>,</span>
+<span id="cb132-482"><a href="#cb132-482" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,dlogkw}$'</span>,</span>
+<span id="cb132-483"><a href="#cb132-483" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,dS1m}$'</span>,</span>
+<span id="cb132-484"><a href="#cb132-484" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">kappa_{c,ddS1}$'</span>,</span>
 <span id="cb132-485"><a href="#cb132-485" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$c</span><span class="sc">\\</span><span class="st">omega_{T,c}$'</span>,</span>
 <span id="cb132-486"><a href="#cb132-486" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{logS2m}$'</span>,</span>
 <span id="cb132-487"><a href="#cb132-487" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{dlogS2}$'</span>,</span>
-<span id="cb132-488"><a href="#cb132-488" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">alpha m_1}$'</span>,</span>
-<span id="cb132-489"><a href="#cb132-489" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">alpha m_2}$'</span>,</span>
-<span id="cb132-490"><a href="#cb132-490" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{d</span><span class="sc">\\</span><span class="st">alpha_1}$'</span>,</span>
-<span id="cb132-491"><a href="#cb132-491" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{d</span><span class="sc">\\</span><span class="st">alpha_2}$'</span>,</span>
-<span id="cb132-492"><a href="#cb132-492" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_1$'</span>,</span>
-<span id="cb132-493"><a href="#cb132-493" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_2$'</span>,</span>
-<span id="cb132-494"><a href="#cb132-494" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_3$'</span>,</span>
+<span id="cb132-488"><a href="#cb132-488" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">alpha m_A}$'</span>,</span>
+<span id="cb132-489"><a href="#cb132-489" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">alpha m_B}$'</span>,</span>
+<span id="cb132-490"><a href="#cb132-490" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{d</span><span class="sc">\\</span><span class="st">alpha_A}$'</span>,</span>
+<span id="cb132-491"><a href="#cb132-491" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">hat{d</span><span class="sc">\\</span><span class="st">alpha_B}$'</span>,</span>
+<span id="cb132-492"><a href="#cb132-492" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_{pKa}$'</span>,</span>
+<span id="cb132-493"><a href="#cb132-493" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_{alpham}$'</span>,</span>
+<span id="cb132-494"><a href="#cb132-494" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$</span><span class="sc">\\</span><span class="st">tau_{dalpha}$'</span>,</span>
 <span id="cb132-495"><a href="#cb132-495" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$m</span><span class="sc">\\</span><span class="st">sigma$'</span>,</span>
 <span id="cb132-496"><a href="#cb132-496" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$s</span><span class="sc">\\</span><span class="st">sigma$'</span>,</span>
 <span id="cb132-497"><a href="#cb132-497" aria-hidden="true" tabindex="-1"></a>         <span class="st">'$clogmsigma_c$'</span>,</span>
