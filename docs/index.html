@@ -154,7 +154,7 @@ div.csl-indent {
   </ul></li>
   <li><a href="#predictions-and-decision-making.-case-study-1" id="toc-predictions-and-decision-making.-case-study-1" class="nav-link" data-scroll-target="#predictions-and-decision-making.-case-study-1">Predictions and decision making. Case study 1</a>
   <ul class="collapse">
-  <li><a href="#utility-maps" id="toc-utility-maps" class="nav-link" data-scroll-target="#utility-maps">Utility maps</a>
+  <li><a href="#the-expected-utility-maps" id="toc-the-expected-utility-maps" class="nav-link" data-scroll-target="#the-expected-utility-maps">The expected utility maps</a>
   <ul class="collapse">
   <li><a href="#uncertainity-chromatogram-1" id="toc-uncertainity-chromatogram-1" class="nav-link" data-scroll-target="#uncertainity-chromatogram-1">Uncertainity chromatogram</a></li>
   </ul></li>
@@ -167,7 +167,7 @@ div.csl-indent {
   <li><a href="#plot-the-predicted-vs.-observed" id="toc-plot-the-predicted-vs.-observed" class="nav-link" data-scroll-target="#plot-the-predicted-vs.-observed">Plot the predicted vs.&nbsp;observed:</a></li>
   <li><a href="#uncertainity-chromatogram-2" id="toc-uncertainity-chromatogram-2" class="nav-link" data-scroll-target="#uncertainity-chromatogram-2">Uncertainity chromatogram</a></li>
   </ul></li>
-  <li><a href="#utility-maps-1" id="toc-utility-maps-1" class="nav-link" data-scroll-target="#utility-maps-1">Utility maps</a>
+  <li><a href="#the-expected-utility-maps-1" id="toc-the-expected-utility-maps-1" class="nav-link" data-scroll-target="#the-expected-utility-maps-1">The expected utility maps</a>
   <ul class="collapse">
   <li><a href="#uncertainity-chromatogram-3" id="toc-uncertainity-chromatogram-3" class="nav-link" data-scroll-target="#uncertainity-chromatogram-3">Uncertainity chromatogram</a></li>
   </ul></li>
@@ -3037,7 +3037,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 </details>
 </div>
 <p>Below we combine separate plot into the one graphic to characterizing column effects:</p>
-<div class="cell" data-hash="index_cache/html/figclogkw_32d7bc32f62d2394eec10f7f8a879f2c">
+<div class="cell" data-hash="index_cache/html/figclogkw_83a7fb416530c9e065c7eed9ae2edf57">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>draws_df_subset <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>(<span class="at">format =</span> <span class="st">"df"</span>, <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">"clogkwHat"</span>,<span class="st">"cdlogkwHat"</span>))</span>
@@ -3094,10 +3094,10 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span>  </span>
 <span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"N"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F8766D"</span>, <span class="st">"#619CFF"</span>, <span class="st">"black"</span>))<span class="sc">+</span> </span>
 <span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ylab</span>(<span class="st">' '</span>) <span class="sc">+</span></span>
-<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"Column effects on logkw (clogkw)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"clogkw"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-hash="index_cache/html/figcS1_3427512659fe4663e59e6c8734789bfa">
+<div class="cell" data-hash="index_cache/html/figcS1_a19905a99ed0a9dba5992659e3e9b2eb">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>draws_df_subset <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>(<span class="at">format =</span> <span class="st">"df"</span>, <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">"S1mHat"</span>,<span class="st">"cS1mHat"</span>,<span class="st">"dS1mHat"</span>,<span class="st">"cdS1mHat"</span>,</span>
@@ -3220,17 +3220,17 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb35-118"><a href="#cb35-118" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span>  </span>
 <span id="cb35-119"><a href="#cb35-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"N"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F8766D"</span>, <span class="st">"#619CFF"</span>, <span class="st">"black"</span>))<span class="sc">+</span> </span>
 <span id="cb35-120"><a href="#cb35-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">' '</span>)<span class="sc">+</span></span>
-<span id="cb35-121"><a href="#cb35-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Column effects on S1m (cS1m)"</span>)</span>
+<span id="cb35-121"><a href="#cb35-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"cS1m"</span>)</span>
 <span id="cb35-122"><a href="#cb35-122" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-123"><a href="#cb35-123" aria-hidden="true" tabindex="-1"></a>p2_2<span class="ot">&lt;-</span><span class="fu">bind_rows</span>(ACN_Neutral_results,ACN_Acids_results, ACN_Basic_results) <span class="sc">%&gt;%</span></span>
 <span id="cb35-124"><a href="#cb35-124" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> ColumnNames, <span class="at">x =</span> S1Hat, <span class="at">xmin =</span> .lower, <span class="at">xmax =</span> .upper,<span class="at">color =</span> Type)) <span class="sc">+</span></span>
 <span id="cb35-125"><a href="#cb35-125" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span>  </span>
 <span id="cb35-126"><a href="#cb35-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"N"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F8766D"</span>, <span class="st">"#619CFF"</span>, <span class="st">"black"</span>))<span class="sc">+</span> </span>
 <span id="cb35-127"><a href="#cb35-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">' '</span>)<span class="sc">+</span></span>
-<span id="cb35-128"><a href="#cb35-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Column effects on dS1 (cdS1)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-128"><a href="#cb35-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"cdS1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-hash="index_cache/html/figcbeta_062f3489df351082bdf8dc4cf6b94966">
+<div class="cell" data-hash="index_cache/html/figcbeta_60256445dbe139d45ecc881a4e90880f">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>draws_df_subset <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>(<span class="at">format =</span> <span class="st">"df"</span>, <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">"beta"</span>,<span class="st">"cbeta"</span>))</span>
@@ -3275,10 +3275,10 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span> </span>
 <span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"clogkw"</span>, <span class="st">"cS1"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"gray"</span>))<span class="sc">+</span></span>
 <span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">' '</span>)<span class="sc">+</span></span>
-<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Column effects on \u03b2 (c\u03b2)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"c\u03b2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-hash="index_cache/html/figcpH_36eac2d78cf0e7b3b42907d8b95474a5">
+<div class="cell" data-hash="index_cache/html/figcpH_7e9fa8fc6fd4ecbe173fd01750e2e608">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>draws_df_subset <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>(<span class="at">format =</span> <span class="st">"df"</span>, <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">"apH"</span>,<span class="st">"capH"</span>))</span>
@@ -3323,10 +3323,10 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span>  </span>
 <span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F8766D"</span>, <span class="st">"#619CFF"</span>))<span class="sc">+</span></span>
 <span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">' '</span>)<span class="sc">+</span></span>
-<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"Column effects on apH (capH)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"capH"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-hash="index_cache/html/figctemp_401ca0bbe1fc8db33c57a8274dd792ad">
+<div class="cell" data-hash="index_cache/html/figctemp_40cb3e3a95d95f654b17138b829ab008">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>draws_df_subset <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>(<span class="at">format =</span> <span class="st">"df"</span>, <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">"dlogkTHat"</span>,<span class="st">"cdlogkTHat"</span>))</span>
@@ -3351,7 +3351,7 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span> </span>
 <span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"clogkw"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"black"</span>))<span class="sc">+</span></span>
 <span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">' '</span>)<span class="sc">+</span></span>
-<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Column effects on dlogkT (cdlogkT)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"cdlogkT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-hash="index_cache/html/figcolumn-effects-all_d31c69e72e8e5d68ede3be09ea8ce406">
@@ -5871,8 +5871,8 @@ ${PWD}/${CMDSTAN_MODEL_NAME} sample num_samples=500 num_warmup=1000 algorithm=hm
 <span id="cb96-10"><a href="#cb96-10" aria-hidden="true" tabindex="-1"></a>                                ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<section id="utility-maps" class="level2">
-<h2 class="anchored" data-anchor-id="utility-maps">Utility maps</h2>
+<section id="the-expected-utility-maps" class="level2">
+<h2 class="anchored" data-anchor-id="the-expected-utility-maps">The expected utility maps</h2>
 <p>For that purpose, we will use decision theory. We start by specifying a notion of utility to each outcome (uncertainty chromatogram). The Bayesian-based optimal decision is the one that maximizes expected utility. Our utility function is calcualted based on the lowest retention time across analytes (<span class="math inline">\(\small mintr\)</span>), the highest retention time across analytes <span class="math inline">\(\small maxtr\)</span>, and the difference in retention times between the critical pair of analytes (<span class="math inline">\(\small res\)</span>). This utility is zero if at least one of the analytes has retention higher than 40, less than 2 min, or the difference in retention times is less than 2. Otherwise, it favors shorter runs. (.) denotes design variables.</p>
 <p><span class="math display">\[
 U(.)= I((mintr(.)&gt;2) \ \&amp; \ (res(.)&gt;2)) \cdot (40-maxtr(.)) \cdot I(maxtr(.)&lt;40)
@@ -6641,8 +6641,8 @@ I(x) = 0 \ if \ condition \ x  \ is \ false
 </div>
 </section>
 </section>
-<section id="utility-maps-1" class="level2">
-<h2 class="anchored" data-anchor-id="utility-maps-1">Utility maps</h2>
+<section id="the-expected-utility-maps-1" class="level2">
+<h2 class="anchored" data-anchor-id="the-expected-utility-maps-1">The expected utility maps</h2>
 <p>We can also determine more detailed graph presenting relationship between the expected utility and design variables:</p>
 <div class="cell" data-hash="index_cache/html/casestudy2-preparedata_2dc871f2b92136c30ee7abda44ce8436">
 <details>
@@ -8629,7 +8629,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-1242"><a href="#cb132-1242" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span>  </span>
 <span id="cb132-1243"><a href="#cb132-1243" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"N"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F8766D"</span>, <span class="st">"#619CFF"</span>, <span class="st">"black"</span>))<span class="sc">+</span> </span>
 <span id="cb132-1244"><a href="#cb132-1244" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ylab</span>(<span class="st">' '</span>) <span class="sc">+</span></span>
-<span id="cb132-1245"><a href="#cb132-1245" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"Column effects on logkw (clogkw)"</span>)</span>
+<span id="cb132-1245"><a href="#cb132-1245" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"clogkw"</span>)</span>
 <span id="cb132-1246"><a href="#cb132-1246" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-1247"><a href="#cb132-1247" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb132-1248"><a href="#cb132-1248" aria-hidden="true" tabindex="-1"></a></span>
@@ -8754,14 +8754,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-1367"><a href="#cb132-1367" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span>  </span>
 <span id="cb132-1368"><a href="#cb132-1368" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"N"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F8766D"</span>, <span class="st">"#619CFF"</span>, <span class="st">"black"</span>))<span class="sc">+</span> </span>
 <span id="cb132-1369"><a href="#cb132-1369" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">' '</span>)<span class="sc">+</span></span>
-<span id="cb132-1370"><a href="#cb132-1370" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Column effects on S1m (cS1m)"</span>)</span>
+<span id="cb132-1370"><a href="#cb132-1370" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"cS1m"</span>)</span>
 <span id="cb132-1371"><a href="#cb132-1371" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-1372"><a href="#cb132-1372" aria-hidden="true" tabindex="-1"></a>p2_2<span class="ot">&lt;-</span><span class="fu">bind_rows</span>(ACN_Neutral_results,ACN_Acids_results, ACN_Basic_results) <span class="sc">%&gt;%</span></span>
 <span id="cb132-1373"><a href="#cb132-1373" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> ColumnNames, <span class="at">x =</span> S1Hat, <span class="at">xmin =</span> .lower, <span class="at">xmax =</span> .upper,<span class="at">color =</span> Type)) <span class="sc">+</span></span>
 <span id="cb132-1374"><a href="#cb132-1374" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span>  </span>
 <span id="cb132-1375"><a href="#cb132-1375" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"N"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F8766D"</span>, <span class="st">"#619CFF"</span>, <span class="st">"black"</span>))<span class="sc">+</span> </span>
 <span id="cb132-1376"><a href="#cb132-1376" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">' '</span>)<span class="sc">+</span></span>
-<span id="cb132-1377"><a href="#cb132-1377" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Column effects on dS1 (cdS1)"</span>)</span>
+<span id="cb132-1377"><a href="#cb132-1377" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"cdS1"</span>)</span>
 <span id="cb132-1378"><a href="#cb132-1378" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-1379"><a href="#cb132-1379" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb132-1380"><a href="#cb132-1380" aria-hidden="true" tabindex="-1"></a></span>
@@ -8808,7 +8808,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-1421"><a href="#cb132-1421" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span> </span>
 <span id="cb132-1422"><a href="#cb132-1422" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"clogkw"</span>, <span class="st">"cS1"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"gray"</span>))<span class="sc">+</span></span>
 <span id="cb132-1423"><a href="#cb132-1423" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">' '</span>)<span class="sc">+</span></span>
-<span id="cb132-1424"><a href="#cb132-1424" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Column effects on \u03b2 (c\u03b2)"</span>)</span>
+<span id="cb132-1424"><a href="#cb132-1424" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"c\u03b2"</span>)</span>
 <span id="cb132-1425"><a href="#cb132-1425" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb132-1426"><a href="#cb132-1426" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-1427"><a href="#cb132-1427" aria-hidden="true" tabindex="-1"></a><span class="in">```{r figcpH}</span></span>
@@ -8854,7 +8854,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-1467"><a href="#cb132-1467" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span>  </span>
 <span id="cb132-1468"><a href="#cb132-1468" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F8766D"</span>, <span class="st">"#619CFF"</span>))<span class="sc">+</span></span>
 <span id="cb132-1469"><a href="#cb132-1469" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">' '</span>)<span class="sc">+</span></span>
-<span id="cb132-1470"><a href="#cb132-1470" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"Column effects on apH (capH)"</span>)</span>
+<span id="cb132-1470"><a href="#cb132-1470" aria-hidden="true" tabindex="-1"></a>   <span class="fu">xlab</span>(<span class="st">"capH"</span>)</span>
 <span id="cb132-1471"><a href="#cb132-1471" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-1472"><a href="#cb132-1472" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb132-1473"><a href="#cb132-1473" aria-hidden="true" tabindex="-1"></a></span>
@@ -8881,7 +8881,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-1494"><a href="#cb132-1494" aria-hidden="true" tabindex="-1"></a>   tidybayes<span class="sc">::</span><span class="fu">geom_pointinterval</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">3</span>)) <span class="sc">+</span> </span>
 <span id="cb132-1495"><a href="#cb132-1495" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"clogkw"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"black"</span>))<span class="sc">+</span></span>
 <span id="cb132-1496"><a href="#cb132-1496" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">' '</span>)<span class="sc">+</span></span>
-<span id="cb132-1497"><a href="#cb132-1497" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Column effects on dlogkT (cdlogkT)"</span>)</span>
+<span id="cb132-1497"><a href="#cb132-1497" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"cdlogkT"</span>)</span>
 <span id="cb132-1498"><a href="#cb132-1498" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-1499"><a href="#cb132-1499" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb132-1500"><a href="#cb132-1500" aria-hidden="true" tabindex="-1"></a></span>
@@ -11043,7 +11043,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-3656"><a href="#cb132-3656" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-3657"><a href="#cb132-3657" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb132-3658"><a href="#cb132-3658" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-3659"><a href="#cb132-3659" aria-hidden="true" tabindex="-1"></a><span class="fu">## Utility maps</span></span>
+<span id="cb132-3659"><a href="#cb132-3659" aria-hidden="true" tabindex="-1"></a><span class="fu">## The expected utility maps</span></span>
 <span id="cb132-3660"><a href="#cb132-3660" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-3661"><a href="#cb132-3661" aria-hidden="true" tabindex="-1"></a>For that purpose, we will use decision theory. We start by specifying a notion of utility to each outcome (uncertainty chromatogram). The Bayesian-based optimal decision is the one that maximizes expected utility. Our utility function is calcualted based on the lowest retention time across analytes ($\small mintr$), the highest retention time across analytes $\small maxtr$, and the difference in retention times between the critical pair of analytes ($\small res$). This utility is zero if at least one of the analytes has retention higher than 40, less than 2 min, or the difference in retention times is less than 2. Otherwise, it favors shorter runs. (.) denotes design variables.</span>
 <span id="cb132-3662"><a href="#cb132-3662" aria-hidden="true" tabindex="-1"></a></span>
@@ -11638,7 +11638,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb132-4251"><a href="#cb132-4251" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-4252"><a href="#cb132-4252" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb132-4253"><a href="#cb132-4253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-4254"><a href="#cb132-4254" aria-hidden="true" tabindex="-1"></a><span class="fu">## Utility maps</span></span>
+<span id="cb132-4254"><a href="#cb132-4254" aria-hidden="true" tabindex="-1"></a><span class="fu">## The expected utility maps</span></span>
 <span id="cb132-4255"><a href="#cb132-4255" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb132-4256"><a href="#cb132-4256" aria-hidden="true" tabindex="-1"></a>We can also determine more detailed graph presenting relationship between the expected utility and design variables:</span>
 <span id="cb132-4257"><a href="#cb132-4257" aria-hidden="true" tabindex="-1"></a></span>

@@ -1242,7 +1242,7 @@ p1<-bind_rows(Neutral_results, Acids_results, Basic_results) %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
    ylab(' ') +
-   xlab("Column effects on logkw (clogkw)")
+   xlab("clogkw")
 
 ```
 
@@ -1367,14 +1367,14 @@ p2_1<-bind_rows(MeOH_Neutral_results, MeOH_Acids_results, MeOH_Basic_results) %>
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
   ylab(' ')+
-  xlab("Column effects on S1m (cS1m)")
+  xlab("cS1m")
 
 p2_2<-bind_rows(ACN_Neutral_results,ACN_Acids_results, ACN_Basic_results) %>%
   ggplot(aes(y = ColumnNames, x = S1Hat, xmin = .lower, xmax = .upper,color = Type)) +
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B", "N"), values = c("#F8766D", "#619CFF", "black"))+ 
   ylab(' ')+
-  xlab("Column effects on dS1 (cdS1)")
+  xlab("cdS1")
 
 ```
 
@@ -1421,7 +1421,7 @@ p3<-bind_rows(logkw_results, S1_results) %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) + 
   scale_color_manual(labels = c("clogkw", "cS1"), values = c("black", "gray"))+
   ylab(' ')+
-  xlab("Column effects on \u03b2 (c\u03b2)")
+  xlab("c\u03b2")
 ```
 
 ```{r figcpH}
@@ -1467,7 +1467,7 @@ p4<-bind_rows(Acids_results, Bases_results) %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) +  
   scale_color_manual(labels = c("A", "B"), values = c("#F8766D", "#619CFF"))+
   ylab(' ')+
-   xlab("Column effects on apH (capH)")
+   xlab("capH")
 
 ```
 
@@ -1494,7 +1494,7 @@ p5<-Results %>%
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) + 
   scale_color_manual(labels = c("clogkw"), values = c("black"))+
   ylab(' ')+
-  xlab("Column effects on dlogkT (cdlogkT)")
+  xlab("cdlogkT")
 
 ```
 
