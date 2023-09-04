@@ -591,7 +591,21 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 {{< pagebreak >}}
 ![](../figures/casestudy2/concordanceplots/Tolbutamide.pdf)
 {{< pagebreak >}}
-# Figure S7. Individual izocratic predictions.
+
+# Figure S7. Uncertainty chromatograms.
+
+Uncertainty chromatograms displaying the predictions for 6 selected analytes using individual, population and limited data predictions. Each peak represents the range of analyte retention factors compatible with prior and preliminary data. The chromatographic conditions are pHo=8.9, ACN, 25oC, tg = 90 min.
+
+![](../figures/concordanceplots/uncertainitychromatogram.individual.pdf)
+{{< pagebreak >}}
+![](../figures/concordanceplots/uncertainitychromatogram.population.pdf)
+
+{{< pagebreak >}}
+![](../figures/casestudy2/concordanceplots/chromatogram.pdf)
+
+
+{{< pagebreak >}}
+# Figure S8. Individual izocratic predictions.
 
 Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Predictions corresponding to future observations given the population-level parameters and all the retention data measured for a particular analyte.
 
@@ -613,7 +627,7 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 ![](../figures/izoparam/isopred/Tolbutamide.individual.pdf)
 
 {{< pagebreak >}}
-# Figure S8. Population isocratic predictions.
+# Figure S9. Population isocratic predictions.
 
 Predictions represented as posterior median (line) and 5th-95th percentiles (areas) for a 6 exemplary analytes. Predictions corresponding to future observations given only population-level parameters and predictors (logP and pKa).
 
@@ -636,7 +650,7 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 
 {{< pagebreak >}}
 
-# Figure S9. The expected utility maps based on individual predictions
+# Figure S10. The expected utility maps based on individual predictions
 
 Utility map for each column:
 
@@ -656,7 +670,7 @@ Utility map for each column:
 
 {{< pagebreak >}}
 
-# Figure S10. The expected utility maps based on limited data predictions
+# Figure S11. The expected utility maps based on limited data predictions
 
 Utility map for each column:
 

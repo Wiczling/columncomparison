@@ -3849,6 +3849,7 @@ Uresults$pHo <-round(Uresults$pHo,1)
  Uresults5<-Uresults5[which(Uresults5$EUtility==max(Uresults5$EUtility)),]
 
 kable(rbind(Uresults1,Uresults2,Uresults3,Uresults4,Uresults5)[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
+
 ```
 
 The highest utility can be expected for Xterra MS C8. 
