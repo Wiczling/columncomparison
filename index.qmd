@@ -4252,6 +4252,268 @@ ggsave(paste0("figures\\casestudy2\\concordanceplots\\",  "chromatogram-manuscri
 
 ```
 
+
+### Isocratic predictions
+
+To better asses the impact of parameters on retention we created graphs presenting the isocratic logarithm of retention factor vs. $\varphi$ for selected analytes. Separate graphs are shown for each dissociation form (r=1,r=2,r=3). Here the limited data predictions are shown:
+
+```{r izo-pred-limited}
+analyte_ID_sample <-c(9,17,33,58,140,180)
+
+for(i in 1:length(analyte_ID_sample)){
+
+idx_analyte = which(unique(data$METID)==analyte_ID_sample[i])
+draws_df_subset <- fit_red$draws(format = "df", variable = c(
+                sprintf("logkwx[%s,1,1]",idx_analyte), 
+                sprintf("logkwx[%s,1,2]",idx_analyte), 
+                sprintf("logkwx[%s,1,3]",idx_analyte),
+                sprintf("logkwx[%s,2,1]",idx_analyte), 
+                sprintf("logkwx[%s,2,2]",idx_analyte),
+                sprintf("logkwx[%s,2,3]",idx_analyte),
+                sprintf("logkwx[%s,3,1]",idx_analyte), 
+                sprintf("logkwx[%s,3,2]",idx_analyte),
+                sprintf("logkwx[%s,3,3]",idx_analyte),
+                sprintf("logkwx[%s,4,1]",idx_analyte), 
+                sprintf("logkwx[%s,4,2]",idx_analyte),
+                sprintf("logkwx[%s,4,3]",idx_analyte),
+                sprintf("logkwx[%s,5,1]",idx_analyte), 
+                sprintf("logkwx[%s,5,2]",idx_analyte),
+                sprintf("logkwx[%s,5,3]",idx_analyte),
+                sprintf("S1x[%s,1,1,1]",idx_analyte), 
+                sprintf("S1x[%s,1,1,2]",idx_analyte), 
+                sprintf("S1x[%s,1,1,3]",idx_analyte),
+                sprintf("S1x[%s,2,1,1]",idx_analyte), 
+                sprintf("S1x[%s,2,1,2]",idx_analyte), 
+                sprintf("S1x[%s,2,1,3]",idx_analyte),
+                sprintf("S1x[%s,1,2,1]",idx_analyte), 
+                sprintf("S1x[%s,1,2,2]",idx_analyte), 
+                sprintf("S1x[%s,1,2,3]",idx_analyte), 
+                sprintf("S1x[%s,2,2,1]",idx_analyte), 
+                sprintf("S1x[%s,2,2,2]",idx_analyte), 
+                sprintf("S1x[%s,2,2,3]",idx_analyte),
+                sprintf("S1x[%s,1,3,1]",idx_analyte), 
+                sprintf("S1x[%s,1,3,2]",idx_analyte), 
+                sprintf("S1x[%s,1,3,3]",idx_analyte), 
+                sprintf("S1x[%s,2,3,1]",idx_analyte), 
+                sprintf("S1x[%s,2,3,2]",idx_analyte), 
+                sprintf("S1x[%s,2,3,3]",idx_analyte),
+                sprintf("S1x[%s,1,4,1]",idx_analyte), 
+                sprintf("S1x[%s,1,4,2]",idx_analyte), 
+                sprintf("S1x[%s,1,4,3]",idx_analyte), 
+                sprintf("S1x[%s,2,4,1]",idx_analyte), 
+                sprintf("S1x[%s,2,4,2]",idx_analyte), 
+                sprintf("S1x[%s,2,4,3]",idx_analyte),
+                sprintf("S1x[%s,1,5,1]",idx_analyte), 
+                sprintf("S1x[%s,1,5,2]",idx_analyte), 
+                sprintf("S1x[%s,1,5,3]",idx_analyte), 
+                sprintf("S1x[%s,2,5,1]",idx_analyte), 
+                sprintf("S1x[%s,2,5,2]",idx_analyte), 
+                sprintf("S1x[%s,2,5,3]",idx_analyte),
+                "S2x[1,1]", 
+                "S2x[2,1]"))
+
+p <-draws_df_subset %>%
+  slice_sample(n=1000) %>%
+  tidybayes::spread_draws(logkwx[, c, r], S1x[, m, c, r], S2x[m, ]) %>%
+  filter(r<=R[idx_analyte]+1)  %>% 
+  tidyr::expand_grid(fi = seq(0,1,0.1)) %>%
+  mutate(logk = logkwx-S1x*(1+S2x)*fi/(1+S2x*fi)) %>%
+  ggplot(aes(x = fi, y = logk, color = as.factor(c), fill = as.factor(c))) +
+  ggdist::stat_lineribbon(.width = c(.90), alpha = 1/2) +
+  facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))+
+  labs(title=paste(dataNames$Name[analyte_ID_sample[i]]),color= " ",fill= " ", x="\u03C6", y="logk")+
+  scale_fill_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")) +
+  scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
+  geom_hline(yintercept= c(0,1), linetype="dashed",color="gray")  + 
+  coord_cartesian(xlim=c(0,1),ylim=c(-1,2))
+
+print(p)
+
+ggsave(paste0("figures\\casestudy2\\izoparam\\isopred\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\izoparam\\isopred\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
+}
+
+# AGG as the graphic backend of RStudio. (Tools -> Global Options -> General -> Graphics)
+# https://github.com/tidyverse/ggplot2/issues/4661
+# otherwise coord_cartesian does not work
+```
+
+Similarly we can quantify the column effects (between column differences in logk using XBridge Shield RP18 as a reference column):
+
+```{r izo-diff-limited}
+analyte_ID_sample <-c(9,17,33,58,140,180)
+
+
+for(i in 1:length(analyte_ID_sample)){
+
+idx_analyte = which(unique(data$METID)==analyte_ID_sample[i])
+draws_df_subset <- fit_red$draws(format = "df", variable = c(
+                sprintf("logkwx[%s,1,1]",idx_analyte), 
+                sprintf("logkwx[%s,1,2]",idx_analyte), 
+                sprintf("logkwx[%s,1,3]",idx_analyte),
+                sprintf("logkwx[%s,2,1]",idx_analyte), 
+                sprintf("logkwx[%s,2,2]",idx_analyte),
+                sprintf("logkwx[%s,2,3]",idx_analyte),
+                sprintf("logkwx[%s,3,1]",idx_analyte), 
+                sprintf("logkwx[%s,3,2]",idx_analyte),
+                sprintf("logkwx[%s,3,3]",idx_analyte),
+                sprintf("logkwx[%s,4,1]",idx_analyte), 
+                sprintf("logkwx[%s,4,2]",idx_analyte),
+                sprintf("logkwx[%s,4,3]",idx_analyte),
+                sprintf("logkwx[%s,5,1]",idx_analyte), 
+                sprintf("logkwx[%s,5,2]",idx_analyte),
+                sprintf("logkwx[%s,5,3]",idx_analyte),
+                sprintf("S1x[%s,1,1,1]",idx_analyte), 
+                sprintf("S1x[%s,1,1,2]",idx_analyte), 
+                sprintf("S1x[%s,1,1,3]",idx_analyte),
+                sprintf("S1x[%s,2,1,1]",idx_analyte), 
+                sprintf("S1x[%s,2,1,2]",idx_analyte), 
+                sprintf("S1x[%s,2,1,3]",idx_analyte),
+                sprintf("S1x[%s,1,2,1]",idx_analyte), 
+                sprintf("S1x[%s,1,2,2]",idx_analyte), 
+                sprintf("S1x[%s,1,2,3]",idx_analyte), 
+                sprintf("S1x[%s,2,2,1]",idx_analyte), 
+                sprintf("S1x[%s,2,2,2]",idx_analyte), 
+                sprintf("S1x[%s,2,2,3]",idx_analyte),
+                sprintf("S1x[%s,1,3,1]",idx_analyte), 
+                sprintf("S1x[%s,1,3,2]",idx_analyte), 
+                sprintf("S1x[%s,1,3,3]",idx_analyte), 
+                sprintf("S1x[%s,2,3,1]",idx_analyte), 
+                sprintf("S1x[%s,2,3,2]",idx_analyte), 
+                sprintf("S1x[%s,2,3,3]",idx_analyte),
+                sprintf("S1x[%s,1,4,1]",idx_analyte), 
+                sprintf("S1x[%s,1,4,2]",idx_analyte), 
+                sprintf("S1x[%s,1,4,3]",idx_analyte), 
+                sprintf("S1x[%s,2,4,1]",idx_analyte), 
+                sprintf("S1x[%s,2,4,2]",idx_analyte), 
+                sprintf("S1x[%s,2,4,3]",idx_analyte),
+                sprintf("S1x[%s,1,5,1]",idx_analyte), 
+                sprintf("S1x[%s,1,5,2]",idx_analyte), 
+                sprintf("S1x[%s,1,5,3]",idx_analyte), 
+                sprintf("S1x[%s,2,5,1]",idx_analyte), 
+                sprintf("S1x[%s,2,5,2]",idx_analyte), 
+                sprintf("S1x[%s,2,5,3]",idx_analyte),
+                "S2x[1,1]", 
+                "S2x[2,1]"))
+
+p<-draws_df_subset %>%
+  slice_sample(n=1000) %>%
+  tidybayes::spread_draws(logkwx[, c, r], S1x[, m, c, r], S2x[m, ]) %>%
+  filter(r<=R[idx_analyte]+1) %>% 
+  tidyr::expand_grid(fi = seq(0,1,0.05)) %>%
+  mutate(k = (logkwx-S1x*(1+S2x)*fi/(1+S2x*fi))) %>%
+  select(.draw,c,r,m,k,fi) %>%
+  tidyr::pivot_wider(names_from = c, values_from = k) %>%
+  mutate(cdk2 = `2`-`1` ) %>%
+  mutate(cdk3 = `3`-`1` ) %>%
+  mutate(cdk4 = `4`-`1` ) %>%
+  mutate(cdk5 = `5`-`1` ) %>%
+  tidyr::pivot_longer(cdk2:cdk5,names_to = "names_cdk", values_to = "cdk")%>%
+   ggplot(aes(x = fi, y = cdk, color = as.factor(names_cdk), fill = as.factor(names_cdk))) +
+   ggdist::stat_lineribbon(.width = c(.90), alpha = 1/2)+
+   facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))+
+   labs(y = "Between column difference in logk", title=paste(dataNames$Name[analyte_ID_sample[i]]),color= " ",fill= " ", x="\u03C6")+
+  scale_fill_discrete(labels= c("XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")) +
+  scale_color_discrete(labels= c("XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
+   geom_hline(yintercept= c(0), linetype="dashed",color="gray") + 
+  coord_cartesian(xlim=c(0,1),ylim=c(-1,1))
+
+ print(p)
+ 
+ ggsave(paste0("figures\\casestudy2\\izoparam\\diff\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\casestudy2\\izoparam\\diff\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
+
+
+}
+
+```
+
+or predict the organic modifier content leading to logk of 1:
+
+```{r izo-logk1-limited}
+analyte_ID_sample <-c(9,17,33,58,140,180)
+
+
+for(i in 1:length(analyte_ID_sample)){
+
+idx_analyte = which(unique(data$METID)==analyte_ID_sample[i])
+draws_df_subset <- fit_red$draws(format = "df", variable = c(
+                sprintf("logkwx[%s,1,1]",idx_analyte), 
+                sprintf("logkwx[%s,1,2]",idx_analyte), 
+                sprintf("logkwx[%s,1,3]",idx_analyte),
+                sprintf("logkwx[%s,2,1]",idx_analyte), 
+                sprintf("logkwx[%s,2,2]",idx_analyte),
+                sprintf("logkwx[%s,2,3]",idx_analyte),
+                sprintf("logkwx[%s,3,1]",idx_analyte), 
+                sprintf("logkwx[%s,3,2]",idx_analyte),
+                sprintf("logkwx[%s,3,3]",idx_analyte),
+                sprintf("logkwx[%s,4,1]",idx_analyte), 
+                sprintf("logkwx[%s,4,2]",idx_analyte),
+                sprintf("logkwx[%s,4,3]",idx_analyte),
+                sprintf("logkwx[%s,5,1]",idx_analyte), 
+                sprintf("logkwx[%s,5,2]",idx_analyte),
+                sprintf("logkwx[%s,5,3]",idx_analyte),
+                sprintf("S1x[%s,1,1,1]",idx_analyte), 
+                sprintf("S1x[%s,1,1,2]",idx_analyte), 
+                sprintf("S1x[%s,1,1,3]",idx_analyte),
+                sprintf("S1x[%s,2,1,1]",idx_analyte), 
+                sprintf("S1x[%s,2,1,2]",idx_analyte), 
+                sprintf("S1x[%s,2,1,3]",idx_analyte),
+                sprintf("S1x[%s,1,2,1]",idx_analyte), 
+                sprintf("S1x[%s,1,2,2]",idx_analyte), 
+                sprintf("S1x[%s,1,2,3]",idx_analyte), 
+                sprintf("S1x[%s,2,2,1]",idx_analyte), 
+                sprintf("S1x[%s,2,2,2]",idx_analyte), 
+                sprintf("S1x[%s,2,2,3]",idx_analyte),
+                sprintf("S1x[%s,1,3,1]",idx_analyte), 
+                sprintf("S1x[%s,1,3,2]",idx_analyte), 
+                sprintf("S1x[%s,1,3,3]",idx_analyte), 
+                sprintf("S1x[%s,2,3,1]",idx_analyte), 
+                sprintf("S1x[%s,2,3,2]",idx_analyte), 
+                sprintf("S1x[%s,2,3,3]",idx_analyte),
+                sprintf("S1x[%s,1,4,1]",idx_analyte), 
+                sprintf("S1x[%s,1,4,2]",idx_analyte), 
+                sprintf("S1x[%s,1,4,3]",idx_analyte), 
+                sprintf("S1x[%s,2,4,1]",idx_analyte), 
+                sprintf("S1x[%s,2,4,2]",idx_analyte), 
+                sprintf("S1x[%s,2,4,3]",idx_analyte),
+                sprintf("S1x[%s,1,5,1]",idx_analyte), 
+                sprintf("S1x[%s,1,5,2]",idx_analyte), 
+                sprintf("S1x[%s,1,5,3]",idx_analyte), 
+                sprintf("S1x[%s,2,5,1]",idx_analyte), 
+                sprintf("S1x[%s,2,5,2]",idx_analyte), 
+                sprintf("S1x[%s,2,5,3]",idx_analyte),
+                "S2x[1,1]", 
+                "S2x[2,1]"))
+
+p<-draws_df_subset %>%
+  slice_sample(n=1000) %>%
+  tidybayes::spread_draws(logkwx[, c, r], S1x[, m, c, r], S2x[m, ]) %>%
+  filter(r<=R[idx_analyte]+1)  %>% 
+  mutate(foo = (logkwx-1)/S1x/(1+S2x)) %>%
+  mutate(fix = foo/(1-S2x*foo)) %>%
+  ggplot(aes(x = fix, color = as.factor(c), fill = as.factor(c))) +
+  geom_density(alpha = 1/2) +
+  #coord_cartesian(xlim=c(0,1))+
+  facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))+
+  labs(title=paste(dataNames$Name[analyte_ID_sample[i]]),
+       color= " ",
+       fill= " ",
+       x = "\u03C6 leading to logk=1")+
+  scale_fill_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")) +
+  scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
+  facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))
+
+print(p)
+
+ ggsave(paste0("figures\\casestudy2\\izoparam\\filogk1\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".png"), plot=p, width = 20, height = 20, units = "cm")
+  ggsave(paste0("figures\\casestudy2\\izoparam\\filogk1\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+}
+```
+
+
 ## The expected utility maps
 
 We can also determine more detailed graph presenting relationship between the expected utility and design variables:
