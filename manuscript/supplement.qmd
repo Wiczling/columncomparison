@@ -2,7 +2,13 @@
 title: |
   | Supporting Information for:
   | Comparison of chromatographic stationary phases using Bayesian-based multilevel modeling
-author: "Paweł Wiczling, Agnieszka Kamedulska"
+author:
+  - name: Paweł Wiczling*
+  - name: Agnieszka Kamedulska
+  - name: Łukasz Kubik
+  - name: Julia Jacyna
+  - name: Wiktoria Struck-Lewicka
+  - name: Michał J. Markuszewski
 adress: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
 date: "`r format(Sys.Date())`"
 format:
