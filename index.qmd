@@ -1493,6 +1493,7 @@ p5<-Results %>%
   ggplot(aes(y = ColumnNames, x = dlogkTHat, xmin = .lower, xmax = .upper,color = Parameter)) +
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) + 
   scale_color_manual(labels = c("clogkw"), values = c("black"))+
+  xlim(-0.03,0.01)+
   ylab(' ')+
   xlab("cdlogkT")
 
@@ -1514,7 +1515,7 @@ ggsave(paste0("figures\\param\\", "column-effects-all", ".pdf"), plot=p, width =
 
 ggsave(paste0("figures\\param\\", "column-effects-all-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.55))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 ```
 
 Below we combine separate plot into the one graphic to characterizing parameters characterizing particular columns:
@@ -1936,7 +1937,7 @@ ggsave(paste0("figures\\param\\", "column-parameters-all", ".pdf"), plot=p, widt
 
 ggsave(paste0("figures\\param\\", "column-parameters-all-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.55))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
 ```
 
@@ -2047,14 +2048,14 @@ p3<-ggplot(comegaT_results,aes(y = as.factor(ColumnNames), x = param, xmin = .lo
   scale_x_continuous(limits =c(0,0.02), breaks=c(0,0.01,0.02))
 
 p=grid.arrange(p1, p3, p2, 
-               widths = c(0.3,0.7), layout_matrix = rbind(c(1, 1),c(2, 3)))
+               widths = c(0.4,0.6), layout_matrix = rbind(c(1, 1),c(2, 3)))
 
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".png"), plot=p, width = 20, height = 15, units = "cm")
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".pdf"), plot=p, width = 20, height = 15, units = "cm")
 
 ggsave(paste0("figures\\param\\", "sd-column-effects-all-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 6.34365, units = "cm", res = 300, scaling=0.55))
+       device = ragg::agg_png(width = 8.4582, height = 6.34365*1.25, units = "cm", res = 300, scaling=0.6))
 
 ```
 
@@ -3113,7 +3114,7 @@ print(p3)
 
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined-manuscript", ".png"),
        p3,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.522))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
 
 ```
@@ -3406,16 +3407,6 @@ logP.labs <- c("logP=0","logP=3","logP=6")
 names(logP.labs) <- c(1,3,5)
 mydata <- list()
 
-savetheme <- theme(
-        legend.position="bottom",
-        legend.box = "vertical",
-        axis.text=element_text(size=10),
-        axis.text.x = element_text(size = 8),
-        axis.text.y = element_text(size = 8),
-        legend.text = element_text(size=10),
-        strip.text.x = element_text(size = 10),
-        strip.text.y = element_text(size = 10))
-
 for(i in 1:3){
 
 idx_analyte =c(1,3,5)[i]
@@ -3503,8 +3494,8 @@ ggsave(paste0("figures\\logPeffects\\logPjoined", ".pdf"), plot=p, width = 20, h
 print(p)
 
 ggsave(paste0("figures\\logPeffects\\logPjoined-manuscript", ".png"),
-       p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.55))
+       p + guides(color=guide_legend(nrow=2, byrow=TRUE)),
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
 # for toc
 toc<-draws_df_subset %>%
@@ -3915,7 +3906,7 @@ print(p)
 
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.522))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
 ```
 
@@ -4248,7 +4239,7 @@ print(p)
 
 ggsave(paste0("figures\\casestudy2\\concordanceplots\\",  "chromatogram-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.522))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
 ```
 
@@ -4755,7 +4746,7 @@ print(p)
 
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.522))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 ```
 
 # Conclusions
