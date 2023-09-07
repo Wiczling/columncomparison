@@ -1493,6 +1493,7 @@ p5<-Results %>%
   ggplot(aes(y = ColumnNames, x = dlogkTHat, xmin = .lower, xmax = .upper,color = Parameter)) +
    tidybayes::geom_pointinterval(position = position_dodge(width = .3)) + 
   scale_color_manual(labels = c("clogkw"), values = c("black"))+
+  xlim(-0.03,0.01)+
   ylab(' ')+
   xlab("cdlogkT")
 
@@ -1514,7 +1515,7 @@ ggsave(paste0("figures\\param\\", "column-effects-all", ".pdf"), plot=p, width =
 
 ggsave(paste0("figures\\param\\", "column-effects-all-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.55))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 ```
 
 Below we combine separate plot into the one graphic to characterizing parameters characterizing particular columns:
@@ -1936,7 +1937,7 @@ ggsave(paste0("figures\\param\\", "column-parameters-all", ".pdf"), plot=p, widt
 
 ggsave(paste0("figures\\param\\", "column-parameters-all-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.55))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
 ```
 
@@ -2047,14 +2048,14 @@ p3<-ggplot(comegaT_results,aes(y = as.factor(ColumnNames), x = param, xmin = .lo
   scale_x_continuous(limits =c(0,0.02), breaks=c(0,0.01,0.02))
 
 p=grid.arrange(p1, p3, p2, 
-               widths = c(0.3,0.7), layout_matrix = rbind(c(1, 1),c(2, 3)))
+               widths = c(0.4,0.6), layout_matrix = rbind(c(1, 1),c(2, 3)))
 
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".png"), plot=p, width = 20, height = 15, units = "cm")
 ggsave(paste0("figures\\param\\", "sd-column-effects-all", ".pdf"), plot=p, width = 20, height = 15, units = "cm")
 
 ggsave(paste0("figures\\param\\", "sd-column-effects-all-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 6.34365, units = "cm", res = 300, scaling=0.55))
+       device = ragg::agg_png(width = 8.4582, height = 6.34365*1.25, units = "cm", res = 300, scaling=0.6))
 
 ```
 
@@ -3113,7 +3114,7 @@ print(p3)
 
 ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined-manuscript", ".png"),
        p3,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.522))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
 
 ```
@@ -3406,16 +3407,6 @@ logP.labs <- c("logP=0","logP=3","logP=6")
 names(logP.labs) <- c(1,3,5)
 mydata <- list()
 
-savetheme <- theme(
-        legend.position="bottom",
-        legend.box = "vertical",
-        axis.text=element_text(size=10),
-        axis.text.x = element_text(size = 8),
-        axis.text.y = element_text(size = 8),
-        legend.text = element_text(size=10),
-        strip.text.x = element_text(size = 10),
-        strip.text.y = element_text(size = 10))
-
 for(i in 1:3){
 
 idx_analyte =c(1,3,5)[i]
@@ -3503,8 +3494,8 @@ ggsave(paste0("figures\\logPeffects\\logPjoined", ".pdf"), plot=p, width = 20, h
 print(p)
 
 ggsave(paste0("figures\\logPeffects\\logPjoined-manuscript", ".png"),
-       p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.55))
+       p + guides(color=guide_legend(nrow=2, byrow=TRUE)),
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
 # for toc
 toc<-draws_df_subset %>%
@@ -3677,10 +3668,13 @@ upH <- datasim %>%
   select(1:20) %>%
   distinct(Temp,Mod, pHo, alpha1, alpha2) %>%
   group_by(Temp,Mod) %>%
-  tidyr::complete(pHo = seq(min(pHo), max(pHo), len = 17)) %>%
+  tidyr::complete(pHo = seq(2.5, 10.5, by = 0.2)) %>%
+  mutate(added_pH = ifelse(is.na(alpha1), 1, 0)) %>%
   arrange(Temp,Mod,pHo) %>%
-  mutate(alpha1 = zoo::na.approx(alpha1,pHo)) %>%
-  mutate(alpha2 = zoo::na.approx(alpha2,pHo)) %>%
+  mutate(alpha1 = zoo::na.approx(alpha1,pHo, rule=2))%>%
+  mutate(alpha2 = zoo::na.approx(alpha2,pHo, rule=2))%>%
+  filter(added_pH==1)%>%
+  select(-added_pH)%>%
   group_by(Temp,Mod) %>%
   mutate(pHid = row_number()) %>%
   group_by(pHid)  %>%
@@ -3692,7 +3686,7 @@ datasim2 <- datasim %>%
   filter(tg==30, Temp==25) %>%
   select(-tg, -fio, -expid, -pHs, -pHo, -alpha1, -alpha2, -pH) %>%
   distinct() %>%
- tidyr::expand_grid(fio = seq(0.05,0.2,0.05),tg = seq(20,260,20), pHs=unique(upH$pHs))%>%
+ tidyr::expand_grid(fio = seq(0.05,0.15,0.02),tg = seq(20,200,20), pHs=unique(upH$pHs))%>%
   left_join(upH, by = join_by(pHs, Mod, Temp), relationship = "many-to-one") %>%
   group_by(tg, fio, Mod, Column, pHs) %>%
   mutate(expid = cur_group_id()) %>%
@@ -3740,7 +3734,7 @@ fit_sim_red1  <- model_sim_red$generate_quantities(fit_red1,
 
 ```{r casestudy1-loaddata}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308241032-1-261ea0.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202309071008-1-8e9f77.csv'
                                 ))
 
 draws_sim_red_df <- as_draws_df(x$generated_quantities)
@@ -3751,33 +3745,21 @@ The results are presented as a utility map for each of the column. The maximum i
 
 ```{r casestudy1-utylitymaps-alldata}
 Uresults<-datasim_red[!duplicated(datasim_red$expid),]
-x<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mindifftr", names(draws_sim_red_df), value = TRUE))]
-y<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^maxtr", names(draws_sim_red_df), value = TRUE))]
-z<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mintr", names(draws_sim_red_df), value = TRUE))]
 
-u=x;
-
-for (i in 1:ncol(x)){u[,i] <- as.numeric(x[,i]>2 & z[,i] > 2) * (40-y[,i]) * as.numeric(y[,i]<40)}
+u<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^utility", names(draws_sim_red_df), value = TRUE))]
 
 pr <- apply(u, MARGIN = 2, FUN = mean)
 pr<-as.data.frame(pr)
 
 Uresults$EUtility=pr$pr
 
-x <- apply(x, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
+x <- apply(u, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
 x<-as.data.frame(t(x))
 
-Uresults$mindifftr_l=x$`5%`
-Uresults$mindifftr_m=x$`50%`
-Uresults$mindifftr_h=x$`95%`
+Uresults$u_l=x$`5%`
+Uresults$u_m=x$`50%`
+Uresults$u_h=x$`95%`
 
-y <- apply(y, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
-
-y<-as.data.frame(t(y))
-
-Uresults$maxtr_l=y$`5%`
-Uresults$maxtr_m=y$`50%`
-Uresults$maxtr_h=y$`95%`
 
 p11 <- ggplot()+
      geom_contour_filled(data=subset(Uresults,Column==1), aes(x = pHs, y=tg, z = EUtility))+
@@ -3831,7 +3813,7 @@ print(p13)
 print(p14)
 print(p15)
 
-Uresults$pHo <-round(Uresults$pHo,1)
+Uresults$pHo <-round(Uresults$pHo,2)
 
  Uresults1<-Uresults[Uresults$Column==1,];
  Uresults1<-Uresults1[which(Uresults1$EUtility==max(Uresults1$EUtility)),]
@@ -3852,7 +3834,7 @@ kable(rbind(Uresults1,Uresults2,Uresults3,Uresults4,Uresults5)[,c('ColumnName','
 
 ```
 
-The highest utility can be expected for Xterra MS C8. 
+The highest expected utility is for XBridge Phenyl. However the differences between the columns are small.
 
 ### Uncertainity chromatogram
 
@@ -3889,7 +3871,7 @@ wpCond1$Column <- paste0(Uresultsi$ColumnName,
                          ', Temp= ', Uresultsi$Temp, ',', " \n ",
                          ' fio= ', Uresultsi$fio,
                          ', tg= ', Uresultsi$tg,
-                         ', pHo= ', round(Uresultsi$pHo,1))
+                         ', pHo= ', round(Uresultsi$pHo,2))
 wpCond= rbind(wpCond,wpCond1)
 }
 
@@ -3915,7 +3897,7 @@ print(p)
 
 ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.522))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
 ```
 
@@ -4248,8 +4230,269 @@ print(p)
 
 ggsave(paste0("figures\\casestudy2\\concordanceplots\\",  "chromatogram-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.522))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
+```
+
+
+### Isocratic predictions
+
+To better asses the impact of parameters on retention we created graphs presenting the isocratic logarithm of retention factor vs. $\varphi$ for selected analytes. Separate graphs are shown for each dissociation form (r=1,r=2,r=3). Here the limited data predictions are shown:
+
+```{r casestudy2-izo-pred-limited}
+analyte_ID_sample <-c(9,17,33,58,140,180)
+
+for(i in 1:length(analyte_ID_sample)){
+
+idx_analyte = which(unique(data$METID)==analyte_ID_sample[i])
+draws_df_subset <- fit_red$draws(format = "df", variable = c(
+                sprintf("logkwx[%s,1,1]",idx_analyte), 
+                sprintf("logkwx[%s,1,2]",idx_analyte), 
+                sprintf("logkwx[%s,1,3]",idx_analyte),
+                sprintf("logkwx[%s,2,1]",idx_analyte), 
+                sprintf("logkwx[%s,2,2]",idx_analyte),
+                sprintf("logkwx[%s,2,3]",idx_analyte),
+                sprintf("logkwx[%s,3,1]",idx_analyte), 
+                sprintf("logkwx[%s,3,2]",idx_analyte),
+                sprintf("logkwx[%s,3,3]",idx_analyte),
+                sprintf("logkwx[%s,4,1]",idx_analyte), 
+                sprintf("logkwx[%s,4,2]",idx_analyte),
+                sprintf("logkwx[%s,4,3]",idx_analyte),
+                sprintf("logkwx[%s,5,1]",idx_analyte), 
+                sprintf("logkwx[%s,5,2]",idx_analyte),
+                sprintf("logkwx[%s,5,3]",idx_analyte),
+                sprintf("S1x[%s,1,1,1]",idx_analyte), 
+                sprintf("S1x[%s,1,1,2]",idx_analyte), 
+                sprintf("S1x[%s,1,1,3]",idx_analyte),
+                sprintf("S1x[%s,2,1,1]",idx_analyte), 
+                sprintf("S1x[%s,2,1,2]",idx_analyte), 
+                sprintf("S1x[%s,2,1,3]",idx_analyte),
+                sprintf("S1x[%s,1,2,1]",idx_analyte), 
+                sprintf("S1x[%s,1,2,2]",idx_analyte), 
+                sprintf("S1x[%s,1,2,3]",idx_analyte), 
+                sprintf("S1x[%s,2,2,1]",idx_analyte), 
+                sprintf("S1x[%s,2,2,2]",idx_analyte), 
+                sprintf("S1x[%s,2,2,3]",idx_analyte),
+                sprintf("S1x[%s,1,3,1]",idx_analyte), 
+                sprintf("S1x[%s,1,3,2]",idx_analyte), 
+                sprintf("S1x[%s,1,3,3]",idx_analyte), 
+                sprintf("S1x[%s,2,3,1]",idx_analyte), 
+                sprintf("S1x[%s,2,3,2]",idx_analyte), 
+                sprintf("S1x[%s,2,3,3]",idx_analyte),
+                sprintf("S1x[%s,1,4,1]",idx_analyte), 
+                sprintf("S1x[%s,1,4,2]",idx_analyte), 
+                sprintf("S1x[%s,1,4,3]",idx_analyte), 
+                sprintf("S1x[%s,2,4,1]",idx_analyte), 
+                sprintf("S1x[%s,2,4,2]",idx_analyte), 
+                sprintf("S1x[%s,2,4,3]",idx_analyte),
+                sprintf("S1x[%s,1,5,1]",idx_analyte), 
+                sprintf("S1x[%s,1,5,2]",idx_analyte), 
+                sprintf("S1x[%s,1,5,3]",idx_analyte), 
+                sprintf("S1x[%s,2,5,1]",idx_analyte), 
+                sprintf("S1x[%s,2,5,2]",idx_analyte), 
+                sprintf("S1x[%s,2,5,3]",idx_analyte),
+                "S2x[1,1]", 
+                "S2x[2,1]"))
+
+p <-draws_df_subset %>%
+  slice_sample(n=1000) %>%
+  tidybayes::spread_draws(logkwx[, c, r], S1x[, m, c, r], S2x[m, ]) %>%
+  filter(r<=R[idx_analyte]+1)  %>% 
+  tidyr::expand_grid(fi = seq(0,1,0.1)) %>%
+  mutate(logk = logkwx-S1x*(1+S2x)*fi/(1+S2x*fi)) %>%
+  ggplot(aes(x = fi, y = logk, color = as.factor(c), fill = as.factor(c))) +
+  ggdist::stat_lineribbon(.width = c(.90), alpha = 1/2) +
+  facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))+
+  labs(title=paste(dataNames$Name[analyte_ID_sample[i]]),color= " ",fill= " ", x="\u03C6", y="logk")+
+  scale_fill_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")) +
+  scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
+  geom_hline(yintercept= c(0,1), linetype="dashed",color="gray")  + 
+  coord_cartesian(xlim=c(0,1),ylim=c(-1,2))
+
+print(p)
+
+ggsave(paste0("figures\\casestudy2\\izoparam\\isopred\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ggsave(paste0("figures\\casestudy2\\izoparam\\isopred\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
+}
+
+# AGG as the graphic backend of RStudio. (Tools -> Global Options -> General -> Graphics)
+# https://github.com/tidyverse/ggplot2/issues/4661
+# otherwise coord_cartesian does not work
+```
+
+Similarly we can quantify the column effects (between column differences in logk using XBridge Shield RP18 as a reference column):
+
+```{r casestudy2-izo-diff-limited}
+analyte_ID_sample <-c(9,17,33,58,140,180)
+
+
+for(i in 1:length(analyte_ID_sample)){
+
+idx_analyte = which(unique(data$METID)==analyte_ID_sample[i])
+draws_df_subset <- fit_red$draws(format = "df", variable = c(
+                sprintf("logkwx[%s,1,1]",idx_analyte), 
+                sprintf("logkwx[%s,1,2]",idx_analyte), 
+                sprintf("logkwx[%s,1,3]",idx_analyte),
+                sprintf("logkwx[%s,2,1]",idx_analyte), 
+                sprintf("logkwx[%s,2,2]",idx_analyte),
+                sprintf("logkwx[%s,2,3]",idx_analyte),
+                sprintf("logkwx[%s,3,1]",idx_analyte), 
+                sprintf("logkwx[%s,3,2]",idx_analyte),
+                sprintf("logkwx[%s,3,3]",idx_analyte),
+                sprintf("logkwx[%s,4,1]",idx_analyte), 
+                sprintf("logkwx[%s,4,2]",idx_analyte),
+                sprintf("logkwx[%s,4,3]",idx_analyte),
+                sprintf("logkwx[%s,5,1]",idx_analyte), 
+                sprintf("logkwx[%s,5,2]",idx_analyte),
+                sprintf("logkwx[%s,5,3]",idx_analyte),
+                sprintf("S1x[%s,1,1,1]",idx_analyte), 
+                sprintf("S1x[%s,1,1,2]",idx_analyte), 
+                sprintf("S1x[%s,1,1,3]",idx_analyte),
+                sprintf("S1x[%s,2,1,1]",idx_analyte), 
+                sprintf("S1x[%s,2,1,2]",idx_analyte), 
+                sprintf("S1x[%s,2,1,3]",idx_analyte),
+                sprintf("S1x[%s,1,2,1]",idx_analyte), 
+                sprintf("S1x[%s,1,2,2]",idx_analyte), 
+                sprintf("S1x[%s,1,2,3]",idx_analyte), 
+                sprintf("S1x[%s,2,2,1]",idx_analyte), 
+                sprintf("S1x[%s,2,2,2]",idx_analyte), 
+                sprintf("S1x[%s,2,2,3]",idx_analyte),
+                sprintf("S1x[%s,1,3,1]",idx_analyte), 
+                sprintf("S1x[%s,1,3,2]",idx_analyte), 
+                sprintf("S1x[%s,1,3,3]",idx_analyte), 
+                sprintf("S1x[%s,2,3,1]",idx_analyte), 
+                sprintf("S1x[%s,2,3,2]",idx_analyte), 
+                sprintf("S1x[%s,2,3,3]",idx_analyte),
+                sprintf("S1x[%s,1,4,1]",idx_analyte), 
+                sprintf("S1x[%s,1,4,2]",idx_analyte), 
+                sprintf("S1x[%s,1,4,3]",idx_analyte), 
+                sprintf("S1x[%s,2,4,1]",idx_analyte), 
+                sprintf("S1x[%s,2,4,2]",idx_analyte), 
+                sprintf("S1x[%s,2,4,3]",idx_analyte),
+                sprintf("S1x[%s,1,5,1]",idx_analyte), 
+                sprintf("S1x[%s,1,5,2]",idx_analyte), 
+                sprintf("S1x[%s,1,5,3]",idx_analyte), 
+                sprintf("S1x[%s,2,5,1]",idx_analyte), 
+                sprintf("S1x[%s,2,5,2]",idx_analyte), 
+                sprintf("S1x[%s,2,5,3]",idx_analyte),
+                "S2x[1,1]", 
+                "S2x[2,1]"))
+
+p<-draws_df_subset %>%
+  slice_sample(n=1000) %>%
+  tidybayes::spread_draws(logkwx[, c, r], S1x[, m, c, r], S2x[m, ]) %>%
+  filter(r<=R[idx_analyte]+1) %>% 
+  tidyr::expand_grid(fi = seq(0,1,0.05)) %>%
+  mutate(k = (logkwx-S1x*(1+S2x)*fi/(1+S2x*fi))) %>%
+  select(.draw,c,r,m,k,fi) %>%
+  tidyr::pivot_wider(names_from = c, values_from = k) %>%
+  mutate(cdk2 = `2`-`1` ) %>%
+  mutate(cdk3 = `3`-`1` ) %>%
+  mutate(cdk4 = `4`-`1` ) %>%
+  mutate(cdk5 = `5`-`1` ) %>%
+  tidyr::pivot_longer(cdk2:cdk5,names_to = "names_cdk", values_to = "cdk")%>%
+   ggplot(aes(x = fi, y = cdk, color = as.factor(names_cdk), fill = as.factor(names_cdk))) +
+   ggdist::stat_lineribbon(.width = c(.90), alpha = 1/2)+
+   facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))+
+   labs(y = "Between column difference in logk", title=paste(dataNames$Name[analyte_ID_sample[i]]),color= " ",fill= " ", x="\u03C6")+
+  scale_fill_discrete(labels= c("XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")) +
+  scale_color_discrete(labels= c("XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
+   geom_hline(yintercept= c(0), linetype="dashed",color="gray") + 
+  coord_cartesian(xlim=c(0,1),ylim=c(-1,1))
+
+ print(p)
+ 
+ ggsave(paste0("figures\\casestudy2\\izoparam\\diff\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".png"), plot=p, width = 20, height = 20, units = "cm")
+ ggsave(paste0("figures\\casestudy2\\izoparam\\diff\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+
+
+
+}
+
+```
+
+or predict the organic modifier content leading to logk of 1:
+
+```{r casestudy2-izo-logk1-limited}
+analyte_ID_sample <-c(9,17,33,58,140,180)
+
+
+for(i in 1:length(analyte_ID_sample)){
+
+idx_analyte = which(unique(data$METID)==analyte_ID_sample[i])
+draws_df_subset <- fit_red$draws(format = "df", variable = c(
+                sprintf("logkwx[%s,1,1]",idx_analyte), 
+                sprintf("logkwx[%s,1,2]",idx_analyte), 
+                sprintf("logkwx[%s,1,3]",idx_analyte),
+                sprintf("logkwx[%s,2,1]",idx_analyte), 
+                sprintf("logkwx[%s,2,2]",idx_analyte),
+                sprintf("logkwx[%s,2,3]",idx_analyte),
+                sprintf("logkwx[%s,3,1]",idx_analyte), 
+                sprintf("logkwx[%s,3,2]",idx_analyte),
+                sprintf("logkwx[%s,3,3]",idx_analyte),
+                sprintf("logkwx[%s,4,1]",idx_analyte), 
+                sprintf("logkwx[%s,4,2]",idx_analyte),
+                sprintf("logkwx[%s,4,3]",idx_analyte),
+                sprintf("logkwx[%s,5,1]",idx_analyte), 
+                sprintf("logkwx[%s,5,2]",idx_analyte),
+                sprintf("logkwx[%s,5,3]",idx_analyte),
+                sprintf("S1x[%s,1,1,1]",idx_analyte), 
+                sprintf("S1x[%s,1,1,2]",idx_analyte), 
+                sprintf("S1x[%s,1,1,3]",idx_analyte),
+                sprintf("S1x[%s,2,1,1]",idx_analyte), 
+                sprintf("S1x[%s,2,1,2]",idx_analyte), 
+                sprintf("S1x[%s,2,1,3]",idx_analyte),
+                sprintf("S1x[%s,1,2,1]",idx_analyte), 
+                sprintf("S1x[%s,1,2,2]",idx_analyte), 
+                sprintf("S1x[%s,1,2,3]",idx_analyte), 
+                sprintf("S1x[%s,2,2,1]",idx_analyte), 
+                sprintf("S1x[%s,2,2,2]",idx_analyte), 
+                sprintf("S1x[%s,2,2,3]",idx_analyte),
+                sprintf("S1x[%s,1,3,1]",idx_analyte), 
+                sprintf("S1x[%s,1,3,2]",idx_analyte), 
+                sprintf("S1x[%s,1,3,3]",idx_analyte), 
+                sprintf("S1x[%s,2,3,1]",idx_analyte), 
+                sprintf("S1x[%s,2,3,2]",idx_analyte), 
+                sprintf("S1x[%s,2,3,3]",idx_analyte),
+                sprintf("S1x[%s,1,4,1]",idx_analyte), 
+                sprintf("S1x[%s,1,4,2]",idx_analyte), 
+                sprintf("S1x[%s,1,4,3]",idx_analyte), 
+                sprintf("S1x[%s,2,4,1]",idx_analyte), 
+                sprintf("S1x[%s,2,4,2]",idx_analyte), 
+                sprintf("S1x[%s,2,4,3]",idx_analyte),
+                sprintf("S1x[%s,1,5,1]",idx_analyte), 
+                sprintf("S1x[%s,1,5,2]",idx_analyte), 
+                sprintf("S1x[%s,1,5,3]",idx_analyte), 
+                sprintf("S1x[%s,2,5,1]",idx_analyte), 
+                sprintf("S1x[%s,2,5,2]",idx_analyte), 
+                sprintf("S1x[%s,2,5,3]",idx_analyte),
+                "S2x[1,1]", 
+                "S2x[2,1]"))
+
+p<-draws_df_subset %>%
+  slice_sample(n=1000) %>%
+  tidybayes::spread_draws(logkwx[, c, r], S1x[, m, c, r], S2x[m, ]) %>%
+  filter(r<=R[idx_analyte]+1)  %>% 
+  mutate(foo = (logkwx-1)/S1x/(1+S2x)) %>%
+  mutate(fix = foo/(1-S2x*foo)) %>%
+  ggplot(aes(x = fix, color = as.factor(c), fill = as.factor(c))) +
+  geom_density(alpha = 1/2) +
+  #coord_cartesian(xlim=c(0,1))+
+  facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))+
+  labs(title=paste(dataNames$Name[analyte_ID_sample[i]]),
+       color= " ",
+       fill= " ",
+       x = "\u03C6 leading to logk=1")+
+  scale_fill_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8")) +
+  scale_color_discrete(labels= c("XBridge Shield RP18","XTerra MS C18", "XBridge Phenyl", "XBridge C8", "Xterra MS C8"))+
+  facet_wrap(m~r, nrow = 2,labeller = labeller(m=mod.labs,r=diss.labs))
+
+print(p)
+
+ ggsave(paste0("figures\\casestudy2\\izoparam\\filogk1\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".png"), plot=p, width = 20, height = 20, units = "cm")
+  ggsave(paste0("figures\\casestudy2\\izoparam\\filogk1\\", paste(dataNames$Name[analyte_ID_sample[i]]), ".limited", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
+}
 ```
 
 ## The expected utility maps
@@ -4261,10 +4504,13 @@ upH <- datasim %>%
   select(1:20) %>%
   distinct(Temp,Mod, pHo, alpha1, alpha2) %>%
   group_by(Temp,Mod) %>%
-  tidyr::complete(pHo = seq(min(pHo), max(pHo), len = 17)) %>%
+  tidyr::complete(pHo = seq(2.5, 10.5, by = 0.2)) %>%
+  mutate(added_pH = ifelse(is.na(alpha1), 1, 0)) %>%
   arrange(Temp,Mod,pHo) %>%
-  mutate(alpha1 = zoo::na.approx(alpha1,pHo)) %>%
-  mutate(alpha2 = zoo::na.approx(alpha2,pHo)) %>%
+  mutate(alpha1 = zoo::na.approx(alpha1,pHo, rule=2))%>%
+  mutate(alpha2 = zoo::na.approx(alpha2,pHo, rule=2))%>%
+  filter(added_pH==1)%>%
+  select(-added_pH)%>%
   group_by(Temp,Mod) %>%
   mutate(pHid = row_number()) %>%
   group_by(pHid)  %>%
@@ -4276,7 +4522,7 @@ datasim2 <- datasim %>%
   filter(tg==30, Temp==25) %>%
   select(-tg, -fio, -expid, -pHs, -pHo, -alpha1, -alpha2, -pH) %>%
   distinct() %>%
- tidyr::expand_grid(fio = seq(0.05,0.2,0.05),tg = seq(20,260,20), pHs=unique(upH$pHs))%>%
+ tidyr::expand_grid(fio = seq(0.05,0.15,0.02),tg = seq(20,200,20), pHs=unique(upH$pHs))%>%
   left_join(upH, by = join_by(pHs, Mod, Temp), relationship = "many-to-one") %>%
   group_by(tg, fio, Mod, Column, pHs) %>%
   mutate(expid = cur_group_id()) %>%
@@ -4322,7 +4568,7 @@ fit_sim_red  <- model_sim_red$generate_quantities(fit_red,
 
 ```{r casestudy2-loaddata}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202308241235-1-3ef502.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-sim-202309070952-1-73d203.csv'
                                 ))
 
 draws_sim_red_df <- as_draws_df(x$generated_quantities)
@@ -4332,38 +4578,22 @@ draws_sim_red_df <- as_draws_df(x$generated_quantities)
 
 The results are presented as a utility map for each of the column. The maximum is displayed below as a table:
 
-```{r casestudy2-utylitymaps-danse}
+```{r casestudy2-utylitymaps-dense}
 Uresults<-datasim_red[!duplicated(datasim_red$expid),]
 
-x<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mindifftr", names(draws_sim_red_df), value = TRUE))]
-y<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^maxtr", names(draws_sim_red_df), value = TRUE))]
-z<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^mintr", names(draws_sim_red_df), value = TRUE))]
-
-u=x;
-
-for (i in 1:ncol(x)){u[,i] <- as.numeric(x[,i]>2 & z[,i] > 2) * (40-y[,i]) * as.numeric(y[,i]<40)}
+u<-draws_sim_red_df[,which(colnames(draws_sim_red_df) %in% grep("^utility", names(draws_sim_red_df), value = TRUE))]
 
 pr <- apply(u, MARGIN = 2, FUN = mean)
-
 pr<-as.data.frame(pr)
 
 Uresults$EUtility=pr$pr
 
-x <- apply(x, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
-
+x <- apply(u, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
 x<-as.data.frame(t(x))
 
-Uresults$mindifftr_l=x$`5%`
-Uresults$mindifftr_m=x$`50%`
-Uresults$mindifftr_h=x$`95%`
-
-y <- apply(y, MARGIN = 2, FUN = quantile, probs = c(.05,.5,.95))
-
-y<-as.data.frame(t(y))
-
-Uresults$maxtr_l=y$`5%`
-Uresults$maxtr_m=y$`50%`
-Uresults$maxtr_h=y$`95%`
+Uresults$u_l=x$`5%`
+Uresults$u_m=x$`50%`
+Uresults$u_h=x$`95%`
 
 p11 <- ggplot()+
      geom_contour_filled(data=subset(Uresults,Column==1), aes(x = pHs, y=tg, z = EUtility))+
@@ -4417,7 +4647,7 @@ print(p13)
 print(p14)
 print(p15)
 
-Uresults$pHo <-round(Uresults$pHo,1)
+Uresults$pHo <-round(Uresults$pHo,2)
  Uresults1<-Uresults[Uresults$Column==1,];
  Uresults1<-Uresults1[which(Uresults1$EUtility==max(Uresults1$EUtility)),]
  Uresults2<-Uresults[Uresults$Column==2,];
@@ -4466,7 +4696,7 @@ wpCond1$Column <- paste0(Uresultsi$ColumnName,
                          ', Temp= ', Uresultsi$Temp, ',', " \n ",
                          ' fio= ', Uresultsi$fio,
                          ', tg= ', Uresultsi$tg,
-                         ', pHo= ', round(Uresultsi$pHo,1))
+                         ', pHo= ', round(Uresultsi$pHo,2))
 wpCond= rbind(wpCond,wpCond1)
 
 }
@@ -4493,7 +4723,7 @@ print(p)
 
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram-manuscript", ".png"),
        p,
-       device = ragg::agg_png(width = 8.4582, height = 8.4582, units = "cm", res = 300, scaling=0.522))
+       device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 ```
 
 # Conclusions
