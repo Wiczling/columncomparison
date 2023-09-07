@@ -10,7 +10,7 @@ functions {
   
   vector lower_tri(matrix mat) {
     int d = rows(mat);
-    int lower_tri_d = d * (d - 1) / 2;
+    int lower_tri_d = d * (d - 1) %/% 2;
     vector[lower_tri_d] lowera;
     int count = 1;
     for(r in 2:d) {
@@ -700,13 +700,17 @@ corr_L~lkj_corr_cholesky_point_lower_tri([0.568,0.781,0.55,0.719,0.554,0.918]',[
 }
 
 generated quantities {
- 
-array[nObs] real trCond;
+
+array[nexpid] real utility;
 array[nObs] real trHatCond;
+
+{ 
+//array[nObs] real trCond;
 array[nexpid] vector[nAnalytessim] tr_matrix;
 array[nexpid] real maxtr;
 array[nexpid] real mintr;
 array[nexpid] real mindifftr;
+
 
  for(z in 1:nObs){
    
@@ -720,7 +724,7 @@ array[nexpid] real mindifftr;
                                 R[analyte[z]],
                                 hplcparam[z]);
 
-  trCond[z] = student_t_rng(3, trHatCond[z], sigmax[analyte[z],column[z]]);
+  //trCond[z] = student_t_rng(3, trHatCond[z], sigmax[analyte[z],column[z]]);
   tr_matrix[expid[z],analytesim[z]]=trHatCond[z];
   }
   
@@ -730,8 +734,10 @@ array[nexpid] real mindifftr;
   maxtr[z] = sorttr[nAnalytessim];
   mintr[z] = sorttr[1];
   mindifftr[z] = min(sorttr[2:nAnalytessim]-sorttr[1:nAnalytessim-1]);
+  utility[z] = (mintr[z]>2)*(mindifftr[z]>2)*(40-maxtr[z])*(maxtr[z]<40);
   }
-  
+}
+
 }
 
 
