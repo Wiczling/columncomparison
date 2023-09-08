@@ -2952,13 +2952,6 @@ tr_sim_Pred<-as.data.frame(t(tr_sim_Pred))
 datasim$trPred_l=tr_sim_Pred$`5%`
 datasim$trPred_m=tr_sim_Pred$`50%`
 datasim$trPred_h=tr_sim_Pred$`95%`
-
-
-datasim %>%
-  subset(METID==140&tg==30&Temp==25&pH==1)%>%
-  select(METID, Mod, ColumnName, trCond_l, trCond_m, trCond_h, trPred_l, trPred_m, trPred_h)%>%
-  mutate_if(is.numeric, round, 1) %>% 
-  kable()
 ```
 
 ### Individual predictions:
@@ -2990,8 +2983,8 @@ ggsave(paste0("figures\\concordanceplots\\", paste(dataNames$Name[analyte_ID_sam
 
 print(p)
 
-}
 
+}
 ```
 
 ### Population predictions:
@@ -3128,7 +3121,21 @@ ggsave(paste0("figures\\concordanceplots\\", "uncertainitychromatogram.joined-ma
        p3,
        device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
+cat("Individual predictions:")
+wpCond%>%
+  rename(analyte=variable,tr=value,column=Column) %>%
+  group_by(analyte,column)%>%
+  summarise(mean = mean(tr, na.rm = TRUE),
+            sd = sd(tr, na.rm = TRUE)) %>%
+  kable()
 
+cat("Population predictions:")
+wpPred%>%
+  rename(analyte=variable,tr=value,column=Column) %>%
+  group_by(analyte,column)%>%
+  summarise(mean = mean(tr, na.rm = TRUE),
+            sd = sd(tr, na.rm = TRUE)) %>%
+  kable()
 ```
 
 ## Isocratic predictions (population predictions)
@@ -4193,6 +4200,7 @@ print(pi)
 
 }
 
+cat("Hydrocortisone")
 datasim_red %>%
   subset(METID==140&tg==30&Temp==25&pH==1)%>%
   select(METID, Mod, ColumnName, trCond_l, trCond_m, trCond_h)%>%
@@ -4248,6 +4256,14 @@ print(p)
 ggsave(paste0("figures\\casestudy2\\concordanceplots\\",  "chromatogram-manuscript", ".png"),
        p,
        device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
+
+cat("Limited data predictions:")
+wpCond %>%
+  rename(analyte=variable,tr=value,column=Column) %>%
+  group_by(analyte,column)%>%
+  summarise(mean = mean(tr, na.rm = TRUE),
+            sd = sd(tr, na.rm = TRUE)) %>%
+  kable()
 
 ```
 
