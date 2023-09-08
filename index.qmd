@@ -12,7 +12,7 @@ format:
   html:
     theme: cosmo
     toc: true
-    code-fold: true
+    code-fold: true  
     code-tools: true
     fig-width: 7
     fig-height: 7
@@ -2953,6 +2953,12 @@ datasim$trPred_l=tr_sim_Pred$`5%`
 datasim$trPred_m=tr_sim_Pred$`50%`
 datasim$trPred_h=tr_sim_Pred$`95%`
 
+
+datasim %>%
+  subset(METID==140&tg==30&Temp==25&pH==1)%>%
+  select(METID, Mod, ColumnName, trCond_l, trCond_m, trCond_h, trPred_l, trPred_m, trPred_h)%>%
+  mutate_if(is.numeric, round, 1) %>% 
+  kable()
 ```
 
 ### Individual predictions:
@@ -4187,6 +4193,11 @@ print(pi)
 
 }
 
+datasim_red %>%
+  subset(METID==140&tg==30&Temp==25&pH==1)%>%
+  select(METID, Mod, ColumnName, trCond_l, trCond_m, trCond_h)%>%
+  mutate_if(is.numeric, round, 1) %>% 
+  kable()
 ```
 
 ### Uncertainity chromatogram
