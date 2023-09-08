@@ -3662,7 +3662,7 @@ $$
  I(x) = 0 \ if \ condition \ x  \ is \ false
 \end{aligned}
 $$
-To find the maximum we use a grid search over a wide range of chromatographic conditions:
+To find the maximum we use a grid search over a wide range of chromatographic conditions (fio ranging from 0.05 to 0.15 by 0.02, pHo ranging from 2.5 to 10.5 by 0.2, tg ranging from 20 to 200 by 20, for MeOH and ACN, for $\small 25^oC$, and for five tested columns):
 
 ```{r casestudy1-preparedatasim}
 upH <- datasim %>%
