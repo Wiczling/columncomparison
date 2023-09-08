@@ -1,7 +1,12 @@
 ---
 title: "Comparison of chromatographic stationary phases using Bayesian-based multilevel modeling"
-author: "Paweł Wiczling, Agnieszka Kamedulska"
-adress: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
+author:
+  - name: "Paweł Wiczling*"
+    affiliations:
+      - name: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
+  - name: "Agnieszka Kamedulska"
+    affiliations:
+      - name: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
 date: "`r format(Sys.Date())`"
 format:
   html:
