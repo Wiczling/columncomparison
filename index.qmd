@@ -3398,7 +3398,7 @@ The following plot show the effect of log P on isocratic retention times (popula
 
 ```{r logPgq, eval = FALSE}
 
-model_logP <- cmdstan_model("stan/hplc-gra-fivecolumns-logP.stan")
+model_logP <- cmdstan_model("stan/hplc-gra-fivecolumns-logP-noetas.stan")
 
 fit_logP  <- model_logP$generate_quantities(fitsim,
                                          data = datastruct,
@@ -3409,8 +3409,10 @@ fit_logP  <- model_logP$generate_quantities(fitsim,
 
 ```{r load-logP}
 x<- cmdstanr::read_cmdstan_csv(c(
-                                  'stanfiles/hplc-gra-fivecolumns-logP-202308240954-1-6e86d7.csv'
+                                  'stanfiles/hplc-gra-fivecolumns-logP-noetas-202309090952-1-88620a.csv'
                                 ))
+#' hplc-gra-fivecolumns-logP-202308240954-1-6e86d7.csv for population predictions
+
 draws_logP_df <- as_draws_df(x$generated_quantities)
 # draws_epred_df <- fit_epred$draws(format = "df")
 ```
@@ -3490,9 +3492,11 @@ p<-draws_df_subset %>%
   mutate(logkPred = logkwxPred-S1xPred*(1+S2xPred)*fi/(1+S2xPred*fi)) %>%
   ungroup() %>%
   group_by(p,m,c,r,fi) %>%
-  summarise(mlogkPred=median(logkPred)) %>%
+  summarise(mlogkPred=mean(logkPred)) %>%
   ggplot(aes(x = fi, y = mlogkPred, size = as.factor(c), color = as.factor(c), fill = as.factor(r), linetype = as.factor(m))) +
   geom_line() +
+  #ggplot(aes(x = fi, y = logkPred, size = as.factor(c), color = as.factor(c), fill = as.factor(c), linetype = as.factor(m))) +
+  #ggdist::stat_lineribbon(.width = c(.90), alpha = 1/2)+
   facet_grid(r~p,labeller = labeller(r=diss2.labs, p=logP.labs))+
   labs(color= " ", linetype= " ", y="typical logk",x="\u03C6")+
   scale_fill_discrete(labels= c("B", "N", "A")) +
@@ -3505,7 +3509,7 @@ p<-draws_df_subset %>%
         strip.text.x = element_text(size = 8),
         strip.text.y = element_text(size = 8))+
   coord_cartesian(xlim=c(0,1),ylim=c(-2,4))+
-  guides(size="none")
+  guides(size="none",fill="none")
 
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".png"), plot=p, width = 20, height = 20, units = "cm")
 ggsave(paste0("figures\\logPeffects\\logPjoined", ".pdf"), plot=p, width = 20, height = 20, units = "cm")
@@ -3515,7 +3519,7 @@ print(p)
 ggsave(paste0("figures\\logPeffects\\logPjoined-manuscript", ".png"),
        p + guides(color=guide_legend(nrow=2, byrow=TRUE)),
        device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
-
+  
 # for toc
 toc<-draws_df_subset %>%
   slice_sample(n=500) %>%
