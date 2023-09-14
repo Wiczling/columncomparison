@@ -3857,6 +3857,7 @@ kable(rbind(Uresults1,Uresults2,Uresults3,Uresults4,Uresults5)[,c('ColumnName','
 
 ```
 
+
 The highest expected utility is for XBridge Phenyl. However the differences between the columns are small.
 
 ### Uncertainity chromatogram
@@ -3922,6 +3923,14 @@ ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram-manuscript", "
        p,
        device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
+cat("Retenrion times")
+wpCond %>%
+  rename(analyte=variable,tr=value,column=Column) %>%
+  group_by(analyte,column)%>%
+  summarise(mean = mean(tr, na.rm = TRUE),
+            sd = sd(tr, na.rm = TRUE)) %>%
+  arrange(column) %>%
+  kable()
 ```
 
 # Predictions and decision making. Case study 2
@@ -4204,12 +4213,6 @@ print(pi)
 
 }
 
-cat("Hydrocortisone")
-datasim_red %>%
-  subset(METID==140&tg==30&Temp==25&pH==1)%>%
-  select(METID, Mod, ColumnName, trCond_l, trCond_m, trCond_h)%>%
-  mutate_if(is.numeric, round, 1) %>% 
-  kable()
 ```
 
 ### Uncertainity chromatogram
@@ -4761,6 +4764,119 @@ print(p)
 ggsave(paste0("figures\\casestudy2\\utilitymap\\",  "chromatogram-manuscript", ".png"),
        p,
        device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
+```
+
+# Tested
+
+## The expected utylity map (similarity)
+
+```{r casestudy1-similarity, eval = FALSE}
+
+datastructsim_red_similarity <- datastructsim_red
+datastructsim_red_similarity$tr_ref <- c(2.470840,5.748797,22.643939,	19.343264,16.959259,8.316534)
+
+model_sim_red <- cmdstan_model("stan/hplc-gra-fivecolumns-fixed-similarity.stan")
+
+fit_sim_red2  <- model_sim_red$generate_quantities(fit_red1,
+                                         data = datastructsim_red_similarity,
+                                         seed = 123,
+                                         parallel_chains = 4,
+                                         output_dir = "stanfiles")
+```
+
+```{r casestudy1-similarity-loaddata}
+x<- cmdstanr::read_cmdstan_csv(c(
+                                  'stanfiles/hplc-gra-fivecolumns-fixed-similarity-202309101702-1-467fab.csv'
+                                ))
+
+draws_sim_red2_df <- as_draws_df(x$generated_quantities)
+#draws_sim_red_df <- fit_sim_red$draws(format = "df")
+```
+
+The results are presented as a utility map for each of the column. The maximum is displayed below as a table
+
+```{r casestudy1-utylitymaps-alldata-similarity}
+
+Uresults<-datasim_red[!duplicated(datasim_red$expid),]
+
+u<-draws_sim_red2_df[,which(colnames(draws_sim_red2_df) %in% grep("^utility", names(draws_sim_red2_df), value = TRUE))]
+
+pr <- apply(u, MARGIN = 2, FUN = mean)
+pr<-as.data.frame(pr)
+
+Uresults$EUtility=pr$pr
+
+p11 <- ggplot()+
+     geom_contour_filled(data=subset(Uresults,Column==1), aes(x = pHs, y=tg, z = EUtility))+
+     facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
+     labs(x ="pH",
+          y = "tg, min",
+          fill = "Expected Utility")
+
+p12 <- ggplot()+
+     geom_contour_filled(data=subset(Uresults,Column==2), aes(x = pHs, y=tg, z = EUtility))+
+     facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
+     labs(x ="pH",
+          y = "tg, min",
+          fill = "Expected Utility")
+
+p13 <- ggplot()+
+     geom_contour_filled(data=subset(Uresults,Column==3), aes(x = pHs, y=tg, z = EUtility))+
+     facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
+     labs(x ="pH",
+          y = "tg, min",
+          fill = "Expected Utility")
+
+p14 <- ggplot()+
+     geom_contour_filled(data=subset(Uresults,Column==4), aes(x = pHs, y=tg, z = EUtility))+
+     facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
+     labs(x ="pH",
+          y = "tg, min",
+          fill = "Expected Utility")
+
+p15 <- ggplot()+
+     geom_contour_filled(data=subset(Uresults,Column==5), aes(x = pHs, y=tg, z = EUtility))+
+     facet_grid(fio~Mod2+ColumnName, labeller = labeller(Mod2=mod.labs))+
+     labs(x ="pH",
+          y = "tg, min",
+          fill = "Expected Utility")
+
+# ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap1", ".png"), plot=p11, width = 20, height = 20, units = "cm")
+# ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap2", ".png"), plot=p12, width = 20, height = 20, units = "cm")
+# ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap3", ".png"), plot=p13, width = 20, height = 20, units = "cm")
+# ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap4", ".png"), plot=p14, width = 20, height = 20, units = "cm")
+# ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap5", ".png"), plot=p15, width = 20, height = 20, units = "cm")
+# ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap1", ".pdf"), plot=p11, width = 20, height = 20, units = "cm")
+# ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap2", ".pdf"), plot=p12, width = 20, height = 20, units = "cm")
+# ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap3", ".pdf"), plot=p13, width = 20, height = 20, units = "cm")
+# ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap4", ".pdf"), plot=p14, width = 20, height = 20, units = "cm")
+# ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "utilitymap5", ".pdf"), plot=p15, width = 20, height = 20, units = "cm")
+# 
+ print(p11)
+ print(p12)
+ print(p13)
+ print(p14)
+ print(p15)
+# 
+# Uresults$pHo <-round(Uresults$pHo,2)
+# 
+#  Uresults1<-Uresults[Uresults$Column==1,];
+#  Uresults1<-Uresults1[which(Uresults1$EUtility==max(Uresults1$EUtility)),]
+# 
+#  Uresults2<-Uresults[Uresults$Column==2,];
+#  Uresults2<-Uresults2[which(Uresults2$EUtility==max(Uresults2$EUtility)),]
+# 
+#  Uresults3<-Uresults[Uresults$Column==3,];
+#  Uresults3<-Uresults3[which(Uresults3$EUtility==max(Uresults3$EUtility)),]
+# 
+#  Uresults4<-Uresults[Uresults$Column==4,];
+#  Uresults4<-Uresults4[which(Uresults4$EUtility==max(Uresults4$EUtility)),]
+# 
+#  Uresults5<-Uresults[Uresults$Column==5,];
+#  Uresults5<-Uresults5[which(Uresults5$EUtility==max(Uresults5$EUtility)),]
+# 
+# kable(rbind(Uresults1,Uresults2,Uresults3,Uresults4,Uresults5)[,c('ColumnName','tg', 'fio', 'fik','Mod','pHo','Temp','EUtility')])
+
 ```
 
 # Conclusions
