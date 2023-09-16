@@ -3764,7 +3764,7 @@ draws_sim_red_df <- as_draws_df(x$generated_quantities)
 #draws_sim_red_df <- fit_sim_red$draws(format = "df")
 ```
 
-The results are presented as a utility map for each of the column. The maximum is displayed below as a table
+The results are presented as an expected utility map for each of the column. The maximum is displayed below as a table
 
 ```{r casestudy1-utylitymaps-alldata}
 Uresults<-datasim_red[!duplicated(datasim_red$expid),]
@@ -3923,7 +3923,7 @@ ggsave(paste0("figures\\casestudy1\\utilitymap\\",  "chromatogram-manuscript", "
        p,
        device = ragg::agg_png(width = 8.4582, height = 8.4582*1.25, units = "cm", res = 300, scaling=0.6))
 
-cat("Retenrion times")
+cat("Retention times")
 wpCond %>%
   rename(analyte=variable,tr=value,column=Column) %>%
   group_by(analyte,column)%>%

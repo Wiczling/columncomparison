@@ -667,7 +667,7 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 
 # Figure S10. The expected utility maps based on individual predictions
 
-Utility map for each column:
+The expected utility map for each column:
 
 ![](../figures/casestudy1/utilitymap/utilitymap1.pdf)
 {{< pagebreak >}}
@@ -687,7 +687,7 @@ Utility map for each column:
 
 # Figure S11. The expected utility maps based on limited data predictions
 
-Utility map for each column:
+The expected utility map for each column:
 
 ![](../figures/casestudy2/utilitymap/utilitymap1.pdf)
 {{< pagebreak >}}
