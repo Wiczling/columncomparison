@@ -3,13 +3,12 @@ title: |
   | Supporting Information for:
   | Comparison of chromatographic stationary phases using Bayesian-based multilevel modeling
 author:
-  - name: Paweł Wiczling*
-  - name: Agnieszka Kamedulska
-  - name: Łukasz Kubik
-  - name: Julia Jacyna
-  - name: Wiktoria Struck-Lewicka
-  - name: Michał J. Markuszewski
-adress: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
+  - name: "Paweł Wiczling*"
+    affiliations:
+      - name: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
+  - name: "Agnieszka Kamedulska"
+    affiliations:
+      - name: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
 date: "`r format(Sys.Date())`"
 format:
   pdf:
@@ -18,6 +17,16 @@ format:
     colorlinks: true
     fig-width: 7
     fig-height: 7
+    keep-tex: true
+    template-partials: 
+      - title.tex
+    include-in-header:
+      text: |
+        \usepackage[noblocks]{authblk}
+        \renewcommand*{\Authsep}{, }
+        \renewcommand*{\Authand}{, }
+        \renewcommand*{\Authands}{, }
+        \renewcommand\Affilfont{\small}    
 ---
 
 ```{r setup, include=FALSE}
@@ -46,7 +55,7 @@ $$
 \int_0^{t_{R,z}-t_{0,z}-t_e}\frac{dt}{t_{0,z}\cdot ki_z(t) }=1,
 $$
 
-where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time t at column inlet for analyte and chromatographic conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients using method proposed by Nikitas et al. [@nikitas_new_2002] The following function described the relationship between the isocratic retention factor and pH for an i-th analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
+where $\small ki_z(t)$ denotes instantaneous isocratic retention factor corresponding to the mobile phase composition at time  $\small t$ at column inlet for analyte and chromatographic conditions corresponding to the z-th observation, $\small t_{0,z}$ denotes column hold-up (dead) time and $\small t_e$ denotes extra column-time. The numerical solution of this integral equation was carried out using method of steps with 4 and 10 steps for methanol and acetonitrile gradients. The following function described the relationship between the isocratic retention factor and pH for an i-th analyte with $\small R[i]$ dissociation steps and $\small R[i]+1$ forms.
 
 $$
 ki_z(t)=\frac{k_{z,i[z],1}(t)+\sum_{r=1}^{R[i[z]]} k_{z,i[z],r+1}(t) \cdot 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i]} pKa_{z,i[z],r}(t)} }{1+\sum_{r=1}^R 10^{r\cdot pH_z(t)-\sum_{r=1}^{R[i[z]]} pKa_{z,i[z],r}(t) } }
@@ -86,15 +95,15 @@ logkwN_i \\
 S1mN_i\\
 \end{bmatrix} \sim
 MVN(\begin{bmatrix}
-\hat{logkw}+\beta_1 \cdot (logP_i-2.2) \\
-\hat{S1m}+\beta_2 \cdot (logP_i-2.2) \\
+\hat{logkwN}+\beta_{logkwN} \cdot (logP_i-2.2) \\
+\hat{S1mN}+\beta_{S1mN} \cdot (logP_i-2.2) \\
 \end{bmatrix},  \Omega) \\
-& dS1N_i \sim N(\hat{dS1}, \omega_3)\\
+& dS1N_i \sim N(\hat{dS1N}, \omega_{dS1N})\\
 & \Omega =
-diag(\omega_{1:2}) \cdot \begin{bmatrix}
+diag([\omega_{logkwN},\omega_{S1mN}]) \cdot \begin{bmatrix}
  1 & \rho \\
  \rho & 1  \\
- \end{bmatrix} \cdot diag(\omega_{1:2}) \\
+ \end{bmatrix} \cdot diag([\omega_{logkwN},\omega_{S1mN}]) \\
 & \begin{bmatrix}
 clogkwN_{1,i} \\
 clogkwN_{2,i} \\
@@ -102,42 +111,42 @@ clogkwN_{3,i} \\
 clogkwN_{4,i} \\
 \end{bmatrix} \sim
 MVN(\begin{bmatrix}
-\hat{clogkw_1}+c\beta_{1,1} \cdot (logP_i-2.2) \\
-\hat{clogkw_2}+c\beta_{2,1} \cdot (logP_i-2.2) \\
-\hat{clogkw_3}+c\beta_{3,1} \cdot (logP_i-2.2) \\
-\hat{clogkw_4}+c\beta_{4,1} \cdot (logP_i-2.2) \\
+\hat{clogkwN_1}+c\beta_{clogkwN,1} \cdot (logP_i-2.2) \\
+\hat{clogkwN_2}+c\beta_{clogkwN,2} \cdot (logP_i-2.2) \\
+\hat{clogkwN_3}+c\beta_{clogkwN,3} \cdot (logP_i-2.2) \\
+\hat{clogkwN_4}+c\beta_{clogkwN,4} \cdot (logP_i-2.2) \\
 \end{bmatrix},  c\Omega) \\
 & c\Omega =
-diag(c\omega) \cdot \begin{bmatrix}
+diag(c\omega_{clogkwN}) \cdot \begin{bmatrix}
  1 & c\rho_{12} & c\rho_{13} & c\rho_{14} \\
   c\rho_{21} & 1 & c\rho_{23} & c\rho_{24} \\
    c\rho_{31} & c\rho_{32} & 1 & c\rho_{34} \\
    c \rho_{41} & c\rho_{42} & c\rho_{43} & 1 \\
- \end{bmatrix} \cdot diag(c\omega) \\
-& cS1mN_{c,i} \sim N(\hat{cS1m}+c\beta_{c,2}\cdot (logP_i-2.2), c\omega_{c,2}) \text{ for c=1...4} \\
-& cdS1N_{c,i} \sim N(\hat{cdS1_c}, c\omega_{c,3}) \text{ for c=1...4} \\
+ \end{bmatrix} \cdot diag(c\omega_{clogkwN}) \\
+& cS1mN_{c,i} \sim N(\hat{cS1mN_c}+c\beta_{cS1mN, c}\cdot (logP_i-2.2), c\omega_{cS1mN,c}) \text{ for c=1...4} \\
+& cdS1N_{c,i} \sim N(\hat{cdS1N_c}, c\omega_{cdS1N,c}) \text{ for c=1...4} \\
 & dlogkT_{c,i} \sim N(\hat{dlogkT_c},\omega_{T,c}) \text{ for c=1...4} \\
 \end{aligned}
 $$
 
-were MVN denotes the multivariate normal distribution; $\small \hat{logkw}$, $\small \hat{S1m}$, $\small \hat{dS1}$ are the mean values of individual chromatographic parameters that correspond to a typical neutral analyte with $\small logP$ =2.2 at $\small 25^oC$ for Xbridge Shield RP18 stationary phase. $\small \beta s$ are regression coefficients between the individual chromatographic parameters and the $\small logP_i$. $\small \omega$ denotes the standard deviation for between analyte variability (BAV). $\small \hat{dlogkT}$ denotes the effect of temperature for a typical analyte and $\small \omega_T$ the standard deviation for between analyte variability for temperature effects. Similar set of equations was used for column effects. Here c denoted the column effect (4 differences with respect to the reference Xbridge Shield RP18 column).
+were MVN denotes the multivariate normal distribution; $\small \hat{logkwN}$, $\small \hat{S1mN}$, $\small \hat{dS1N}$ are the mean values of individual chromatographic parameters that correspond to a typical neutral analyte with $\small logP$ =2.2 at $\small 25^oC$ for Xbridge Shield RP18 stationary phase. $\small \beta s$ are regression coefficients between the individual chromatographic parameters and the $\small logP_i$. $\small \omega$ denotes the standard deviation for between analyte variability (BAV). $\small \hat{dlogkT}$ denotes the effect of temperature for a typical analyte and $\small \omega_T$ the standard deviation for between analyte variability for temperature effects. Similar set of equations was used for column effects. Here c denoted the column effect (4 differences with respect to the reference Xbridge Shield RP18 column).
 
-The difference in retention between the ionized form of an analyte and the neutral form of an analyte was separately estimated for acids and bases for $\small logkw$, $\small S1m$, $\small dS1$ parameters. Similar set of equations was used for column effects.
+The difference in retention between the ionized form of an analyte and the neutral form of an analyte was separately estimated for acids and bases for $\small dlogkwA$, $\small dlogkwB$, $\small dS1mA$, $\small dS1mB$, $\small ddS1A$ and $\small ddS1B$ parameters. Similar set of equations was used for column effects.
 
 $$
 \begin{aligned}
-& dlogkwA_a \sim N(\hat{dlogkw_1}, \kappa_1), \\
-& dlogkwB_b \sim N(\hat{dlogkw_2}, \kappa_1), \\
-& dS1mA_a \sim N(\hat{dS1m_1}, \kappa_2), \\
-& dS1mB_b \sim N(\hat{dS1m_2}, \kappa_2), \\
-& ddS1A_a \sim N(\hat{ddS1_1}, \kappa_3), \\
-& ddS1B_b \sim N(\hat{ddS1_2}, \kappa_3), \\
-& cdlogkwA_{c,a} \sim N(\hat{cdlogkw_{c,1}}, c\kappa_{c,1}) \text{ for c=1...4}, \\
-& cdlogkwB_{c,b} \sim N(\hat{cdlogkw_{c,2}}, c\kappa_{c,1}) \text{ for c=1...4}, \\
-& cdS1mA_{c,a} \sim N(\hat{cdS1m_{c,1}}, c\kappa_{c,2}) \text{ for c=1...4}, \\
-& cdS1mB_{c,b} \sim N(\hat{cdS1m_{c,2}}, c\kappa_{c,2}) \text{ for c=1...4}, \\
-& cddS1A_{c,a} \sim N(\hat{cddS1_{c,1}}, c\kappa_{c,3}) \text{ for c=1...4}, \\
-& cddS1B_{c,b} \sim N(\hat{cddS1_{c,2}}, c\kappa_{c,3}) \text{ for c=1...4}. \\
+& dlogkwA_a \sim N(\hat{dlogkwA}, \kappa_{dlogkw}), \\
+& dlogkwB_b \sim N(\hat{dlogkwB}, \kappa_{dlogkw}), \\
+& dS1mA_a \sim N(\hat{dS1mA}, \kappa_{dS1m}), \\
+& dS1mB_b \sim N(\hat{dS1mB}, \kappa_{dS1m}), \\
+& ddS1A_a \sim N(\hat{ddS1A}, \kappa_{ddS1}), \\
+& ddS1B_b \sim N(\hat{ddS1B}, \kappa_{ddS1}), \\
+& cdlogkwA_{c,a} \sim N(\hat{cdlogkwA_{c}}, c\kappa_{cdlogkw,c}) \text{ for c=1...4}, \\
+& cdlogkwB_{c,b} \sim N(\hat{cdlogkwB_{c}}, c\kappa_{cdlogkw,c}) \text{ for c=1...4}, \\
+& cdS1mA_{c,a} \sim N(\hat{cdS1mA_{c}}, c\kappa_{cdS1m,c}) \text{ for c=1...4}, \\
+& cdS1mB_{c,b} \sim N(\hat{cdS1mB_{c}}, c\kappa_{cdS1m,c}) \text{ for c=1...4}, \\
+& cddS1A_{c,a} \sim N(\hat{cddS1A_{c}}, c\kappa_{cddS1,c}) \text{ for c=1...4}, \\
+& cddS1B_{c,b} \sim N(\hat{cddS1B_{c}}, c\kappa_{cddS1,c}) \text{ for c=1...4}. \\
 \end{aligned}
 $$ 
 
@@ -147,12 +156,12 @@ Similarly $\small pKa$ an $\small \alpha$ parameters were described separately f
 
 $$
 \begin{aligned}
-& pKawA_{a} \sim N(pKaAlit_{a}, \tau_1), \\
-& pKawB_{b} \sim N(pKaBlit_{b}, \tau_1), \\
-& \alpha mA_{a} \sim N(\hat{\alpha m_1},\tau_2), \\
-& \alpha mB_{b} \sim N(\hat{\alpha m_2},\tau_2), \\
-& d\alpha A_{a} \sim N(\hat{d\alpha_1},\tau_3), \\
-& d\alpha B_{b} \sim N(\hat{d\alpha_2},\tau_3).
+& pKawA_{a} \sim N(pKaAlit_{a}, \tau_{pKaw}), \\
+& pKawB_{b} \sim N(pKaBlit_{b}, \tau_{pKaw}), \\
+& \alpha mA_{a} \sim N(\hat{\alpha m A},\tau_{\alpha m}), \\
+& \alpha mB_{b} \sim N(\hat{\alpha m B},\tau_{\alpha m}), \\
+& d\alpha A_{a} \sim N(\hat{d\alpha A},\tau_{d\alpha}), \\
+& d\alpha B_{b} \sim N(\hat{d\alpha B},\tau_{d\alpha}).
 \end{aligned}
 $$
 
@@ -186,59 +195,59 @@ The detailed description of parameters and used priors is provided in the follow
 
 # to properly render in quarto: https://github.com/quarto-dev/quarto-cli/issues/3340
 
-Name = c('$\\hat{logkw}$',
-         '$\\hat{S1m}$',
-         '$\\hat{dS1}$',
-         '$\\beta_{logkw}$',
-         '$\\beta_{S1m}$',
-         '$\\hat{dlogkw_A}$',
-         '$\\hat{dlogkw_B}$',
-         '$\\hat{dS1m_A}$',
-         '$\\hat{dS1m_B}$',
-         '$\\hat{ddS1_A}$',
-         '$\\hat{ddS1_B}$',
-         '$\\hat{apH_A}$',
-         '$\\hat{apH_B}$',
+Name = c('$\\hat{logkwN}$',
+         '$\\hat{S1mN}$',
+         '$\\hat{dS1N}$',
+         '$\\beta_{logkwN}$',
+         '$\\beta_{S1mN}$',
+         '$\\hat{dlogkwA}$',
+         '$\\hat{dlogkwB}$',
+         '$\\hat{dS1mA}$',
+         '$\\hat{dS1mB}$',
+         '$\\hat{ddS1A}$',
+         '$\\hat{ddS1B}$',
+         '$\\hat{apHA}$',
+         '$\\hat{apHB}$',
          '$\\hat{dlogkT}$',
-         '$\\omega_{logkw}$',
-         '$\\omega_{S1m}$',
-         '$\\omega_{dS1}$',
+         '$\\omega_{logkwN}$',
+         '$\\omega_{S1mN}$',
+         '$\\omega_{dS1N}$',
          '$\\rho$',
          '$\\omega_T$',
          '$\\kappa_{dlogkw}$',
          '$\\kappa_{dS1m}$',
          '$\\kappa_{ddS1}$',
-         '$\\hat{clogkw_c}$',
-         '$\\hat{cS1m_c}$',
-         '$\\hat{cdS1_c}$',
-         '$c\\beta_{c,logkw}$',
-         '$c\\beta_{c,dS1m}$',
-         '$\\hat{cdlogkw_{c,A}}$',
-         '$\\hat{cdlogkw_{c,B}}$',
-         '$\\hat{cdS1m_{c,A}}$',
-         '$\\hat{cdS1m_{c,B}}$',
-         '$\\hat{cddS1_{c,A}}$',
-         '$\\hat{cddS1_{c,B}}$',
+         '$\\hat{clogkwN_c}$',
+         '$\\hat{cS1mN_c}$',
+         '$\\hat{cdS1N_c}$',
+         '$c\\beta_{logkwN,c}$',
+         '$c\\beta_{dS1mN,c}$',
+         '$\\hat{cdlogkwA_{c}}$',
+         '$\\hat{cdlogkwB_{c}}$',
+         '$\\hat{cdS1mB_{c}}$',
+         '$\\hat{cdS1mB_{c}}$',
+         '$\\hat{cddS1A_{c}}$',
+         '$\\hat{cddS1B_{c}}$',
          '$\\hat{cdlogkT_c}$',
-         '$capH_{c,A}$',
-         '$capH_{c,B}$',
-         '$c\\omega_{c,logkw}$',
+         '$capHA_{c}$',
+         '$capHB_{c}$',
+         '$c\\omega_{logkwN,c}$',
          '$c\\rho$',
-         '$c\\omega_{c,S1m}$',
-         '$c\\omega_{c,dS1}$',
-         '$c\\kappa_{c,dlogkw}$',
-         '$c\\kappa_{c,dS1m}$',
-         '$c\\kappa_{c,ddS1}$',
+         '$c\\omega_{S1mN,c}$',
+         '$c\\omega_{dS1N,c}$',
+         '$c\\kappa_{dlogkw,c}$',
+         '$c\\kappa_{dS1m,c}$',
+         '$c\\kappa_{ddS1,c}$',
          '$c\\omega_{T,c}$',
          '$\\hat{logS2m}$',
          '$\\hat{dlogS2}$',
-         '$\\hat{\\alpha m_A}$',
-         '$\\hat{\\alpha m_B}$',
-         '$\\hat{d\\alpha_A}$',
-         '$\\hat{d\\alpha_B}$',
+         '$\\hat{\\alpha mA}$',
+         '$\\hat{\\alpha mB}$',
+         '$\\hat{d\\alpha A}$',
+         '$\\hat{d\\alpha B}$',
          '$\\tau_{pKa}$',
-         '$\\tau_{alpham}$',
-         '$\\tau_{dalpha}$',
+         '$\\tau_{\\alpha m}$',
+         '$\\tau_{d\\alpha}$',
          '$m\\sigma$',
          '$s\\sigma$',
          '$clogmsigma_c$',
@@ -658,7 +667,7 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 
 # Figure S10. The expected utility maps based on individual predictions
 
-Utility map for each column:
+The expected utility map for each column:
 
 ![](../figures/casestudy1/utilitymap/utilitymap1.pdf)
 {{< pagebreak >}}
@@ -678,7 +687,7 @@ Utility map for each column:
 
 # Figure S11. The expected utility maps based on limited data predictions
 
-Utility map for each column:
+The expected utility map for each column:
 
 ![](../figures/casestudy2/utilitymap/utilitymap1.pdf)
 {{< pagebreak >}}
