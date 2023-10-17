@@ -41,3 +41,4 @@ stanfiles/*.csv
 /.quarto/
 # Word temporary
 ~$*.doc*
+manusript/
