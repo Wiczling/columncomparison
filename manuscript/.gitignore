@@ -2,4 +2,4 @@
 # Word temporary
 ~$*.doc*
 ~$*.tmp
-~$*.docx
+*.docx
