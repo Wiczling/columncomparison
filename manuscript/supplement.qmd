@@ -3,12 +3,10 @@ title: |
   | Supporting Information for:
   | Comparison of chromatographic stationary phases using a Bayesian-based multilevel model
 author:
-  - name: "Paweł Wiczling*"
-    affiliations:
-      - name: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
+  - name: "Paweł Wiczling"
   - name: "Agnieszka Kamedulska"
     affiliations:
-      - name: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland"
+      - name: "Department of Biopharmaceutics and Pharmacodynamics, Medical University of Gdańsk, Al. Gen. Hallera 107, 80-416 Gdańsk, Poland"
 date: "`r format(Sys.Date())`"
 format:
   pdf:
@@ -22,11 +20,14 @@ format:
       - title.tex
     include-in-header:
       text: |
-        \usepackage[noblocks]{authblk}
+        \usepackage[blocks]{authblk}
         \renewcommand*{\Authsep}{, }
         \renewcommand*{\Authand}{, }
         \renewcommand*{\Authands}{, }
-        \renewcommand\Affilfont{\small}    
+        \renewcommand\Affilfont{\small}  
+        \usepackage{fancyhdr}
+        \pagestyle{fancy}
+        \fancyfoot[C]{S\thepage}
 ---
 
 ```{r setup, include=FALSE}
@@ -169,13 +170,13 @@ Further, we created the matrices containing the value of $\small logkw$,$\small 
 
 $$
 \begin{aligned}
-& logkw_{col,i,r}= f(logkwN_i,clogkwN_{c,i},dlogkwA_{a},cdlogkwA_{c,a}, dlogkwB_{b}, cdlogkwB_{c,b},...) \\
+& logkw_{col,i,r}= f(logkwN_i,clogkwN_{c,i},dlogkwA_{a},cdlogkwA_{c,a}, dlogkwB_{b}, cdlogkwB_{c,b},...), \\
 & S1_{m,col,i,r}  = f(S1mN_i,cS1mN_{c,i}, dS1mA_a, cdS1mA_{c,a}, S1mB_b, cdS1mB_{c,b}, ...\\
-& dS1N_i, cdS1N_{c,i}, ddS1A_a, cddS1A_{c,a}, ddS1B_b, cddS1B_{c,b},...) \\
-& apH_{m,col,i,r} = f(\widehat{apH_1},\widehat{capH_{c,1}},\widehat{apH_2},\widehat{capH_{c,2}},...) \\
-& S2_{m} = 10^{f(\widehat{logS2m},\widehat{dlogS2},...)} \\
-& pKaw_{i,r} = f(pKawA_{a},pKawB_{b},...) \\
-& \alpha_{m,i,r} = f(\alpha mA_{a}, d\alpha A_{a}, \alpha mB_{b}, d\alpha B_{b},...)
+& dS1N_i, cdS1N_{c,i}, ddS1A_a, cddS1A_{c,a}, ddS1B_b, cddS1B_{c,b},...), \\
+& apH_{m,col,i,r} = f(\widehat{apH_1},\widehat{capH_{c,1}},\widehat{apH_2},\widehat{capH_{c,2}},...), \\
+& S2_{m} = 10^{f(\widehat{logS2m},\widehat{dlogS2},...)}, \\
+& pKaw_{i,r} = f(pKawA_{a},pKawB_{b},...), \\
+& \alpha_{m,i,r} = f(\alpha mA_{a}, d\alpha A_{a}, \alpha mB_{b}, d\alpha B_{b},...).
 \end{aligned}
 $$
 
@@ -183,17 +184,19 @@ Three dots represent additional arguments. Residual error model assumes differen
 
 $$
 \begin{aligned}
-& log(\sigma_{col,i}) = f(log\sigma_i, clog\sigma_{c,i},...) \\
-& log\sigma_i  \sim N(log(m\sigma),s\sigma) \\
-& clog\sigma_{c,i} \sim N(clogm\sigma_c,cs\sigma_c) \text{ for c=1,...,4},
+& log(\sigma_{col,i}) = f(log\sigma_i, clog\sigma_{c,i},...), \\
+& log\sigma_i  \sim N(log(m\sigma),s\sigma), \\
+& clog\sigma_{c,i} \sim N(clogm\sigma_c,cs\sigma_c) \text{ for c=1,...,4}.
 \end{aligned}
 $$
 
-The detailed description of parameters and used priors is provided in the following table (BAV denotes between analyte variability):
+The detailed description of parameters and used priors is provided in the following table (Table S1):
 
-```{r table, results="asis"}
+{{< pagebreak >}}
 
-# to properly render in quarto: https://github.com/quarto-dev/quarto-cli/issues/3340
+# Table S1. Description of model parameters
+
+```{r table}
 
 Name = c('$\\widehat{logkwN}$',
          '$\\widehat{S1mN}$',
@@ -311,56 +314,56 @@ Namecode = c('logkwHat',
          'clogmsigma[c]',
          'cssigma[c]')
 
-Description = c('typical logkw [Neutral]',
-                'effect of MeOH on logkw [Neutral]',
-                'effect of ACN on S1m [Neutral]',
-                'effect of logP on logkw [Neutral]',
-                'effect of logP on S1m [Neutral]',
-                'effect of dissociation on logkw [Acids]',
-                'effect of dissociation on logkw [Bases]',
-                'effect of dissociation on S1m [Acids]',
-                'effect of dissociation on S1m [Bases]',
-                'effect of dissociation on dS1 [Acids]',
-                'effect of dissociation on dS1 [Bases]',
-                'effect of pH on logkw [Acids]',
-                'effect of pH on logkw [Bases]',
+Description = c('typical logkw [N]',
+                'effect of MeOH on logkw [N]',
+                'effect of ACN on S1m [N]',
+                'effect of logP on logkw [N]',
+                'effect of logP on S1m [N]',
+                'effect of dissociation on logkw [A]',
+                'effect of dissociation on logkw [B]',
+                'effect of dissociation on S1m [A]',
+                'effect of dissociation on S1m [B]',
+                'effect of dissociation on dS1 [A]',
+                'effect of dissociation on dS1 [B]',
+                'effect of pH on logkw [A]',
+                'effect of pH on logkw [B]',
                 'effect of temperature on logkw',
-                'sd of BAV for logkw [Neutral]',
-                'sd of BAV for S1 [Neutral]',
-                'sd of BAV for dS1 [Neutral]',
-                'correlation logkw vs S1 [Neutral]',
-                'sd of BAV for dlogkT [Neutral]',
-                'sd of BAV for dlogkw [Acids and Bases]',
-                'sd of BAV for dS1m [Acids and Bases]',
-                'sd of BAV for ddS1 [Acids and Bases]',
-                'effect of column c on logkw [Neutral]',
-                'effect of column c on S1m [Neutral]',
-                'effect of column c on dS1 [Neutral]',
-                'effect of column c on beta[1] [Neutral]',
-                'effect of column c on beta[2] [Neutral]',
-                'effect of column c on dlogkw [Acids]',
-                'effect of column c on dlogkw [Bases]',
-                'effect of column c on dS1m [Acids]',
-                'effect of column c on dS1m [Bases]',
-                'effect of column c on ddS1 [Acids]',
-                'effect of column c on ddS1 [Bases]',
+                'sd of BAV for logkw [N]',
+                'sd of BAV for S1 [N]',
+                'sd of BAV for dS1 [N]',
+                'correlation logkw vs S1 [N]',
+                'sd of BAV for dlogkT [N]',
+                'sd of BAV for dlogkw [A and B]',
+                'sd of BAV for dS1m [A and B]',
+                'sd of BAV for ddS1 [A and B]',
+                'effect of column c on logkw [N]',
+                'effect of column c on S1m [N]',
+                'effect of column c on dS1 [N]',
+                'effect of column c on beta[1] [N]',
+                'effect of column c on beta[2] [N]',
+                'effect of column c on dlogkw [A]',
+                'effect of column c on dlogkw [B]',
+                'effect of column c on dS1m [A]',
+                'effect of column c on dS1m [B]',
+                'effect of column c on ddS1 [A]',
+                'effect of column c on ddS1 [B]',
                 'effect of column c on dlogkwT',
-                'effect of column c on apH [Acids]',
-                'effect of column c on apH [Bases]',
-                'sd of BAV for clogkw [Neutral]',
-                'corr beetwen clogkw [Neutral]',
-                'sd of BAV for cS1 [Neutral]',
-                'sd of BAV for cdS1 [Neutral]',
-                'sd of BAV for cdlogkw [Acids and Bases]',
-                'sd of BAV for cdS1m [Acids and Bases]',
-                'sd of BAV for cddS1 [Acids and Bases]',
+                'effect of column c on apH [A]',
+                'effect of column c on apH [B]',
+                'sd of BAV for clogkw [N]',
+                'corr beetwen clogkw [N]',
+                'sd of BAV for cS1 [N]',
+                'sd of BAV for cdS1 [N]',
+                'sd of BAV for cdlogkw [A and B]',
+                'sd of BAV for cdS1m [A and B]',
+                'sd of BAV for cddS1 [A and B]',
                 'sd of BAV for dlogkT',
                 'typical value of S2m (log10 scale)',
                 'effect of ACN on logS2m',
-                'effect of MeOH on pKa [Acids]',
-                'effect of MeOH on pKa [Bases]',
-                'effect of ACN on alpham [Acids]',
-                'effect of ACN on alpham [Bases]',
+                'effect of MeOH on pKa [A]',
+                'effect of MeOH on pKa [B]',
+                'effect of ACN on alpham [A]',
+                'effect of ACN on alpham [B]',
                 'sd of BAV for pKalit',
                 'sd of BAV for alpham',
                 'sd of BAV for dalpha',
@@ -415,8 +418,8 @@ Priors = c('N(2.2,2)',
          'N+(0, 0.125)',
          'N+(0, 0.125)',
          'N+(0, 0.011)',
-         'N(-0.7, 0.125);',
-         'N(1, 0.125);',
+         'N(-0.7, 0.125)',
+         'N(1, 0.125)',
          'N(2, 0.25)',
          'N(-1, 0.25)',
          'N(0, 0.125)',
@@ -433,21 +436,23 @@ table_of_parameters = data.frame(Name,Namecode,Description,Priors)
 
 
 table_of_parameters %>%
-kableExtra::kbl(caption = "Desciption of model paramters", escape = FALSE, longtable=TRUE) %>%
+kableExtra::kbl(escape = FALSE, longtable=TRUE, format="latex") %>%
 kableExtra::kable_classic(full_width = F, html_font = "Cambria") %>%
-kableExtra::kable_styling(latex_options = c("repeat_header")) %>%
+kableExtra::column_spec(3, width = "5cm") %>%
+kableExtra::kable_styling(latex_options = c("repeat_header"),font_size = 9) %>%
  kableExtra::pack_rows("XBridge Shield RP18 parameters", 1, 22) %>%
  kableExtra::pack_rows("between column differences", 23, 44) %>%
  kableExtra::pack_rows("S2", 45, 46) %>%
  kableExtra::pack_rows("pKa", 47, 53) %>%
  kableExtra::pack_rows("Residuals", 54, 57) %>%
- unclass() %>%
- cat()
+  footnote(footnote_as_chunk = TRUE,
+           general = "N-Neutral, A-Acids, B-Bases, BAV-between analyte variability")
  
 ```
+
 {{< pagebreak >}}
 
-# Table S1. Summary of the MCMC simulations of the marginal posterior distributions of population-level model parameters. 
+# Table S2. Summary of the MCMC simulations of the marginal posterior distributions of population-level model parameters. 
 
 Mean denotes sample mean, MCSE denotes Monte Carlo Standard Error, StdDev denotes sample standard deviation, 5%, 50%, 95% denote corresponding quantiles, N_Eff denotes effective sample size, R_Hat denotes a measure of chain equilibrium must be within 0.05 of 1.0.
 
@@ -521,7 +526,7 @@ fit$print(c("clogkwHat","cS1mHat","cdS1Hat",
 
 {{< pagebreak >}}
 
-# Figure S3. Goodness of fit plots
+# Figure S3. Goodness of fit plots.
 
 Individual residuals:
 
@@ -665,7 +670,7 @@ Predictions represented as posterior median (line) and 5th-95th percentiles (are
 
 {{< pagebreak >}}
 
-# Figure S10. The expected utility maps based on individual predictions
+# Figure S10. The expected utility maps based on individual predictions.
 
 The expected utility map for each column:
 
@@ -685,7 +690,7 @@ The expected utility map for each column:
 
 {{< pagebreak >}}
 
-# Figure S11. The expected utility maps based on limited data predictions
+# Figure S11. The expected utility maps based on limited data predictions.
 
 The expected utility map for each column:
 

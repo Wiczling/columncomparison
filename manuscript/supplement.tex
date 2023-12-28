@@ -76,11 +76,14 @@
 \def\fps@figure{htbp}
 \makeatother
 
-\usepackage[noblocks]{authblk}
+\usepackage[blocks]{authblk}
 \renewcommand*{\Authsep}{, }
 \renewcommand*{\Authand}{, }
 \renewcommand*{\Authands}{, }
 \renewcommand\Affilfont{\small}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyfoot[C]{S\thepage}
 \makeatletter
 \makeatother
 \makeatletter
@@ -141,7 +144,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdfauthor={Paweł Wiczling*; Agnieszka Kamedulska},
+  pdfauthor={Paweł Wiczling; Agnieszka Kamedulska},
   colorlinks=true,
   linkcolor={blue},
   filecolor={Maroon},
@@ -154,23 +157,20 @@ Comparison of chromatographic stationary phases using a Bayesian-based
 multilevel model}
 
 
-  \author{Paweł Wiczling*}
+  \author{Paweł Wiczling}
+    \author{Agnieszka Kamedulska}
             \affil{%
                   Department of Biopharmaceutics and Pharmacodynamics,
-                  Medical University of Gdańsk, Gen.~J. Hallera 107,
-                  80-416 Gdańsk, Poland
-              }
-        \author{Agnieszka Kamedulska}
-            \affil{%
-                  Department of Biopharmaceutics and Pharmacodynamics,
-                  Medical University of Gdańsk, Gen.~J. Hallera 107,
+                  Medical University of Gdańsk, Al. Gen.~Hallera 107,
                   80-416 Gdańsk, Poland
               }
       
-\date{2023-10-16}
+\date{}
+
+\newpage
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, breakable, borderline west={3pt}{0pt}{shadecolor}, sharp corners, frame hidden, enhanced, boxrule=0pt]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, sharp corners, enhanced, frame hidden, boxrule=0pt, breakable, borderline west={3pt}{0pt}{shadecolor}]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -385,13 +385,13 @@ denoted as f(.). The exact procedure can be found in the stan code.
 
 \[
 \begin{aligned}
-& logkw_{col,i,r}= f(logkwN_i,clogkwN_{c,i},dlogkwA_{a},cdlogkwA_{c,a}, dlogkwB_{b}, cdlogkwB_{c,b},...) \\
+& logkw_{col,i,r}= f(logkwN_i,clogkwN_{c,i},dlogkwA_{a},cdlogkwA_{c,a}, dlogkwB_{b}, cdlogkwB_{c,b},...), \\
 & S1_{m,col,i,r}  = f(S1mN_i,cS1mN_{c,i}, dS1mA_a, cdS1mA_{c,a}, S1mB_b, cdS1mB_{c,b}, ...\\
-& dS1N_i, cdS1N_{c,i}, ddS1A_a, cddS1A_{c,a}, ddS1B_b, cddS1B_{c,b},...) \\
-& apH_{m,col,i,r} = f(\widehat{apH_1},\widehat{capH_{c,1}},\widehat{apH_2},\widehat{capH_{c,2}},...) \\
-& S2_{m} = 10^{f(\widehat{logS2m},\widehat{dlogS2},...)} \\
-& pKaw_{i,r} = f(pKawA_{a},pKawB_{b},...) \\
-& \alpha_{m,i,r} = f(\alpha mA_{a}, d\alpha A_{a}, \alpha mB_{b}, d\alpha B_{b},...)
+& dS1N_i, cdS1N_{c,i}, ddS1A_a, cddS1A_{c,a}, ddS1B_b, cddS1B_{c,b},...), \\
+& apH_{m,col,i,r} = f(\widehat{apH_1},\widehat{capH_{c,1}},\widehat{apH_2},\widehat{capH_{c,2}},...), \\
+& S2_{m} = 10^{f(\widehat{logS2m},\widehat{dlogS2},...)}, \\
+& pKaw_{i,r} = f(pKawA_{a},pKawB_{b},...), \\
+& \alpha_{m,i,r} = f(\alpha mA_{a}, d\alpha A_{a}, \alpha mB_{b}, d\alpha B_{b},...).
 \end{aligned}
 \]
 
@@ -400,133 +400,140 @@ different parameters for each column and analyte:
 
 \[
 \begin{aligned}
-& log(\sigma_{col,i}) = f(log\sigma_i, clog\sigma_{c,i},...) \\
-& log\sigma_i  \sim N(log(m\sigma),s\sigma) \\
-& clog\sigma_{c,i} \sim N(clogm\sigma_c,cs\sigma_c) \text{ for c=1,...,4},
+& log(\sigma_{col,i}) = f(log\sigma_i, clog\sigma_{c,i},...), \\
+& log\sigma_i  \sim N(log(m\sigma),s\sigma), \\
+& clog\sigma_{c,i} \sim N(clogm\sigma_c,cs\sigma_c) \text{ for c=1,...,4}.
 \end{aligned}
 \]
 
 The detailed description of parameters and used priors is provided in
-the following table (BAV denotes between analyte variability):
+the following table (Table S1):
 
-\begin{longtable}[t]{l|l|l|l}
-\caption{Desciption of model paramters}\\
+\newpage{}
+
+\hypertarget{table-s1.-description-of-model-parameters}{%
+\section{Table S1. Description of model
+parameters}\label{table-s1.-description-of-model-parameters}}
+
+\begingroup\fontsize{9}{11}\selectfont
+
+\begin{longtable*}[t]{l|l|>{\raggedright\arraybackslash}p{5cm}|l}
 \hline
 Name & Namecode & Description & Priors\\
 \hline
 \endfirsthead
-\caption[]{Desciption of model paramters \textit{(continued)}}\\
+\multicolumn{4}{@{}l}{\textit{(continued)}}\\
 \hline
 Name & Namecode & Description & Priors\\
 \hline
 \endhead
 \multicolumn{4}{l}{\textbf{XBridge Shield RP18 parameters}}\\
 \hline
-\hspace{1em}$\widehat{logkwN}$ & logkwHat & typical logkw [Neutral] & N(2.2,2)\\
+\hspace{1em}$\widehat{logkwN}$ & logkwHat & typical logkw [N] & N(2.2,2)\\
 \hline
-\hspace{1em}$\widehat{S1mN}$ & S1mHat & effect of MeOH on logkw [Neutral] & N(4, 1)\\
+\hspace{1em}$\widehat{S1mN}$ & S1mHat & effect of MeOH on logkw [N] & N(4, 1)\\
 \hline
-\hspace{1em}$\widehat{dS1N}$ & dS1Hat & effect of ACN on S1m [Neutral] & N(1, 1)\\
+\hspace{1em}$\widehat{dS1N}$ & dS1Hat & effect of ACN on S1m [N] & N(1, 1)\\
 \hline
-\hspace{1em}$\beta_{logkwN}$ & beta[1] & effect of logP on logkw [Neutral] & N(1, 0.125)\\
+\hspace{1em}$\beta_{logkwN}$ & beta[1] & effect of logP on logkw [N] & N(1, 0.125)\\
 \hline
-\hspace{1em}$\beta_{S1mN}$ & beta[2] & effect of logP on S1m [Neutral] & N(0.5, 0.5)\\
+\hspace{1em}$\beta_{S1mN}$ & beta[2] & effect of logP on S1m [N] & N(0.5, 0.5)\\
 \hline
-\hspace{1em}$\widehat{dlogkwA}$ & dlogkwHat[1] & effect of dissociation on logkw [Acids] & N(-1, 0.125)\\
+\hspace{1em}$\widehat{dlogkwA}$ & dlogkwHat[1] & effect of dissociation on logkw [A] & N(-1, 0.125)\\
 \hline
-\hspace{1em}$\widehat{dlogkwB}$ & dlogkwHat[2] & effect of dissociation on logkw [Bases] & N(-1, 0.125)\\
+\hspace{1em}$\widehat{dlogkwB}$ & dlogkwHat[2] & effect of dissociation on logkw [B] & N(-1, 0.125)\\
 \hline
-\hspace{1em}$\widehat{dS1mA}$ & dS1mHat[1] & effect of dissociation on S1m [Acids] & N(0, 0.5)\\
+\hspace{1em}$\widehat{dS1mA}$ & dS1mHat[1] & effect of dissociation on S1m [A] & N(0, 0.5)\\
 \hline
-\hspace{1em}$\widehat{dS1mB}$ & dS1mHat[2] & effect of dissociation on S1m [Bases] & N(0, 0.5)\\
+\hspace{1em}$\widehat{dS1mB}$ & dS1mHat[2] & effect of dissociation on S1m [B] & N(0, 0.5)\\
 \hline
-\hspace{1em}$\widehat{ddS1A}$ & ddS1Hat[1] & effect of dissociation on dS1 [Acids] & N(0, 0.25)\\
+\hspace{1em}$\widehat{ddS1A}$ & ddS1Hat[1] & effect of dissociation on dS1 [A] & N(0, 0.25)\\
 \hline
-\hspace{1em}$\widehat{ddS1B}$ & ddS1Hat[2] & effect of dissociation on dS1 [Bases] & N(0, 0.25)\\
+\hspace{1em}$\widehat{ddS1B}$ & ddS1Hat[2] & effect of dissociation on dS1 [B] & N(0, 0.25)\\
 \hline
-\hspace{1em}$\widehat{apHA}$ & apH[1] & effect of pH on logkw [Acids] & N(0, 0.1)\\
+\hspace{1em}$\widehat{apHA}$ & apH[1] & effect of pH on logkw [A] & N(0, 0.1)\\
 \hline
-\hspace{1em}$\widehat{apHB}$ & apH[2] & effect of pH on logkw [Bases] & N(0, 0.1)\\
+\hspace{1em}$\widehat{apHB}$ & apH[2] & effect of pH on logkw [B] & N(0, 0.1)\\
 \hline
 \hspace{1em}$\widehat{dlogkT}$ & dlogkTHat & effect of temperature on logkw & N(-0.087, 0.022)\\
 \hline
-\hspace{1em}$\omega_{logkwN}$ & omega[1] & sd of BAV for logkw [Neutral] & N+(0, 2)\\
+\hspace{1em}$\omega_{logkwN}$ & omega[1] & sd of BAV for logkw [N] & N+(0, 2)\\
 \hline
-\hspace{1em}$\omega_{S1mN}$ & omega[2] & sd of BAV for S1 [Neutral] & N+(0, 2)\\
+\hspace{1em}$\omega_{S1mN}$ & omega[2] & sd of BAV for S1 [N] & N+(0, 2)\\
 \hline
-\hspace{1em}$\omega_{dS1N}$ & omega[3] & sd of BAV for dS1 [Neutral] & N+(0, 2)\\
+\hspace{1em}$\omega_{dS1N}$ & omega[3] & sd of BAV for dS1 [N] & N+(0, 2)\\
 \hline
-\hspace{1em}$\rho$ & rho & correlation logkw vs S1 [Neutral] & LKJCORRN(0.75, 0.125)\\
+\hspace{1em}$\rho$ & rho & correlation logkw vs S1 [N] & LKJCORRN(0.75, 0.125)\\
 \hline
-\hspace{1em}$\omega_T$ & omegaT & sd of BAV for dlogkT [Neutral] & N+(0, 0.022)\\
+\hspace{1em}$\omega_T$ & omegaT & sd of BAV for dlogkT [N] & N+(0, 0.022)\\
 \hline
-\hspace{1em}$\kappa_{dlogkw}$ & kappa[1] & sd of BAV for dlogkw [Acids and Bases] & N+(0, 0.25)\\
+\hspace{1em}$\kappa_{dlogkw}$ & kappa[1] & sd of BAV for dlogkw [A and B] & N+(0, 0.25)\\
 \hline
-\hspace{1em}$\kappa_{dS1m}$ & kappa[2] & sd of BAV for dS1m [Acids and Bases] & N+(0, 0.25)\\
+\hspace{1em}$\kappa_{dS1m}$ & kappa[2] & sd of BAV for dS1m [A and B] & N+(0, 0.25)\\
 \hline
-\hspace{1em}$\kappa_{ddS1}$ & kappa[3] & sd of BAV for ddS1 [Acids and Bases] & N+(0, 0.25)\\
+\hspace{1em}$\kappa_{ddS1}$ & kappa[3] & sd of BAV for ddS1 [A and B] & N+(0, 0.25)\\
 \hline
 \multicolumn{4}{l}{\textbf{between column differences}}\\
 \hline
-\hspace{1em}$\widehat{clogkwN_c}$ & clogkwHat[c] & effect of column c on logkw [Neutral] & N(0, 1)\\
+\hspace{1em}$\widehat{clogkwN_c}$ & clogkwHat[c] & effect of column c on logkw [N] & N(0, 1)\\
 \hline
-\hspace{1em}$\widehat{cS1mN_c}$ & cS1mHat[c] & effect of column c on S1m [Neutral] & N(0, 0.5)\\
+\hspace{1em}$\widehat{cS1mN_c}$ & cS1mHat[c] & effect of column c on S1m [N] & N(0, 0.5)\\
 \hline
-\hspace{1em}$\widehat{cdS1N_c}$ & cdS1Hat[c] & effect of column c on dS1 [Neutral] & N(0, 0.25)\\
+\hspace{1em}$\widehat{cdS1N_c}$ & cdS1Hat[c] & effect of column c on dS1 [N] & N(0, 0.25)\\
 \hline
-\hspace{1em}$c\beta_{logkwN,c}$ & cbeta[c,1] & effect of column c on beta[1] [Neutral] & N(0, 0.25)\\
+\hspace{1em}$c\beta_{logkwN,c}$ & cbeta[c,1] & effect of column c on beta[1] [N] & N(0, 0.25)\\
 \hline
-\hspace{1em}$c\beta_{dS1mN,c}$ & cbeta[c,2] & effect of column c on beta[2] [Neutral] & N(0, 0.25)\\
+\hspace{1em}$c\beta_{dS1mN,c}$ & cbeta[c,2] & effect of column c on beta[2] [N] & N(0, 0.25)\\
 \hline
-\hspace{1em}$\widehat{cdlogkwA_{c}}$ & cdlogkwHat[c,1] & effect of column c on dlogkw [Acids] & N(0, 0.0625)\\
+\hspace{1em}$\widehat{cdlogkwA_{c}}$ & cdlogkwHat[c,1] & effect of column c on dlogkw [A] & N(0, 0.0625)\\
 \hline
-\hspace{1em}$\widehat{cdlogkwB_{c}}$ & cdlogkwHat[c,2] & effect of column c on dlogkw [Bases] & N(0, 0.0625)\\
+\hspace{1em}$\widehat{cdlogkwB_{c}}$ & cdlogkwHat[c,2] & effect of column c on dlogkw [B] & N(0, 0.0625)\\
 \hline
-\hspace{1em}$\widehat{cdS1mB_{c}}$ & cdS1mHat[c,1] & effect of column c on dS1m [Acids] & N(0, 0.25)\\
+\hspace{1em}$\widehat{cdS1mB_{c}}$ & cdS1mHat[c,1] & effect of column c on dS1m [A] & N(0, 0.25)\\
 \hline
-\hspace{1em}$\widehat{cdS1mB_{c}}$ & cdS1mHat[c,2] & effect of column c on dS1m [Bases] & N(0, 0.25)\\
+\hspace{1em}$\widehat{cdS1mB_{c}}$ & cdS1mHat[c,2] & effect of column c on dS1m [B] & N(0, 0.25)\\
 \hline
-\hspace{1em}$\widehat{cddS1A_{c}}$ & cddS1Hat[c,1] & effect of column c on ddS1 [Acids] & N(0, 0.125)\\
+\hspace{1em}$\widehat{cddS1A_{c}}$ & cddS1Hat[c,1] & effect of column c on ddS1 [A] & N(0, 0.125)\\
 \hline
-\hspace{1em}$\widehat{cddS1B_{c}}$ & cddS1Hat[c,2] & effect of column c on ddS1 [Bases] & N(0, 0.125)\\
+\hspace{1em}$\widehat{cddS1B_{c}}$ & cddS1Hat[c,2] & effect of column c on ddS1 [B] & N(0, 0.125)\\
 \hline
 \hspace{1em}$\widehat{cdlogkT_c}$ & cdlogkTHat[c] & effect of column c on dlogkwT & N(0, 0.011)\\
 \hline
-\hspace{1em}$capHA_{c}$ & capH[c,1] & effect of column c on apH [Acids] & N(0, 0.05)\\
+\hspace{1em}$capHA_{c}$ & capH[c,1] & effect of column c on apH [A] & N(0, 0.05)\\
 \hline
-\hspace{1em}$capHB_{c}$ & capH[c,2] & effect of column c on apH [Bases] & N(0, 0.05)\\
+\hspace{1em}$capHB_{c}$ & capH[c,2] & effect of column c on apH [B] & N(0, 0.05)\\
 \hline
-\hspace{1em}$c\omega_{logkwN,c}$ & comega[c,1] & sd of BAV for clogkw [Neutral] & N+(0, 1)\\
+\hspace{1em}$c\omega_{logkwN,c}$ & comega[c,1] & sd of BAV for clogkw [N] & N+(0, 1)\\
 \hline
-\hspace{1em}$c\rho$ & crho & corr beetwen clogkw [Neutral] & LKJ(2)\\
+\hspace{1em}$c\rho$ & crho & corr beetwen clogkw [N] & LKJ(2)\\
 \hline
-\hspace{1em}$c\omega_{S1mN,c}$ & comega[c,2] & sd of BAV for cS1 [Neutral] & N+(0, 1)\\
+\hspace{1em}$c\omega_{S1mN,c}$ & comega[c,2] & sd of BAV for cS1 [N] & N+(0, 1)\\
 \hline
-\hspace{1em}$c\omega_{dS1N,c}$ & comega[c,3] & sd of BAV for cdS1 [Neutral] & N+(0, 1)\\
+\hspace{1em}$c\omega_{dS1N,c}$ & comega[c,3] & sd of BAV for cdS1 [N] & N+(0, 1)\\
 \hline
-\hspace{1em}$c\kappa_{dlogkw,c}$ & ckappa[c,1] & sd of BAV for cdlogkw [Acids and Bases] & N+(0, 0.125)\\
+\hspace{1em}$c\kappa_{dlogkw,c}$ & ckappa[c,1] & sd of BAV for cdlogkw [A and B] & N+(0, 0.125)\\
 \hline
-\hspace{1em}$c\kappa_{dS1m,c}$ & ckappa[c,2] & sd of BAV for cdS1m [Acids and Bases] & N+(0, 0.125)\\
+\hspace{1em}$c\kappa_{dS1m,c}$ & ckappa[c,2] & sd of BAV for cdS1m [A and B] & N+(0, 0.125)\\
 \hline
-\hspace{1em}$c\kappa_{ddS1,c}$ & ckappa[c,3] & sd of BAV for cddS1 [Acids and Bases] & N+(0, 0.125)\\
+\hspace{1em}$c\kappa_{ddS1,c}$ & ckappa[c,3] & sd of BAV for cddS1 [A and B] & N+(0, 0.125)\\
 \hline
 \hspace{1em}$c\omega_{T,c}$ & comegaT[c] & sd of BAV for dlogkT & N+(0, 0.011)\\
 \hline
 \multicolumn{4}{l}{\textbf{S2}}\\
 \hline
-\hspace{1em}$\widehat{logS2m}$ & logS2mHat & typical value of S2m (log10 scale) & N(-0.7, 0.125);\\
+\hspace{1em}$\widehat{logS2m}$ & logS2mHat & typical value of S2m (log10 scale) & N(-0.7, 0.125)\\
 \hline
-\hspace{1em}$\widehat{dlogS2}$ & dlogS2Hat & effect of ACN on logS2m & N(1, 0.125);\\
+\hspace{1em}$\widehat{dlogS2}$ & dlogS2Hat & effect of ACN on logS2m & N(1, 0.125)\\
 \hline
 \multicolumn{4}{l}{\textbf{pKa}}\\
 \hline
-\hspace{1em}$\widehat{\alpha mA}$ & alphamHat[1] & effect of MeOH on pKa [Acids] & N(2, 0.25)\\
+\hspace{1em}$\widehat{\alpha mA}$ & alphamHat[1] & effect of MeOH on pKa [A] & N(2, 0.25)\\
 \hline
-\hspace{1em}$\widehat{\alpha mB}$ & alphamHat[2] & effect of MeOH on pKa [Bases] & N(-1, 0.25)\\
+\hspace{1em}$\widehat{\alpha mB}$ & alphamHat[2] & effect of MeOH on pKa [B] & N(-1, 0.25)\\
 \hline
-\hspace{1em}$\widehat{d\alpha A}$ & dalphaHat[1] & effect of ACN on alpham [Acids] & N(0, 0.125)\\
+\hspace{1em}$\widehat{d\alpha A}$ & dalphaHat[1] & effect of ACN on alpham [A] & N(0, 0.125)\\
 \hline
-\hspace{1em}$\widehat{d\alpha B}$ & dalphaHat[2] & effect of ACN on alpham [Bases] & N(0, 0.125)\\
+\hspace{1em}$\widehat{d\alpha B}$ & dalphaHat[2] & effect of ACN on alpham [B] & N(0, 0.125)\\
 \hline
 \hspace{1em}$\tau_{pKa}$ & tau[1] & sd of BAV for pKalit & N+(0, 0.25)\\
 \hline
@@ -544,14 +551,16 @@ Name & Namecode & Description & Priors\\
 \hline
 \hspace{1em}$c\sigma_c$ & cssigma[c] & sd of BAV of residuals for column c & N+(0,0.125)\\
 \hline
-\end{longtable}
+\multicolumn{4}{l}{\rule{0pt}{1em}\textit{Note: } N-Neutral, A-Acids, B-Bases, BAV-between analyte variability}\\
+\end{longtable*}
+\endgroup{}
 
 \newpage{}
 
-\hypertarget{table-s1.-summary-of-the-mcmc-simulations-of-the-marginal-posterior-distributions-of-population-level-model-parameters.}{%
-\section{Table S1. Summary of the MCMC simulations of the marginal
+\hypertarget{table-s2.-summary-of-the-mcmc-simulations-of-the-marginal-posterior-distributions-of-population-level-model-parameters.}{%
+\section{Table S2. Summary of the MCMC simulations of the marginal
 posterior distributions of population-level model
-parameters.}\label{table-s1.-summary-of-the-mcmc-simulations-of-the-marginal-posterior-distributions-of-population-level-model-parameters.}}
+parameters.}\label{table-s2.-summary-of-the-mcmc-simulations-of-the-marginal-posterior-distributions-of-population-level-model-parameters.}}
 
 Mean denotes sample mean, MCSE denotes Monte Carlo Standard Error,
 StdDev denotes sample standard deviation, 5\%, 50\%, 95\% denote
@@ -746,9 +755,9 @@ parameters.}\label{figure-s2.-summary-of-the-mcmc-simulations-of-the-marginal-po
 
 \newpage{}
 
-\hypertarget{figure-s3.-goodness-of-fit-plots}{%
+\hypertarget{figure-s3.-goodness-of-fit-plots.}{%
 \section{Figure S3. Goodness of fit
-plots}\label{figure-s3.-goodness-of-fit-plots}}
+plots.}\label{figure-s3.-goodness-of-fit-plots.}}
 
 Individual residuals:
 
@@ -965,9 +974,9 @@ parameters and predictors (logP and pKa).
 
 \newpage{}
 
-\hypertarget{figure-s10.-the-expected-utility-maps-based-on-individual-predictions}{%
+\hypertarget{figure-s10.-the-expected-utility-maps-based-on-individual-predictions.}{%
 \section{Figure S10. The expected utility maps based on individual
-predictions}\label{figure-s10.-the-expected-utility-maps-based-on-individual-predictions}}
+predictions.}\label{figure-s10.-the-expected-utility-maps-based-on-individual-predictions.}}
 
 The expected utility map for each column:
 
@@ -991,9 +1000,9 @@ The expected utility map for each column:
 
 \newpage{}
 
-\hypertarget{figure-s11.-the-expected-utility-maps-based-on-limited-data-predictions}{%
+\hypertarget{figure-s11.-the-expected-utility-maps-based-on-limited-data-predictions.}{%
 \section{Figure S11. The expected utility maps based on limited data
-predictions}\label{figure-s11.-the-expected-utility-maps-based-on-limited-data-predictions}}
+predictions.}\label{figure-s11.-the-expected-utility-maps-based-on-limited-data-predictions.}}
 
 The expected utility map for each column:
 
@@ -1048,30 +1057,27 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] kableExtra_1.3.4 GGally_2.1.2     posterior_1.3.1  bayesplot_1.9.0 
- [5] reshape2_1.4.4   knitr_1.40       cmdstanr_0.5.3   gridExtra_2.3   
- [9] ggplot2_3.4.2    dplyr_1.1.2      pracma_2.3.8    
+[1] cmdstanr_0.5.3   kableExtra_1.3.4 dplyr_1.1.3     
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.9           svglite_2.1.1        digest_0.6.29       
- [4] utf8_1.2.2           R6_2.5.1             plyr_1.8.7          
- [7] ggridges_0.5.3       backports_1.4.1      evaluate_0.16       
-[10] httr_1.4.5           pillar_1.9.0         rlang_1.1.0         
-[13] rstudioapi_0.14      data.table_1.14.2    checkmate_2.1.0     
-[16] rmarkdown_2.16       textshaping_0.3.6    webshot_0.5.4       
-[19] stringr_1.5.0        munsell_0.5.0        compiler_4.1.3      
-[22] xfun_0.32            pkgconfig_2.0.3      systemfonts_1.0.4   
-[25] htmltools_0.5.3      tidyselect_1.2.0     tibble_3.2.1        
-[28] tensorA_0.36.2       matrixStats_0.62.0   codetools_0.2-18    
-[31] reshape_0.8.9        fansi_1.0.3          viridisLite_0.4.1   
-[34] withr_2.5.0          grid_4.1.3           distributional_0.3.1
-[37] jsonlite_1.8.4       gtable_0.3.1         lifecycle_1.0.3     
-[40] magrittr_2.0.3       scales_1.2.1         cli_3.4.0           
-[43] stringi_1.7.8        farver_2.1.1         xml2_1.3.3          
-[46] ragg_1.2.5           generics_0.1.3       vctrs_0.6.2         
-[49] RColorBrewer_1.1-3   tools_4.1.3          glue_1.6.2          
-[52] abind_1.4-5          fastmap_1.1.0        yaml_2.3.5          
-[55] colorspace_2.0-3     rvest_1.0.3         
+ [1] tidyselect_1.2.0     xfun_0.32            colorspace_2.0-3    
+ [4] vctrs_0.6.2          generics_0.1.3       htmltools_0.5.3     
+ [7] viridisLite_0.4.1    yaml_2.3.7           utf8_1.2.3          
+[10] rlang_1.1.0          pillar_1.9.0         glue_1.6.2          
+[13] withr_2.5.0          distributional_0.3.1 matrixStats_0.62.0  
+[16] lifecycle_1.0.3      stringr_1.5.0        posterior_1.3.1     
+[19] munsell_0.5.0        gtable_0.3.1         ragg_1.2.5          
+[22] rvest_1.0.3          codetools_0.2-18     evaluate_0.16       
+[25] knitr_1.40           fastmap_1.1.0        fansi_1.0.4         
+[28] scales_1.2.1         backports_1.4.1      checkmate_2.2.0     
+[31] webshot_0.5.4        jsonlite_1.8.7       abind_1.4-5         
+[34] farver_2.1.1         systemfonts_1.0.4    textshaping_0.3.6   
+[37] tensorA_0.36.2       ggplot2_3.4.2        digest_0.6.29       
+[40] stringi_1.7.8        grid_4.1.3           cli_3.6.1           
+[43] tools_4.1.3          magrittr_2.0.3       tibble_3.2.1        
+[46] pkgconfig_2.0.3      data.table_1.14.8    xml2_1.3.3          
+[49] rmarkdown_2.16       svglite_2.1.1        httr_1.4.5          
+[52] rstudioapi_0.14      R6_2.5.1             compiler_4.1.3      
 \end{verbatim}
 
 
